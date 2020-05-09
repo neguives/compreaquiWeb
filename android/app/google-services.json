@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "175139261417",
+    "firebase_url": "https://compreai-delivery.firebaseio.com",
+    "project_id": "compreai-delivery",
+    "storage_bucket": "compreai-delivery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175139261417:android:f5edb9c00ae95e5f349978",
+        "android_client_info": {
+          "package_name": "com.vostore.compreaidelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175139261417-6onlqdmdtiso6ccavn2efptrr88apvdo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vostore.compreaidelivery",
+            "certificate_hash": "7ac5f4cf4875c42ba5404958d570ba6c9f533583"
+          }
+        },
+        {
+          "client_id": "175139261417-mmumm769em89hgd0lke33lt9a4l11ukj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN-stBbriJdSb1Qh9K41i_NtxdESrWG-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175139261417-mmumm769em89hgd0lke33lt9a4l11ukj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "175139261417-ik8702qk7he7akci7vc0uq0ka15f2koi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vostore.compreaidelivery"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
