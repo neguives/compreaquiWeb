@@ -48,8 +48,8 @@ class _MyMapPageState extends State<MyMapPage> {
   String endereco;
 
   static final CameraPosition initialLocation = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(-18.1644818, -47.961643),
+    zoom: 5,
   );
 
   Future<Uint8List> getMarker() async {
@@ -81,6 +81,29 @@ class _MyMapPageState extends State<MyMapPage> {
   }
 
   void getCurrentLocation() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser;
+    Future<Null> _loadCurrentUser(double latitude, logintude) async {
+      if (firebaseUser == null) firebaseUser = await _auth.currentUser();
+      if (firebaseUser != null) {
+        DocumentSnapshot docUser = await Firestore.instance
+            .collection("ConsumidorFinal")
+            .document(firebaseUser.uid)
+            .get();
+
+        DocumentReference documentReference = Firestore.instance
+            .collection("ConsumidorFinal")
+            .document(firebaseUser.uid);
+
+        Firestore.instance.runTransaction((transaction) async {
+          await transaction.update(documentReference, {"cidade": cidadeEstado});
+          await transaction.update(documentReference, {"endereco": endereco});
+          await transaction.update(documentReference, {"latitude": latitude});
+          await transaction.update(documentReference, {"longitude": logintude});
+        });
+      }
+    }
+
     try {
       Uint8List imageData = await getMarker();
       var location = await _locationTracker.getLocation();
@@ -114,52 +137,10 @@ class _MyMapPageState extends State<MyMapPage> {
           String cidade = first.subAdminArea;
           String estado = first.adminArea;
           cidadeEstado = cidade + "-" + first.adminArea;
-          print(cidadeEstado);
 
-          DocumentReference documentReference = Firestore.instance
-              .collection("ConsumidorFinal")
-              .document("FiW9trcBVbZsAJfuJF4WEi5xVj62");
-          Firestore.instance.runTransaction((transaction) async {
-            await transaction
-                .update(documentReference, {"cidade": cidadeEstado});
-            await transaction.update(documentReference, {"endereco": endereco});
-            await transaction
-                .update(documentReference, {"latitude": newLocalData.latitude});
-            await transaction.update(
-                documentReference, {"longitude": newLocalData.longitude});
-          });
-          FutureBuilder(
-            future: FirebaseAuth.instance.currentUser(),
-            builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-              if (snapshot.hasData) {
-                return StreamBuilder(
-                  stream: Firestore.instance
-                      .collection("ConsumidorFinal")
-                      .document(snapshot.data.uid)
-                      .snapshots(),
-                  builder: (context, snapshot2) {
-                    Future<FirebaseUser> user =
-                        FirebaseAuth.instance.currentUser();
-
-                    if (!snapshot2.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot2.hasData) {}
-                    return Column(
-                      children: <Widget>[
-                        Text(
-                          "Seja bem-vindo(a) ${snapshot2.data["apelido"]}",
-                          style: TextStyle(color: Colors.green),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          );
+          double latitude = newLocalData.latitude;
+          double logintude = newLocalData.longitude;
+          _loadCurrentUser(latitude, logintude);
         }
       });
     } on PlatformException catch (e) {
@@ -185,8 +166,11 @@ class _MyMapPageState extends State<MyMapPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.green.shade100,
-        title: Text("Onde eu estou"),
+        backgroundColor: Colors.white,
+        title: Text(
+          "Onde eu estou",
+          style: TextStyle(color: Colors.black87),
+        ),
       ),
       body: Stack(
         children: <Widget>[
@@ -199,70 +183,57 @@ class _MyMapPageState extends State<MyMapPage> {
               _controller = controller;
             },
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 100),
-            child: Center(
-              child: Card(
-                  color: Colors.white70,
-                  elevation: 40,
-                  child: OutlineButton(
-                    onPressed: () {
-                      if (marker != null) {
-                        print(cidadeEstado);
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => EmpresasTab(
-                                  cidade: cidadeEstado,
-                                  endereco: endereco,
-                                )));
-                      } else {
-                        snackBar();
-                      }
-                    },
-                    color: Colors.white,
-                    highlightColor: Colors.white10,
-                    highlightedBorderColor: Colors.white10,
-                    highlightElevation: 50,
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Confirmo minha localidade",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontStyle: FontStyle.normal,
-                              fontFamily: "assets/fonts/ProductSans-Bold.ttf",
-                              color: Colors.black87),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.map),
-                          color: Colors.green,
-                          onPressed: () {},
-                        )
-                      ],
-                    ),
-                  )),
-            ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+                padding: EdgeInsets.all(50),
+                child: RaisedButton(
+                  onPressed: marker == null
+                      ? () {
+                          if (marker != null && endereco != null) {
+                            print(cidadeEstado);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EmpresasTab(
+                                      cidade: cidadeEstado,
+                                      endereco: endereco,
+                                    )));
+                          } else {
+                            snackBar();
+                            getCurrentLocation();
+                          }
+                        }
+                      : marker != null && endereco != null
+                          ? () {
+                              if (marker != null && endereco != null) {
+                                print(cidadeEstado);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => EmpresasTab(
+                                          cidade: cidadeEstado,
+                                          endereco: endereco,
+                                        )));
+                              } else {
+                                snackBar();
+                                getCurrentLocation();
+                              }
+                            }
+                          : null,
+                  color: Colors.white,
+                  highlightColor: Colors.white10,
+                  highlightElevation: 50,
+                  child: Text(
+                    marker != null
+                        ? "Confirmar minha localização"
+                        : "Buscar minha localização",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: "assets/fonts/ProductSans-Bold.ttf",
+                        color: Colors.black87),
+                  ),
+                )),
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                Icon(
-                  Icons.location_searching,
-                  color: Colors.greenAccent,
-                ),
-                Text(
-                  "Buscar",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            ),
-          ),
-          onPressed: () {
-            getCurrentLocation();
-          }),
     );
   }
 

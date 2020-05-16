@@ -26,43 +26,100 @@ class ProductTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: 0.9,
-                    child: Image.network(
-                      product.images[0],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Divider(),
-                  Row(
+                  Stack(
                     children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(1),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                product.title,
-                                style: TextStyle(
-                                    fontSize: 15, fontFamily: "Georgia"),
-                              ),
-                              Text(
-                                "R\$ ${product.price.toStringAsFixed(2)}",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.indigo),
-                              ),
-                            ],
-                          ),
+                      AspectRatio(
+                        aspectRatio: 1.1,
+                        child: Image.network(
+                          product.images[0],
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Card(
+                                  child: Padding(
+                                padding: EdgeInsets.all(2),
+                                child: Text(
+                                  product.promo == true
+                                      ? "${((product.precoAnterior / product.price - 1) * 100).toStringAsPrecision(2)}% de Desconto"
+                                      : "",
+                                  style: (TextStyle(
+                                      fontFamily: "QuickSand",
+                                      color: Colors.blueGrey)),
+                                ),
+                              ))),
+                        ),
                       )
                     ],
-                  )
+                  ),
+                  Divider(),
+                  SingleChildScrollView(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                              padding: EdgeInsets.all(3),
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "${product.title}",
+                                        maxLines: 4,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: "Georgia"),
+                                      ),
+                                    ],
+                                  ))),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add_shopping_cart),
+                        )
+                      ],
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            product.promo == true
+                                ? "De R\$ ${product.precoAnterior.toStringAsFixed(2)} por "
+                                : "",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.indigo),
+                          ),
+                          Text(
+                            " R\$ ${product.price.toStringAsFixed(2)}",
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: product.promo == true
+                                    ? Colors.red
+                                    : Colors.blue),
+                          ),
+                          Text(
+                            product.promo == true
+                                ? "Restam ${product.quantidade} unidades"
+                                : "",
+                            style:
+                                TextStyle(fontSize: 8, color: Colors.black54),
+                          ),
+                        ],
+                      ))
                 ],
               )
             : Row(

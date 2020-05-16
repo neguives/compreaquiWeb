@@ -82,6 +82,27 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
+  fonts:
+
+    - family: QuickSand
+      fonts:
+        - asset: fonts/quicksand-bold.ttf
+
+    - family: Roboto-Light
+      fonts:
+        - asset: fonts/Roboto-Bold.ttf
+
+    - family: RobotoBold
+      fonts:
+        - asset: fonts/Roboto-Bold.ttf
+
+
+    #       - asset: fonts/TrajanPro_Bold.ttf
+    #         weight: 700
+    #
+    # For details regarding fonts from package dependencies,
+    # see https://flutter.dev/custom-fonts/#from-packages
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

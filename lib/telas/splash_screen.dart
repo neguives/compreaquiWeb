@@ -38,7 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 200,
               child: Center(
                 child: Transform.scale(
-                    scale: 1.2, child: Image.asset("assets/logo.png")),
+                    scale: 1.2,
+                    child: Image.asset("assets/logomodificada.png")),
               ),
             ),
           )

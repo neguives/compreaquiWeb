@@ -3,6 +3,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:compreaidelivery/style/theme.dart' as Theme;
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -33,6 +34,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   final FocusNode myFocusNodeEmail = FocusNode();
   final FocusNode myFocusNodeName = FocusNode();
   final FocusNode myFocusNodeApelido = FocusNode();
+  final FocusNode myFocusNodeTelefone = FocusNode();
 
   bool _obscureTextLogin = true;
   bool _obscureTextSignup = true;
@@ -57,8 +59,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
         onNotification: (overscroll) {
           overscroll.disallowGlow();
         },
-        child: SingleChildScrollView(
-          child: Container(
+        child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height >= 775.0
                 ? MediaQuery.of(context).size.height
@@ -74,53 +75,65 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                   stops: [0.0, 1.0],
                   tileMode: TileMode.clamp),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
+            child: Stack(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 1.0),
-                  child: new Padding(
-                      padding: EdgeInsets.only(
-                          left: 30, right: 30, top: 30, bottom: 20),
-                      child: Image.asset(
-                        'assets/logo.png',
-                        width: 200,
-                        height: 200,
-                      )),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      if (i == 0) {
-                        setState(() {
-                          right = Colors.white;
-                          left = Colors.black;
-                        });
-                      } else if (i == 1) {
-                        setState(() {
-                          right = Colors.black;
-                          left = Colors.white;
-                        });
-                      }
-                    },
-                    children: <Widget>[
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignIn(context),
-                      ),
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignUp(context),
-                      ),
-                    ],
+                Container(
+                  decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/fundocatalao.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  child: null /* add child content content here */,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 1.0),
+                      child: new Padding(
+                          padding: EdgeInsets.only(
+                              left: 30, right: 30, top: 30, bottom: 20),
+                          child: Image.asset(
+                            'assets/logomodificada.png',
+                            width: 200,
+                            height: 200,
+                          )),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (i) {
+                          if (i == 0) {
+                            setState(() {
+                              right = Colors.white;
+                              left = Colors.black;
+                            });
+                          } else if (i == 1) {
+                            setState(() {
+                              right = Colors.black;
+                              left = Colors.white;
+                            });
+                          }
+                        },
+                        children: <Widget>[
+                          new ConstrainedBox(
+                            constraints: const BoxConstraints.expand(),
+                            child: _buildSignIn(context),
+                          ),
+                          new ConstrainedBox(
+                              constraints: const BoxConstraints.expand(),
+                              child: SingleChildScrollView(
+                                child: _buildSignUp(context),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }
@@ -328,11 +341,52 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                     ],
                   ),
                 ),
-                Center(
-                  child: Text(
-                    "Não tem conta ? Arraste para o lado!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black26),
+                Padding(
+                  padding: EdgeInsets.all(1),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 40,
+                        child: FlatButton(
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            disabledColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            color: Colors.transparent,
+                            onPressed: () {},
+                            child: Image.asset(
+                              'assets/gmail.png',
+                            )),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 40,
+                        child: FlatButton(
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            disabledColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            color: Colors.transparent,
+                            onPressed: () {},
+                            child: Image.asset(
+                              'assets/fb.png',
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          "Não tem conta ? Arraste para o lado!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black26),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],
@@ -343,7 +397,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 
   Widget _buildSignUp(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 23.0),
+        padding: EdgeInsets.only(top: 10.0),
         child:
             ScopedModelDescendant<UserModel>(builder: (context, child, model) {
           return Form(
@@ -383,7 +437,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       icon: Icon(
-                                        FontAwesomeIcons.envelope,
+                                        Icons.person_outline,
                                         color: Colors.black,
                                       ),
                                       hintText: "Apelido",
@@ -443,6 +497,33 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                         color: Colors.black,
                                       ),
                                       hintText: "Email",
+                                      hintStyle: TextStyle(
+                                          fontFamily: "WorkSansSemiBold",
+                                          fontSize: 16.0),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 20.0,
+                                      bottom: 20.0,
+                                      left: 25.0,
+                                      right: 25.0),
+                                  child: TextField(
+                                    focusNode: myFocusNodeTelefone,
+                                    controller: _telefoneController,
+                                    keyboardType: TextInputType.phone,
+                                    style: TextStyle(
+                                        fontFamily: "WorkSansSemiBold",
+                                        fontSize: 16.0,
+                                        color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      icon: Icon(
+                                        FontAwesomeIcons.phone,
+                                        color: Colors.black,
+                                      ),
+                                      hintText: "Telefone para contato",
                                       hintStyle: TextStyle(
                                           fontFamily: "WorkSansSemiBold",
                                           fontSize: 16.0),
@@ -550,6 +631,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                               "nome": _nameController.text,
                               "apelido": _apelidoController.text,
                               "email": _emailController.text,
+                              "telefone": _telefoneController.text,
                               "cidade": _cidadeController.text,
                               "latitude": "-12.117111",
                               "logintude": "-38.430454",

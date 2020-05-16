@@ -5,9 +5,11 @@ class ProductData {
   String category;
   String title;
   String description;
-  double price;
+  double price, precoAnterior;
+  bool promo;
   List images;
   List variacao;
+  int quantidade;
 
   ProductData.fromDocument(DocumentSnapshot snapshot) {
     id = snapshot.documentID;
@@ -16,6 +18,9 @@ class ProductData {
     price = snapshot.data["price"] + 0.0;
     variacao = snapshot.data["variacao"];
     images = snapshot.data["images"];
+    quantidade = snapshot.data["quantidade"];
+    promo = snapshot.data["promo"];
+    precoAnterior = snapshot.data["precoAnterior"] + 0.0;
   }
 
   Map<String, dynamic> toResumedMap() {
@@ -23,6 +28,7 @@ class ProductData {
       "title": title,
       "description": description,
       "preco": price,
+      "quantidade": quantidade,
     };
   }
 }

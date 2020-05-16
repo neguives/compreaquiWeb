@@ -79,6 +79,19 @@ class _ProductScreenState extends State<ProductScreen> {
                             fontSize: 25, fontWeight: FontWeight.w500),
                         maxLines: 3,
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Quantidade Disponível: " +
+                            product.quantidade.toString(),
+                        style: TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.w500),
+                        maxLines: 3,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Text(
                         "R\$ ${product.price.toStringAsFixed(2)}",
                         style: TextStyle(
