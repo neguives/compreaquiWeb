@@ -37,7 +37,7 @@ dependencies:
   firebase_auth: 0.10.0
   firebase_core:
   font_awesome_flutter: ^8.0.1
-
+  flutter_html: ^1.0.0-pre.1
   search_widget:
   flutter_local_notifications:
   geocoder:

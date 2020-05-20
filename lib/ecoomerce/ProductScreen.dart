@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
@@ -31,7 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return Stack(
       children: <Widget>[
         Scaffold(
-            floatingActionButton: CartButton(nomeEmpresa),
+//            floatingActionButton: CartButton(nomeEmpresa),
             key: _scaffoldKey,
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -155,14 +156,31 @@ class _ProductScreenState extends State<ProductScreen> {
                           child: Row(
                             children: <Widget>[
                               Text(
-                                'Adicionar ao Carrinho',
+                                product.quantidade > 0
+                                    ? 'Adicionar ao Carrinho'
+                                    : "Produto Indisponível",
                                 textAlign: TextAlign.center,
                               ),
                             ],
                           ),
                         ),
-                        onPressed: preferencia != null
-                            ? () {
+                        onPressed: preferencia != null && product.quantidade > 0
+                            ? () async {
+                                DocumentReference documentReference = Firestore
+                                    .instance
+                                    .collection("EmpresasParceiras")
+                                    .document(nomeEmpresa)
+                                    .collection("Produtos e Servicos")
+                                    .document(product.category)
+                                    .collection("itens")
+                                    .document(product.id);
+
+                                Firestore.instance
+                                    .runTransaction((transaction) async {
+                                  await transaction.update(documentReference,
+                                      {"quantidade": product.quantidade - 1});
+                                });
+
                                 if (UserModel.of(context).isLoggedIn()) {
                                   CartProduct cartProduct = CartProduct();
                                   cartProduct.variacao = preferencia;
@@ -174,7 +192,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       .addCartItem(cartProduct);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          CartScreen(nomeEmpresa)));
+                                          CartScreen(nomeEmpresa, product)));
                                 } else {
                                   _scaffoldKey.currentState
                                       .showSnackBar(SnackBar(

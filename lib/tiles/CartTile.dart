@@ -4,10 +4,23 @@ import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 
-class CartTile extends StatelessWidget {
+class CartTile extends StatefulWidget {
   final CartProduct cartProduct;
+  ProductData productData;
   String nomeEmpresa;
-  CartTile(this.cartProduct, this.nomeEmpresa);
+  int quantidadeRemovida = 0;
+  CartTile(this.cartProduct, this.nomeEmpresa, this.productData);
+  @override
+  _CartTileState createState() =>
+      _CartTileState(this.cartProduct, this.nomeEmpresa, this.productData);
+}
+
+class _CartTileState extends State<CartTile> {
+  final CartProduct cartProduct;
+  ProductData productData;
+  String nomeEmpresa;
+  int quantidadeRemovida = 0;
+  _CartTileState(this.cartProduct, this.nomeEmpresa, this.productData);
   @override
   Widget build(BuildContext context) {
     Widget _buildContent() {
@@ -45,8 +58,30 @@ class CartTile extends StatelessWidget {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.remove),
-                        onPressed: cartProduct.quantidade > 1
+                        onPressed: productData.quantidade > 1 &&
+                                cartProduct.quantidade > 1
                             ? () {
+                                quantidadeRemovida--;
+                                Future<Null> _atualizarQuantidade() async {
+                                  DocumentReference documentReference =
+                                      Firestore.instance
+                                          .collection("EmpresasParceiras")
+                                          .document(nomeEmpresa)
+                                          .collection("Produtos e Servicos")
+                                          .document(productData.category)
+                                          .collection("itens")
+                                          .document(productData.id);
+
+                                  Firestore.instance
+                                      .runTransaction((transaction) async {
+                                    await transaction.update(
+                                        documentReference, {
+                                      "quantidade": productData.quantidade++
+                                    });
+                                  });
+                                }
+
+                                _atualizarQuantidade();
                                 CartModel.of(context).decProduct(cartProduct);
                               }
                             : null,
@@ -54,12 +89,55 @@ class CartTile extends StatelessWidget {
                       Text(cartProduct.quantidade.toString()),
                       IconButton(
                         icon: Icon(Icons.add),
-                        onPressed: () {
-                          CartModel.of(context).incProduct(cartProduct);
-                        },
+                        onPressed: productData.quantidade > 1
+                            ? () {
+                                quantidadeRemovida++;
+                                Future<Null> _atualizarQuantidade() async {
+                                  DocumentReference documentReference =
+                                      Firestore.instance
+                                          .collection("EmpresasParceiras")
+                                          .document(nomeEmpresa)
+                                          .collection("Produtos e Servicos")
+                                          .document(productData.category)
+                                          .collection("itens")
+                                          .document(productData.id);
+
+                                  Firestore.instance
+                                      .runTransaction((transaction) async {
+                                    await transaction.update(
+                                        documentReference, {
+                                      "quantidade": productData.quantidade--
+                                    });
+                                  });
+                                }
+
+                                _atualizarQuantidade();
+                                CartModel.of(context).incProduct(cartProduct);
+                              }
+                            : null,
                       ),
                       FlatButton(
                         onPressed: () {
+                          Future<Null> _atualizarQuantidade() async {
+                            DocumentReference documentReference = Firestore
+                                .instance
+                                .collection("EmpresasParceiras")
+                                .document(nomeEmpresa)
+                                .collection("Produtos e Servicos")
+                                .document(productData.category)
+                                .collection("itens")
+                                .document(productData.id);
+
+                            Firestore.instance
+                                .runTransaction((transaction) async {
+                              await transaction.update(documentReference, {
+                                "quantidade":
+                                    productData.quantidade + quantidadeRemovida
+                              });
+                            });
+                          }
+
+                          _atualizarQuantidade();
                           CartModel.of(context).removeCartItem(cartProduct);
                         },
                         child: Text("Remover"),

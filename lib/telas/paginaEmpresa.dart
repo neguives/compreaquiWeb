@@ -36,7 +36,7 @@ class PaginaEmpresa extends StatelessWidget {
           hoverElevation: 20,
           onPressed: () async {
             var whatsappUrl =
-                "whatsapp://send?phone=${whatsapp}&text=${"Olá, vim através do App Beleza in Home!"}";
+                "whatsapp://send?phone=${whatsapp}&text=${"Olá, vim através do App CompreAqui!"}";
             await canLaunch(whatsappUrl)
                 ? launch(whatsappUrl)
                 : print(

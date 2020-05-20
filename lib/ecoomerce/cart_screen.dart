@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/CartTile.dart';
@@ -10,8 +12,9 @@ import 'ordemPedidoConfirmado.dart';
 
 class CartScreen extends StatelessWidget {
   String nomeEmpresa;
+  ProductData product;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  CartScreen(this.nomeEmpresa);
+  CartScreen(this.nomeEmpresa, this.product);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +37,7 @@ class CartScreen extends StatelessWidget {
             child: ScopedModelDescendant<CartModel>(
               builder: (context, child, model) {
                 int p = model.products.length;
+
                 return Text(
                   "${p ?? 0} ${p == 1 ? "ITEM" : "ITENS"}",
                   style: TextStyle(color: Colors.white),
@@ -90,8 +94,8 @@ class CartScreen extends StatelessWidget {
             return ListView(
               children: <Widget>[
                 Column(
-                  children: model.products.map((product) {
-                    return CartTile(product, nomeEmpresa);
+                  children: model.products.map((products) {
+                    return CartTile(products, nomeEmpresa, product);
                   }).toList(),
                 ),
                 CardDesconto(),

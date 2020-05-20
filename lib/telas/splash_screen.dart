@@ -32,6 +32,15 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
+          Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage("assets/fundocatalao.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: null /* add child content content here */,
+          ),
           Center(
             child: Container(
               width: 200,

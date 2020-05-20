@@ -1,3 +1,4 @@
+import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,8 @@ import 'package:scoped_model/scoped_model.dart';
 
 class CartButton extends StatelessWidget {
   String nomeEmpresa;
-  CartButton(this.nomeEmpresa);
+  ProductData product;
+  CartButton(this.nomeEmpresa, this.product);
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -43,8 +45,8 @@ class CartButton extends StatelessWidget {
         }),
       ]),
       onPressed: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CartScreen(nomeEmpresa)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CartScreen(nomeEmpresa, product)));
       },
       backgroundColor: Colors.white70,
     );

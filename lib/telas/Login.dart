@@ -1,3 +1,4 @@
+import 'package:compreaidelivery/introducao.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -662,15 +663,15 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
       duration: Duration(seconds: 2),
     ));
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Introducao()));
     });
   }
 
   void _onSucess() {
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Introducao()));
     });
   }
 

@@ -15,7 +15,7 @@ class Products_Screen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          floatingActionButton: CartButton(nomeEmpresa),
+//          floatingActionButton: CartButton(nomeEmpresa),
           appBar: AppBar(
             iconTheme: IconThemeData(
               color: Colors.black, //change your color here
@@ -80,6 +80,7 @@ class Products_Screen extends StatelessWidget {
                           ProductData data = ProductData.fromDocument(
                               snapshot.data.documents[index]);
                           data.category = this.snapshot.documentID;
+                          print(data.quantidade);
                           return ProductTile(
                               "grid", data, nomeEmpresa, imagemEmpresa);
                         }),

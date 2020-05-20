@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+//        print(product.quantidade.toString());
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ProductScreen(product, nomeEmpresa)));
       },
@@ -112,9 +114,9 @@ class ProductTile extends StatelessWidget {
                                     : Colors.blue),
                           ),
                           Text(
-                            product.promo == true
+                            product.promo == true && product.quantidade > 0
                                 ? "Restam ${product.quantidade} unidades"
-                                : "",
+                                : "Esgotado",
                             style:
                                 TextStyle(fontSize: 8, color: Colors.black54),
                           ),
