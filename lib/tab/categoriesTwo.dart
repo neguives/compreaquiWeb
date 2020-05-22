@@ -4,11 +4,17 @@ import 'package:flutter/material.dart';
 
 class CategoryTile extends StatelessWidget {
   final DocumentSnapshot snapshot;
-  String nomeEmpresa, imagemEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
   CategoryTile(
     this.snapshot,
     @required this.nomeEmpresa,
     @required this.imagemEmpresa,
+    @required this.cidadeEstado,
+    @required this.endereco,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.telefone,
   );
 
   @override
@@ -39,8 +45,15 @@ class CategoryTile extends StatelessWidget {
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          Products_Screen(snapshot, nomeEmpresa)));
+                      builder: (context) => Products_Screen(
+                          snapshot,
+                          nomeEmpresa,
+                          imagemEmpresa,
+                          cidadeEstado,
+                          endereco,
+                          latitude,
+                          longitude,
+                          telefone)));
                 },
               ),
             ],

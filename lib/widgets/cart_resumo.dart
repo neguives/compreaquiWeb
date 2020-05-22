@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CartResumo extends StatelessWidget {
+  String nomeEmpresa, cidadeEstado, endereco;
+  double latitude, longitude;
   final VoidCallback buy;
 
-  CartResumo(this.buy);
+  CartResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
+      this.latitude, this.longitude);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,6 +21,7 @@ class CartResumo extends StatelessWidget {
               double preco = model.getProductPrice();
               double desconto = model.getDesconto();
               double frete = model.getFrete();
+//              model.loadCartItens();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -77,7 +81,7 @@ class CartResumo extends StatelessWidget {
 
                     onPressed: () {
                       {
-                        model.finalizarCompra();
+                        model.finalizarCompra(nomeEmpresa, endereco);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => OrdemPedidoConfirmado("1")));
                       }

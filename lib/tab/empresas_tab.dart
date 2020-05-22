@@ -5,9 +5,16 @@ import 'package:flutter/material.dart';
 
 class EmpresasTab extends StatelessWidget {
   final String cidade, endereco;
+  double latitude, longitude;
+
   TextEditingController _senhaController = TextEditingController();
 
-  EmpresasTab({Key key, @required this.cidade, @required this.endereco})
+  EmpresasTab(
+      {Key key,
+      @required this.cidade,
+      @required this.endereco,
+      this.latitude,
+      this.longitude})
       : super(key: key);
 
   @override
@@ -78,7 +85,8 @@ class EmpresasTab extends StatelessWidget {
                       children: snapshot.data.documents.map((doc) {
                         return Column(
                           children: <Widget>[
-                            InformacoesEmpresaTile(doc),
+                            InformacoesEmpresaTile(
+                                doc, cidade, endereco, latitude, longitude),
                           ],
                         );
                       }).toList()),

@@ -19,6 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  google_sign_in:
+
+  google_sign_in_platform_interface: ^1.1.1
   google_maps_flutter: ^0.5.21+15
   location: ^2.3.5
   qr_flutter: ^3.1.0
@@ -30,7 +34,9 @@ dependencies:
   date_format:
   flutter_credit_card: 0.1.0
   dio: ^2.0.0
+
   flare_flutter: ^2.0.3
+  flutter_cielo:
   cloud_firestore: ^0.12.9
   transparent_image: ^1.0.0
   scoped_model: ^1.0.1

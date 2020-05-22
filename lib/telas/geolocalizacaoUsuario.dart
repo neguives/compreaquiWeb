@@ -38,6 +38,7 @@ class _MyMapPageState extends State<MyMapPage> {
   final _formKeyGeolocalizacao = GlobalKey<FormState>();
 
   final _formKey = GlobalKey<FormState>();
+  double latitudeAtualizada, logintudeAtualizada;
 
   StreamSubscription _locationSubscription;
   Location _locationTracker = Location();
@@ -133,6 +134,8 @@ class _MyMapPageState extends State<MyMapPage> {
           var addresses =
               await Geocoder.local.findAddressesFromCoordinates(coordinates);
           var first = addresses.first;
+          latitudeAtualizada = newLocalData.latitude;
+          logintudeAtualizada = newLocalData.longitude;
           endereco = first.addressLine;
           String cidade = first.subAdminArea;
           String estado = first.adminArea;
@@ -210,6 +213,8 @@ class _MyMapPageState extends State<MyMapPage> {
                                     builder: (context) => EmpresasTab(
                                           cidade: cidadeEstado,
                                           endereco: endereco,
+                                          latitude: latitudeAtualizada,
+                                          longitude: logintudeAtualizada,
                                         )));
                               } else {
                                 snackBar();

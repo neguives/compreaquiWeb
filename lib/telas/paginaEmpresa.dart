@@ -13,12 +13,26 @@ import 'package:url_launcher/url_launcher.dart';
 class PaginaEmpresa extends StatelessWidget {
   List<String> galeriaImages = new List();
   CarouselSlider instance;
-  String nomeEmpresa, imagemEmpresa, descricaoEmpresa, whatsapp;
+  String nomeEmpresa,
+      imagemEmpresa,
+      descricaoEmpresa,
+      whatsapp,
+      cidadeEstado,
+      endereco;
+  double latitude, longitude;
   List galeriaPagina;
 
   UserModel user;
-  PaginaEmpresa(@required this.nomeEmpresa, @required this.imagemEmpresa,
-      @required this.descricaoEmpresa, this.galeriaPagina, this.whatsapp);
+  PaginaEmpresa(
+      @required this.nomeEmpresa,
+      @required this.imagemEmpresa,
+      @required this.descricaoEmpresa,
+      this.galeriaPagina,
+      this.whatsapp,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude);
 
   @override
   void initState() {
@@ -111,7 +125,13 @@ class PaginaEmpresa extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => BottomPrincipal(
-                                      nomeEmpresa, imagemEmpresa)));
+                                      nomeEmpresa,
+                                      imagemEmpresa,
+                                      cidadeEstado,
+                                      endereco,
+                                      latitude,
+                                      longitude,
+                                      whatsapp)));
                             },
                             child: Container(
                               child: ClipRRect(
@@ -132,6 +152,28 @@ class PaginaEmpresa extends StatelessWidget {
                         moveIndicatorFromBottom: 180.0,
                         noRadiusForIndicator: true,
                       )),
+                  Container(child: ScopedModelDescendant<CartModel>(
+                    builder: (context, child, model) {
+//                      model.limparCarrinho(nomeEmpresa, endereco);
+                      return SizedBox(
+                        width: 200,
+                        child: InkWell(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.keyboard_return,
+                              color: Colors.green.shade600,
+                            ),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(context)) {
+//                              model.finalizarCompra(nomeEmpresa, endereco);
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  )),
                   OutlineButton(
                     hoverColor: Colors.white,
                     highlightColor: Colors.white70,
@@ -139,8 +181,14 @@ class PaginaEmpresa extends StatelessWidget {
                     child: Text('Nova Solicitação'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              BottomPrincipal(nomeEmpresa, imagemEmpresa)));
+                          builder: (context) => BottomPrincipal(
+                              nomeEmpresa,
+                              imagemEmpresa,
+                              cidadeEstado,
+                              endereco,
+                              latitude,
+                              longitude,
+                              whatsapp)));
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(18.0),
@@ -152,22 +200,6 @@ class PaginaEmpresa extends StatelessWidget {
                       width: 0.8, //width of the border
                     ),
                   ),
-                  SizedBox(
-                    width: 200,
-                    child: InkWell(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.keyboard_return,
-                          color: Colors.green.shade600,
-                        ),
-                      ),
-                      onTap: () {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-                  )
                 ],
               ),
             )

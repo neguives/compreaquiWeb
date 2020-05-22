@@ -195,6 +195,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_cielo:
+    dependency: "direct main"
+    description:
+      name: flutter_cielo
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
   flutter_credit_card:
     dependency: "direct main"
     description:
@@ -303,6 +310,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.5.0"
+  google_sign_in_platform_interface:
+    dependency: "direct main"
+    description:
+      name: google_sign_in_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.1"
   html:
     dependency: transitive
     description:

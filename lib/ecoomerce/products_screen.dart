@@ -6,16 +6,33 @@ import 'package:flutter/material.dart';
 
 class Products_Screen extends StatelessWidget {
   final DocumentSnapshot snapshot;
-  String nomeEmpresa, imagemEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
 
-  Products_Screen(this.snapshot, this.nomeEmpresa);
+  Products_Screen(
+      this.snapshot,
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-//          floatingActionButton: CartButton(nomeEmpresa),
+          floatingActionButton: CartButton(
+            nomeEmpresa: nomeEmpresa,
+            imagemEmpresa: imagemEmpresa,
+            cidadeEstado: cidadeEstado,
+            endereco: endereco,
+            latitude: latitude,
+            longitude: longitude,
+            telefone: telefone,
+          ),
           appBar: AppBar(
             iconTheme: IconThemeData(
               color: Colors.black, //change your color here
@@ -82,7 +99,15 @@ class Products_Screen extends StatelessWidget {
                           data.category = this.snapshot.documentID;
                           print(data.quantidade);
                           return ProductTile(
-                              "grid", data, nomeEmpresa, imagemEmpresa);
+                              "grid",
+                              data,
+                              nomeEmpresa,
+                              imagemEmpresa,
+                              cidadeEstado,
+                              endereco,
+                              latitude,
+                              longitude,
+                              telefone);
                         }),
                     ListView.builder(
                         padding: EdgeInsets.all(4),
@@ -92,7 +117,15 @@ class Products_Screen extends StatelessWidget {
                               snapshot.data.documents[index]);
                           data.category = this.snapshot.documentID;
                           return ProductTile(
-                              "list", data, nomeEmpresa, imagemEmpresa);
+                              "list",
+                              data,
+                              nomeEmpresa,
+                              imagemEmpresa,
+                              cidadeEstado,
+                              endereco,
+                              latitude,
+                              longitude,
+                              telefone);
                         })
                   ],
                 );

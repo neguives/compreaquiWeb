@@ -11,8 +11,10 @@ class CartTile extends StatefulWidget {
   int quantidadeRemovida = 0;
   CartTile(this.cartProduct, this.nomeEmpresa, this.productData);
   @override
-  _CartTileState createState() =>
-      _CartTileState(this.cartProduct, this.nomeEmpresa, this.productData);
+  _CartTileState createState() => _CartTileState(
+        this.cartProduct,
+        this.nomeEmpresa,
+      );
 }
 
 class _CartTileState extends State<CartTile> {
@@ -20,7 +22,7 @@ class _CartTileState extends State<CartTile> {
   ProductData productData;
   String nomeEmpresa;
   int quantidadeRemovida = 0;
-  _CartTileState(this.cartProduct, this.nomeEmpresa, this.productData);
+  _CartTileState(this.cartProduct, this.nomeEmpresa);
   @override
   Widget build(BuildContext context) {
     Widget _buildContent() {
@@ -58,7 +60,7 @@ class _CartTileState extends State<CartTile> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.remove),
-                        onPressed: productData.quantidade > 1 &&
+                        onPressed: cartProduct.productData.quantidade > 1 &&
                                 cartProduct.quantidade > 1
                             ? () {
                                 quantidadeRemovida--;
@@ -76,20 +78,22 @@ class _CartTileState extends State<CartTile> {
                                       .runTransaction((transaction) async {
                                     await transaction.update(
                                         documentReference, {
-                                      "quantidade": productData.quantidade++
+                                      "quantidade":
+                                          cartProduct.productData.quantidade++
                                     });
                                   });
                                 }
 
                                 _atualizarQuantidade();
-                                CartModel.of(context).decProduct(cartProduct);
+                                CartModel.of(context)
+                                    .decProduct(cartProduct, nomeEmpresa);
                               }
                             : null,
                       ),
                       Text(cartProduct.quantidade.toString()),
                       IconButton(
                         icon: Icon(Icons.add),
-                        onPressed: productData.quantidade > 1
+                        onPressed: cartProduct.productData.quantidade > 1
                             ? () {
                                 quantidadeRemovida++;
                                 Future<Null> _atualizarQuantidade() async {
@@ -106,13 +110,15 @@ class _CartTileState extends State<CartTile> {
                                       .runTransaction((transaction) async {
                                     await transaction.update(
                                         documentReference, {
-                                      "quantidade": productData.quantidade--
+                                      "quantidade":
+                                          cartProduct.productData.quantidade--
                                     });
                                   });
                                 }
 
                                 _atualizarQuantidade();
-                                CartModel.of(context).incProduct(cartProduct);
+                                CartModel.of(context)
+                                    .incProduct(cartProduct, nomeEmpresa);
                               }
                             : null,
                       ),
@@ -132,13 +138,15 @@ class _CartTileState extends State<CartTile> {
                                 .runTransaction((transaction) async {
                               await transaction.update(documentReference, {
                                 "quantidade":
-                                    productData.quantidade + quantidadeRemovida
+                                    cartProduct.productData.quantidade +
+                                        quantidadeRemovida
                               });
                             });
                           }
 
                           _atualizarQuantidade();
-                          CartModel.of(context).removeCartItem(cartProduct);
+                          CartModel.of(context)
+                              .removeCartItem(cartProduct, nomeEmpresa);
                         },
                         child: Text("Remover"),
                         textColor: Colors.red,

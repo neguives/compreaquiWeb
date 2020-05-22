@@ -6,13 +6,19 @@ import 'package:flutter/material.dart';
 class ProductTile extends StatelessWidget {
   final String type;
   final ProductData product;
-  String nomeEmpresa, imagemEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
 
   ProductTile(
     this.type,
     this.product,
     @required this.nomeEmpresa,
     @required this.imagemEmpresa,
+    @required this.cidadeEstado,
+    @required this.endereco,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.telefone,
   );
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,15 @@ class ProductTile extends StatelessWidget {
       onTap: () {
 //        print(product.quantidade.toString());
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ProductScreen(product, nomeEmpresa)));
+            builder: (context) => ProductScreen(
+                product,
+                nomeEmpresa,
+                imagemEmpresa,
+                cidadeEstado,
+                endereco,
+                latitude,
+                longitude,
+                telefone)));
       },
       child: Card(
         child: type == "grid"

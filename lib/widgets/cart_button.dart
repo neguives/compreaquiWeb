@@ -5,9 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CartButton extends StatelessWidget {
-  String nomeEmpresa;
   ProductData product;
-  CartButton(this.nomeEmpresa, this.product);
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
+  CartButton(
+      {this.product,
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone});
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -46,7 +55,15 @@ class CartButton extends StatelessWidget {
       ]),
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CartScreen(nomeEmpresa, product)));
+            builder: (context) => CartScreen(
+                product,
+                nomeEmpresa,
+                imagemEmpresa,
+                cidadeEstado,
+                endereco,
+                latitude,
+                longitude,
+                telefone)));
       },
       backgroundColor: Colors.white70,
     );

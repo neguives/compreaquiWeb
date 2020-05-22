@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 import 'categoriesTwo.dart';
 
 class ProductTab extends StatelessWidget {
-  String nomeEmpresa, imagemEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
   ProductTab(
     @required this.nomeEmpresa,
     @required this.imagemEmpresa,
+    @required this.cidadeEstado,
+    @required this.endereco,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.telefone,
   );
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,8 @@ class ProductTab extends StatelessWidget {
               ),
               ListView(
                   children: snapshot.data.documents.map((doc) {
-                return CategoryTile(doc, nomeEmpresa, imagemEmpresa);
+                return CategoryTile(doc, nomeEmpresa, imagemEmpresa,
+                    cidadeEstado, endereco, latitude, longitude, telefone);
               }).toList())
             ],
           );

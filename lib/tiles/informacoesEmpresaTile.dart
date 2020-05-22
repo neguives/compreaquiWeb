@@ -5,8 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class InformacoesEmpresaTile extends StatelessWidget {
   final DocumentSnapshot snapshot;
+  String cidadeEstado, endereco;
+  double latitude, longitude;
 
-  InformacoesEmpresaTile(this.snapshot);
+  InformacoesEmpresaTile(this.snapshot, this.cidadeEstado, this.endereco,
+      this.latitude, this.longitude);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,11 @@ class InformacoesEmpresaTile extends StatelessWidget {
                           snapshot.data["imagem"],
                           snapshot.data["descricao"],
                           snapshot.data["galeriaPagina"],
-                          snapshot.data["telefone"])));
+                          snapshot.data["telefone"],
+                          cidadeEstado,
+                          endereco,
+                          latitude,
+                          longitude)));
                 },
                 child: Container(
                     width: 200,
@@ -131,7 +138,11 @@ class InformacoesEmpresaTile extends StatelessWidget {
                                         snapshot.data["imagem"],
                                         snapshot.data["descricao"],
                                         snapshot.data["galeriaPagina"],
-                                        snapshot.data["telefone"])));
+                                        snapshot.data["telefone"],
+                                        cidadeEstado,
+                                        endereco,
+                                        latitude,
+                                        longitude)));
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(18.0),

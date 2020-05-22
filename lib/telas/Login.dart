@@ -663,15 +663,15 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
       duration: Duration(seconds: 2),
     ));
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Introducao()));
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
   }
 
   void _onSucess() {
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Introducao()));
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
   }
 

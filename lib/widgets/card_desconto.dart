@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class CardDesconto extends StatelessWidget {
+  String nomeEmpresa;
+
+  CardDesconto(this.nomeEmpresa);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -26,6 +29,8 @@ class CardDesconto extends StatelessWidget {
               initialValue: CartModel.of(context).cupomDesconto ?? "",
               onFieldSubmitted: (text) {
                 Firestore.instance
+                    .collection("EmpresasParceiras")
+                    .document(nomeEmpresa)
                     .collection("cuponsDesconto")
                     .document(text)
                     .get()

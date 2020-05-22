@@ -17,12 +17,12 @@ class CartModel extends Model {
 
   bool isLoading = false;
   CartModel(this.user) {
-    if (user.isLoggedIn()) _loadCartItens();
+//    if (user.isLoggedIn()) loadCartItens(nomeEmpresa);
   }
 
   static CartModel of(BuildContext context) =>
       ScopedModel.of<CartModel>(context);
-  void addCartItem(CartProduct cartProduct) {
+  void addCartItem(CartProduct cartProduct, String nomeEmpresa) {
     products.add(cartProduct);
 
     Firestore.instance
@@ -30,7 +30,7 @@ class CartModel extends Model {
         .document(user.firebaseUser.uid)
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection("Barbearia Transformacao")
+        .collection(nomeEmpresa)
         .add(cartProduct.toMap())
         .then((doc) {
       cartProduct.cid = doc.documentID;
@@ -39,11 +39,13 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  void removeCartItem(CartProduct cartProduct) {
+  void removeCartItem(CartProduct cartProduct, String nomeEmpresa) {
     Firestore.instance
         .collection("ConsumidorFinal")
         .document(user.firebaseUser.uid)
-        .collection("cart")
+        .collection("Em Aberto")
+        .document("Carrinho")
+        .collection(nomeEmpresa)
         .document(cartProduct.cid)
         .delete();
 
@@ -52,7 +54,7 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  void decProduct(CartProduct cartProduct) {
+  void decProduct(CartProduct cartProduct, String nomeEmpresa) {
     cartProduct.quantidade--;
 
     Firestore.instance
@@ -60,14 +62,14 @@ class CartModel extends Model {
         .document(user.firebaseUser.uid)
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection("Barbearia Transformacao")
+        .collection(nomeEmpresa)
         .document(cartProduct.cid)
         .updateData(cartProduct.toMap());
 
     notifyListeners();
   }
 
-  void incProduct(CartProduct cartProduct) {
+  void incProduct(CartProduct cartProduct, String nomeEmpresa) {
     cartProduct.quantidade++;
 
     Firestore.instance
@@ -75,20 +77,20 @@ class CartModel extends Model {
         .document(user.firebaseUser.uid)
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection("Barbearia Transformacao")
+        .collection(nomeEmpresa)
         .document(cartProduct.cid)
         .updateData(cartProduct.toMap());
 
     notifyListeners();
   }
 
-  void _loadCartItens() async {
+  void loadCartItens(String nomeEmpresa) async {
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection("ConsumidorFinal")
         .document(user.firebaseUser.uid)
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection("Barbearia ElShaday")
+        .collection(nomeEmpresa)
         .getDocuments();
 
     products = querySnapshot.documents
@@ -122,7 +124,8 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  Future<String> finalizarCompra() async {
+  Future<String> finalizarCompra(String nomeEmpresa, String endereco) async {
+    print(endereco + " Deus no comando");
     if (products.length == 0) return null;
 
     isLoading = true;
@@ -134,10 +137,14 @@ class CartModel extends Model {
     double productsFrete = getFrete();
     double productsDesconto = getDesconto();
 
-    DocumentReference referenciaOrdem =
-        await Firestore.instance.collection("ordensSolicitadas").add({
+    DocumentReference referenciaOrdem = await Firestore.instance
+        .collection("EmpresasParceiras")
+        .document(nomeEmpresa)
+        .collection("ordensSolicitadas")
+        .add({
       "clienteId": user.firebaseUser.uid,
       "produtos": products.map((catProduct) => catProduct.toMap()).toList(),
+      "enderecoCliente": endereco,
       "precoDoFrete": productsFrete,
       "precoDosProdutos": productsPrice,
       "desconto": productsDesconto,
@@ -151,6 +158,8 @@ class CartModel extends Model {
         .collection("ConsumidorFinal")
         .document(user.firebaseUser.uid)
         .collection("ordemPedidos")
+        .document("realizados")
+        .collection(nomeEmpresa)
         .document(referenciaOrdem.documentID)
         .setData({"ordemId": referenciaOrdem.documentID});
 
@@ -159,7 +168,7 @@ class CartModel extends Model {
         .document(user.firebaseUser.uid)
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection("Barbearia Transformacao")
+        .collection(nomeEmpresa)
         .getDocuments();
     for (DocumentSnapshot doc in querySnapshot.documents) {
       doc.reference.delete();
@@ -174,5 +183,25 @@ class CartModel extends Model {
     notifyListeners();
 
     return referenciaOrdem.documentID;
+  }
+
+  Future<String> limparCarrinho(String nomeEmpresa, String endereco) async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection("ConsumidorFinal")
+        .document(user.firebaseUser.uid)
+        .collection("Em Aberto")
+        .document("Carrinho")
+        .collection(nomeEmpresa)
+        .getDocuments();
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      doc.reference.delete();
+    }
+    products.clear();
+
+    cupomDesconto = null;
+    discountPercentage = 0;
+
+    isLoading = false;
+    notifyListeners();
   }
 }

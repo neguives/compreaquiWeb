@@ -1,28 +1,31 @@
+import 'package:compreaidelivery/datas/product_data.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/ecoomerce/produtosTwo.dart';
+import 'package:compreaidelivery/tab/ordersTab.dart';
 import 'package:compreaidelivery/widgets/AnimatedBottomBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BottomPrincipal extends StatefulWidget {
-  String nomeEmpresa, imagemEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
   BottomPrincipal(
-    @required this.nomeEmpresa,
-    @required this.imagemEmpresa,
-  );
+      @required this.nomeEmpresa,
+      @required this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
   final List<BarItem> barItems = [
-    BarItem(
-      text: "Conversar",
-      iconData: Icons.chat,
-      color: Colors.purple,
-    ),
-    BarItem(
-      text: "Produtos",
-      iconData: Icons.add_circle_outline,
-      color: Colors.blueAccent.shade700,
-    ),
     BarItem(
       text: "Meu carrinho",
       iconData: Icons.shopping_cart,
+      color: Colors.blueAccent.shade700,
+    ),
+    BarItem(
+      text: "Produtos e Serviços",
+      iconData: Icons.add_circle_outline,
       color: Colors.blueAccent.shade700,
     ),
     BarItem(
@@ -39,18 +42,30 @@ class BottomPrincipal extends StatefulWidget {
     */
   ];
   @override
-  _BottomPrincipal createState() =>
-      _BottomPrincipal(this.nomeEmpresa, this.imagemEmpresa);
+  _BottomPrincipal createState() => _BottomPrincipal(
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
 }
 
 class _BottomPrincipal extends State<BottomPrincipal> {
-  int selectedBarIndex = 1;
-  String nomeEmpresa, imagemEmpresa;
+  ProductData productData;
 
+  int selectedBarIndex = 0;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
   _BottomPrincipal(
-    @required this.nomeEmpresa,
-    @required this.imagemEmpresa,
-  );
+      @required this.nomeEmpresa,
+      @required this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
   @override
   Widget build(BuildContext context) {
     print(nomeEmpresa);
@@ -69,10 +84,11 @@ class _BottomPrincipal extends State<BottomPrincipal> {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     List<Widget> telas = [
-      SelecaoCategoria(nomeEmpresa, imagemEmpresa),
-      SelecaoCategoria(nomeEmpresa, imagemEmpresa),
-      SelecaoCategoria(nomeEmpresa, imagemEmpresa),
-      SelecaoCategoria(nomeEmpresa, imagemEmpresa),
+      CartScreen(productData, nomeEmpresa, imagemEmpresa, cidadeEstado,
+          endereco, latitude, longitude, telefone),
+      SelecaoCategoria(nomeEmpresa, imagemEmpresa, cidadeEstado, endereco,
+          latitude, longitude, telefone),
+      OrdersTab(nomeEmpresa, imagemEmpresa),
     ];
     return Scaffold(
       body: telas[selectedBarIndex],

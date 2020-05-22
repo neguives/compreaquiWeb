@@ -12,19 +12,42 @@ import 'cart_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductData product;
-  String nomeEmpresa;
+  String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
+  double latitude, longitude;
 
-  ProductScreen(this.product, this.nomeEmpresa);
+  ProductScreen(
+      this.product,
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
   @override
-  _ProductScreenState createState() =>
-      _ProductScreenState(product, nomeEmpresa);
+  _ProductScreenState createState() => _ProductScreenState(product, nomeEmpresa,
+      imagemEmpresa, cidadeEstado, endereco, latitude, longitude, telefone);
 }
 
 class _ProductScreenState extends State<ProductScreen> {
   final ProductData product;
-  String preferencia, nomeEmpresa;
+  String preferencia,
+      nomeEmpresa,
+      imagemEmpresa,
+      cidadeEstado,
+      endereco,
+      telefone;
+  double latitude, longitude;
 
-  _ProductScreenState(this.product, this.nomeEmpresa);
+  _ProductScreenState(
+      this.product,
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone);
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -189,10 +212,17 @@ class _ProductScreenState extends State<ProductScreen> {
                                   cartProduct.categoria = product.category;
                                   cartProduct.productData = product;
                                   CartModel.of(context)
-                                      .addCartItem(cartProduct);
+                                      .addCartItem(cartProduct, nomeEmpresa);
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          CartScreen(nomeEmpresa, product)));
+                                      builder: (context) => CartScreen(
+                                          cartProduct.productData,
+                                          nomeEmpresa,
+                                          imagemEmpresa,
+                                          cidadeEstado,
+                                          endereco,
+                                          latitude,
+                                          longitude,
+                                          telefone)));
                                 } else {
                                   _scaffoldKey.currentState
                                       .showSnackBar(SnackBar(
