@@ -55,7 +55,7 @@ class BottomPrincipal extends StatefulWidget {
 class _BottomPrincipal extends State<BottomPrincipal> {
   ProductData productData;
 
-  int selectedBarIndex = 0;
+  int selectedBarIndex = 1;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   _BottomPrincipal(
@@ -88,7 +88,7 @@ class _BottomPrincipal extends State<BottomPrincipal> {
           endereco, latitude, longitude, telefone),
       SelecaoCategoria(nomeEmpresa, imagemEmpresa, cidadeEstado, endereco,
           latitude, longitude, telefone),
-      OrdersTab(nomeEmpresa, imagemEmpresa),
+      OrdersTab(nomeEmpresa, imagemEmpresa, cidadeEstado),
     ];
     return Scaffold(
       body: telas[selectedBarIndex],

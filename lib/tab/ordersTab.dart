@@ -4,8 +4,8 @@ import 'package:compreaidelivery/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
 class OrdersTab extends StatelessWidget {
-  String nomeEmpresa, imagemEmpresa;
-  OrdersTab(this.nomeEmpresa, this.imagemEmpresa);
+  String nomeEmpresa, imagemEmpresa, cidadeEstado;
+  OrdersTab(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     if (UserModel.of(context).isLoggedIn()) {
@@ -69,7 +69,8 @@ class OrdersTab extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(16, 220, 16, 1),
                   child: ListView(
                     children: snapshot.data.documents
-                        .map((doc) => OrderTile(doc.documentID, nomeEmpresa))
+                        .map((doc) => OrderTile(
+                            doc.documentID, nomeEmpresa, cidadeEstado))
                         .toList(),
                   ),
                 )

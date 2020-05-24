@@ -8,9 +8,9 @@ import 'package:flutter/rendering.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class OrderTile extends StatelessWidget {
-  String orderId, nomeEmpresa;
+  String orderId, nomeEmpresa, cidadeEstado;
 
-  OrderTile(this.orderId, this.nomeEmpresa);
+  OrderTile(this.orderId, this.nomeEmpresa, this.cidadeEstado);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class OrderTile extends StatelessWidget {
               padding: EdgeInsets.all(8),
               child: StreamBuilder<DocumentSnapshot>(
                   stream: Firestore.instance
-                      .collection("EmpresasParceiras")
+                      .collection(cidadeEstado)
                       .document(nomeEmpresa)
                       .collection("ordensSolicitadas")
                       .document(orderId)

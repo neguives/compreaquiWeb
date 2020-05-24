@@ -191,7 +191,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ? () async {
                                 DocumentReference documentReference = Firestore
                                     .instance
-                                    .collection("EmpresasParceiras")
+                                    .collection(cidadeEstado)
                                     .document(nomeEmpresa)
                                     .collection("Produtos e Servicos")
                                     .document(product.category)

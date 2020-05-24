@@ -7,6 +7,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -60,19 +61,19 @@ class PaginaEmpresa extends StatelessWidget {
         body: Stack(
           children: <Widget>[
             Container(
-              decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/fundo_pg_empresa.png"),
-                  fit: BoxFit.cover,
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/fundo_pg_empresa.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: null /* add child content content here */,
-            ),
+                child: null /* add child content content here */
+                ),
             SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 90),
+                    padding: EdgeInsets.only(top: 40),
                     child: Center(
                         child: Card(
                       elevation: 40,
@@ -100,16 +101,10 @@ class PaginaEmpresa extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
-                  Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 60,
-                      ),
-                      Text(
-                        descricaoEmpresa,
-                        style: TextStyle(color: Colors.black38),
-                      ),
-                    ],
+                  Text(
+                    descricaoEmpresa,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black38),
                   ),
                   SizedBox(
                     height: 60,
@@ -119,7 +114,7 @@ class PaginaEmpresa extends StatelessWidget {
                       width: 350.0,
                       child: Carousel(
                         images: [
-                          Image.asset("assets/logo.png"),
+                          Image.asset("assets/logomodificada.png"),
                           Image.network(galeriaPagina.elementAt(0)),
                           InkWell(
                             onTap: () {

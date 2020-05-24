@@ -81,7 +81,8 @@ class CartResumo extends StatelessWidget {
 
                     onPressed: () {
                       {
-                        model.finalizarCompra(nomeEmpresa, endereco);
+                        model.finalizarCompra(
+                            nomeEmpresa, endereco, cidadeEstado);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => OrdemPedidoConfirmado("1")));
                       }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
 import 'package:compreaidelivery/telas/paginaEmpresa.dart';
+import 'package:compreaidelivery/telas/tela_selecao_categoria.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
@@ -196,9 +197,11 @@ class _MyMapPageState extends State<MyMapPage> {
                           if (marker != null && endereco != null) {
                             print(cidadeEstado);
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EmpresasTab(
-                                      cidade: cidadeEstado,
+                                builder: (context) => TelaSelecaoCategoria(
+                                      cidadeEstado: cidadeEstado,
                                       endereco: endereco,
+                                      latitude: latitudeAtualizada,
+                                      longitude: logintudeAtualizada,
                                     )));
                           } else {
                             snackBar();
@@ -210,8 +213,8 @@ class _MyMapPageState extends State<MyMapPage> {
                               if (marker != null && endereco != null) {
                                 print(cidadeEstado);
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => EmpresasTab(
-                                          cidade: cidadeEstado,
+                                    builder: (context) => TelaSelecaoCategoria(
+                                          cidadeEstado: cidadeEstado,
                                           endereco: endereco,
                                           latitude: latitudeAtualizada,
                                           longitude: logintudeAtualizada,

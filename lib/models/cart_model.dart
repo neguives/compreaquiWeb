@@ -124,7 +124,8 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  Future<String> finalizarCompra(String nomeEmpresa, String endereco) async {
+  Future<String> finalizarCompra(
+      String nomeEmpresa, String endereco, String cidade) async {
     print(endereco + " Deus no comando");
     if (products.length == 0) return null;
 
@@ -138,7 +139,7 @@ class CartModel extends Model {
     double productsDesconto = getDesconto();
 
     DocumentReference referenciaOrdem = await Firestore.instance
-        .collection("EmpresasParceiras")
+        .collection(cidade)
         .document(nomeEmpresa)
         .collection("ordensSolicitadas")
         .add({

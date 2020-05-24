@@ -70,7 +70,7 @@ class Products_Screen extends StatelessWidget {
           ),
           body: FutureBuilder<QuerySnapshot>(
             future: Firestore.instance
-                .collection("EmpresasParceiras")
+                .collection(cidadeEstado)
                 .document(nomeEmpresa)
                 .collection("Produtos e Servicos")
                 .document(snapshot.data["title"])
