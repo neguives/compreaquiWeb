@@ -1,11 +1,14 @@
 import 'package:compreaidelivery/introducao.dart';
+import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:compreaidelivery/style/theme.dart' as Theme;
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class Login extends StatefulWidget {
@@ -16,6 +19,9 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> with SingleTickerProviderStateMixin {
+  bool _isLoggedIn = false;
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final _nameController = TextEditingController();
   final _apelidoController = TextEditingController();
   final _emailController = TextEditingController();
@@ -151,7 +157,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -355,7 +360,9 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                             disabledColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             color: Colors.transparent,
-                            onPressed: () {},
+                            onPressed: () {
+                              _loginGoogle();
+                            },
                             child: Image.asset(
                               'assets/gmail.png',
                             )),
@@ -568,11 +575,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  width: 250.0,
-                                  height: 1.0,
-                                  color: Colors.grey[400],
-                                ),
                               ],
                             ),
                           )),
@@ -629,6 +631,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                         onPressed: () {
                           if (_formKeyRegister.currentState.validate()) {
                             Map<String, dynamic> userData = {
+                              "photo":
+                                  "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
                               "nome": _nameController.text,
                               "apelido": _apelidoController.text,
                               "email": _emailController.text,
@@ -717,5 +721,16 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     setState(() {
       _obscureTextSignupConfirm = !_obscureTextSignupConfirm;
     });
+  }
+
+  _loginGoogle() async {
+    AuthService authService = AuthService();
+    bool res = await authService.googleSignIn();
+    if (!res) {
+      print("Erro ao fazer o login com o Google");
+    } else {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+    }
   }
 }

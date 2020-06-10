@@ -19,7 +19,7 @@ class ProductTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
       future: Firestore.instance
-          .collection("EmpresasParceiras")
+          .collection(cidadeEstado)
           .document(nomeEmpresa)
           .collection("Produtos e Servicos")
           .orderBy("pos")

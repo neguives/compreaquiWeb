@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:location/location.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -46,9 +47,10 @@ class _MyMapPageState extends State<MyMapPage> {
   Marker marker;
   Circle circle;
   GoogleMapController _controller;
-  String cidadeEstado;
+  String cidadeEstado, photo;
   String endereco;
 
+  String uid;
   static final CameraPosition initialLocation = CameraPosition(
     target: LatLng(-18.1644818, -47.961643),
     zoom: 5,
@@ -62,6 +64,7 @@ class _MyMapPageState extends State<MyMapPage> {
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
+
     this.setState(() {
       marker = Marker(
           markerId: MarkerId("Onde eu estou"),
@@ -83,29 +86,6 @@ class _MyMapPageState extends State<MyMapPage> {
   }
 
   void getCurrentLocation() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    FirebaseUser firebaseUser;
-    Future<Null> _loadCurrentUser(double latitude, logintude) async {
-      if (firebaseUser == null) firebaseUser = await _auth.currentUser();
-      if (firebaseUser != null) {
-        DocumentSnapshot docUser = await Firestore.instance
-            .collection("ConsumidorFinal")
-            .document(firebaseUser.uid)
-            .get();
-
-        DocumentReference documentReference = Firestore.instance
-            .collection("ConsumidorFinal")
-            .document(firebaseUser.uid);
-
-        Firestore.instance.runTransaction((transaction) async {
-          await transaction.update(documentReference, {"cidade": cidadeEstado});
-          await transaction.update(documentReference, {"endereco": endereco});
-          await transaction.update(documentReference, {"latitude": latitude});
-          await transaction.update(documentReference, {"longitude": logintude});
-        });
-      }
-    }
-
     try {
       Uint8List imageData = await getMarker();
       var location = await _locationTracker.getLocation();
@@ -144,7 +124,33 @@ class _MyMapPageState extends State<MyMapPage> {
 
           double latitude = newLocalData.latitude;
           double logintude = newLocalData.longitude;
-          _loadCurrentUser(latitude, logintude);
+          FirebaseAuth _auth = FirebaseAuth.instance;
+          FirebaseUser firebaseUser;
+          if (firebaseUser == null) firebaseUser = await _auth.currentUser();
+          if (firebaseUser != null) {
+            DocumentReference documentReference = Firestore.instance
+                .collection("ConsumidorFinal")
+                .document(firebaseUser.uid);
+
+            uid = firebaseUser.uid;
+            print(uid + "esse aquiiiiiiiii");
+
+//            Mudar quando for lançar
+//            documentReference.updateData({"cidade": cidadeEstado});
+            documentReference.updateData({"cidade": "Catalão - GO"});
+            documentReference.updateData({"endereco": endereco});
+            documentReference.updateData({"latitude": latitude});
+            documentReference.updateData({"longitude": logintude});
+
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => TelaSelecaoCategoria(
+                      cidadeEstado: "Catalão - GO",
+                      endereco: endereco,
+                      latitude: latitudeAtualizada,
+                      longitude: logintudeAtualizada,
+                      uid: uid,
+                    )));
+          }
         }
       });
     } on PlatformException catch (e) {
@@ -196,29 +202,29 @@ class _MyMapPageState extends State<MyMapPage> {
                       ? () {
                           if (marker != null && endereco != null) {
                             print(cidadeEstado);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => TelaSelecaoCategoria(
-                                      cidadeEstado: cidadeEstado,
-                                      endereco: endereco,
-                                      latitude: latitudeAtualizada,
-                                      longitude: logintudeAtualizada,
-                                    )));
                           } else {
                             snackBar();
                             getCurrentLocation();
                           }
                         }
                       : marker != null && endereco != null
-                          ? () {
+                          ? () async {
                               if (marker != null && endereco != null) {
                                 print(cidadeEstado);
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => TelaSelecaoCategoria(
-                                          cidadeEstado: cidadeEstado,
-                                          endereco: endereco,
-                                          latitude: latitudeAtualizada,
-                                          longitude: logintudeAtualizada,
-                                        )));
+                                final FirebaseAuth _auth =
+                                    FirebaseAuth.instance;
+                                GoogleSignIn googleSignIn = GoogleSignIn();
+                                GoogleSignInAccount account =
+                                    await googleSignIn.signIn();
+
+                                FirebaseUser result =
+                                    await _auth.signInWithCredential(
+                                        GoogleAuthProvider.getCredential(
+                                  idToken:
+                                      (await account.authentication).idToken,
+                                  accessToken: (await account.authentication)
+                                      .accessToken,
+                                ));
                               } else {
                                 snackBar();
                                 getCurrentLocation();
@@ -242,33 +248,6 @@ class _MyMapPageState extends State<MyMapPage> {
           )
         ],
       ),
-    );
-  }
-
-  updateLocaleUsuario(String lat, long) async {
-    FutureBuilder(
-      future: FirebaseAuth.instance.currentUser(),
-      builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (snapshot.hasData) {
-          return StreamBuilder(
-            stream: Firestore.instance
-                .collection("ConsumidorFinal")
-                .document(snapshot.data.uid)
-                .snapshots(),
-            builder: (context, snapshot2) {
-              Future<FirebaseUser> user = FirebaseAuth.instance.currentUser();
-
-              if (!snapshot2.hasData) {
-                return Center(child: CircularProgressIndicator());
-              } else {
-                print(snapshot2);
-              }
-            },
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
     );
   }
 

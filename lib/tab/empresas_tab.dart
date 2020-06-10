@@ -30,15 +30,15 @@ class EmpresasTab extends StatelessWidget {
         cidadeQuery.where('categoria', arrayContains: categoria);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        heroTag: "demoValue",
-        elevation: 10,
-        highlightElevation: 20,
-        focusElevation: 10,
-        hoverElevation: 20,
-        onPressed: () async {},
-      ),
+//      floatingActionButton: FloatingActionButton(
+//        child: Icon(Icons.search),
+//        heroTag: "demoValue",
+//        elevation: 10,
+//        highlightElevation: 20,
+//        focusElevation: 10,
+//        hoverElevation: 20,
+//        onPressed: () async {},
+//          ),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
             .collection(cidade)

@@ -1,3 +1,4 @@
+import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
           return ScopedModel<CartModel>(
             model: CartModel(model),
             child: MaterialApp(
+              routes: <String, WidgetBuilder>{
+                '/login': (BuildContext context) => new Login(),
+              },
               home: SplashScreen(),
 //      home: Principal(),
               debugShowCheckedModeBanner: false,

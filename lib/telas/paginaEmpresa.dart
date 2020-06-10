@@ -8,19 +8,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaginaEmpresa extends StatelessWidget {
   List<String> galeriaImages = new List();
   CarouselSlider instance;
+  String distanciaReal;
   String nomeEmpresa,
       imagemEmpresa,
       descricaoEmpresa,
       whatsapp,
       cidadeEstado,
       endereco;
-  double latitude, longitude;
+  double latitude, longitude, latitudeEmpresa, longitudeEmpresa;
   List galeriaPagina;
 
   UserModel user;
@@ -33,15 +36,29 @@ class PaginaEmpresa extends StatelessWidget {
       this.cidadeEstado,
       this.endereco,
       this.latitude,
-      this.longitude);
+      this.longitude,
+      this.latitudeEmpresa,
+      this.longitudeEmpresa);
 
   @override
   void initState() {
     print(galeriaPagina);
   }
 
+  Future<void> _onCalculatePressed() async {
+    double distanceInMeters = await Geolocator().distanceBetween(
+        latitude, longitude, latitudeEmpresa, longitudeEmpresa);
+
+    double distancia = distanceInMeters / 1000;
+    distanciaReal = "Mais de " + distancia.toStringAsFixed(1) + " km";
+
+    print('The distance is: $distanciaReal');
+    return distanciaReal;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _onCalculatePressed();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Image.asset("assets/icon_zap.png"),
@@ -99,22 +116,26 @@ class PaginaEmpresa extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
+                        fontFamily: "QuickSand",
                         fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    descricaoEmpresa,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black38),
+                  Card(child: text()),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      descricaoEmpresa,
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: Colors.black38),
+                    ),
                   ),
                   SizedBox(
                     height: 60,
                   ),
                   SizedBox(
-                      height: 200.0,
+                      height: 150.0,
                       width: 350.0,
                       child: Carousel(
                         images: [
-                          Image.asset("assets/logomodificada.png"),
                           Image.network(galeriaPagina.elementAt(0)),
                           InkWell(
                             onTap: () {
@@ -173,7 +194,7 @@ class PaginaEmpresa extends StatelessWidget {
                     hoverColor: Colors.white,
                     highlightColor: Colors.white70,
                     highlightElevation: 10,
-                    child: Text('Nova Solicitação'),
+                    child: Text('Entrar na Loja'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => BottomPrincipal(
@@ -200,5 +221,22 @@ class PaginaEmpresa extends StatelessWidget {
             )
           ],
         ));
+  }
+
+  Widget text() {
+    Future<void> _onCalculatePressed() async {
+      double distanceInMeters = await Geolocator().distanceBetween(
+          latitude, longitude, latitudeEmpresa, longitudeEmpresa);
+
+      double distancia = distanceInMeters / 1000;
+      distanciaReal = "Mais de " + distancia.toStringAsFixed(1) + " km";
+
+      print('The distance is: $distanciaReal');
+      return distanciaReal;
+    }
+
+    _onCalculatePressed();
+
+    return Text("");
   }
 }

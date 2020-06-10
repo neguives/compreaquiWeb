@@ -7,22 +7,22 @@ import 'package:flutter/material.dart';
 class CartTile extends StatefulWidget {
   final CartProduct cartProduct;
   ProductData productData;
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
   int quantidadeRemovida = 0;
-  CartTile(this.cartProduct, this.nomeEmpresa, this.productData);
+  CartTile(
+      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
   @override
   _CartTileState createState() => _CartTileState(
-        this.cartProduct,
-        this.nomeEmpresa,
-      );
+      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
 }
 
 class _CartTileState extends State<CartTile> {
   final CartProduct cartProduct;
   ProductData productData;
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
   int quantidadeRemovida = 0;
-  _CartTileState(this.cartProduct, this.nomeEmpresa);
+  _CartTileState(
+      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     Widget _buildContent() {
@@ -67,20 +67,16 @@ class _CartTileState extends State<CartTile> {
                                 Future<Null> _atualizarQuantidade() async {
                                   DocumentReference documentReference =
                                       Firestore.instance
-                                          .collection("EmpresasParceiras")
+                                          .collection(cidadeEstado)
                                           .document(nomeEmpresa)
                                           .collection("Produtos e Servicos")
                                           .document(productData.category)
                                           .collection("itens")
                                           .document(productData.id);
 
-                                  Firestore.instance
-                                      .runTransaction((transaction) async {
-                                    await transaction.update(
-                                        documentReference, {
-                                      "quantidade":
-                                          cartProduct.productData.quantidade++
-                                    });
+                                  documentReference.updateData({
+                                    "quantidade":
+                                        cartProduct.productData.quantidade--
                                   });
                                 }
 
@@ -99,20 +95,16 @@ class _CartTileState extends State<CartTile> {
                                 Future<Null> _atualizarQuantidade() async {
                                   DocumentReference documentReference =
                                       Firestore.instance
-                                          .collection("EmpresasParceiras")
+                                          .collection(cidadeEstado)
                                           .document(nomeEmpresa)
                                           .collection("Produtos e Servicos")
                                           .document(productData.category)
                                           .collection("itens")
                                           .document(productData.id);
 
-                                  Firestore.instance
-                                      .runTransaction((transaction) async {
-                                    await transaction.update(
-                                        documentReference, {
-                                      "quantidade":
-                                          cartProduct.productData.quantidade--
-                                    });
+                                  documentReference.updateData({
+                                    "quantidade":
+                                        cartProduct.productData.quantidade--
                                   });
                                 }
 
@@ -127,20 +119,16 @@ class _CartTileState extends State<CartTile> {
                           Future<Null> _atualizarQuantidade() async {
                             DocumentReference documentReference = Firestore
                                 .instance
-                                .collection("EmpresasParceiras")
+                                .collection(cidadeEstado)
                                 .document(nomeEmpresa)
                                 .collection("Produtos e Servicos")
                                 .document(productData.category)
                                 .collection("itens")
                                 .document(productData.id);
 
-                            Firestore.instance
-                                .runTransaction((transaction) async {
-                              await transaction.update(documentReference, {
-                                "quantidade":
-                                    cartProduct.productData.quantidade +
-                                        quantidadeRemovida
-                              });
+                            documentReference.updateData({
+                              "quantidade": cartProduct.productData.quantidade +
+                                  quantidadeRemovida
                             });
                           }
 

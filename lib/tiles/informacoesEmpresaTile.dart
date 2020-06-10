@@ -24,15 +24,18 @@ class InformacoesEmpresaTile extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => PaginaEmpresa(
-                          snapshot.data["nomeEmpresa"],
-                          snapshot.data["imagem"],
-                          snapshot.data["descricao"],
-                          snapshot.data["galeriaPagina"],
-                          snapshot.data["telefone"],
-                          cidadeEstado,
-                          endereco,
-                          latitude,
-                          longitude)));
+                            snapshot.data["nomeEmpresa"],
+                            snapshot.data["imagem"],
+                            snapshot.data["descricao"],
+                            snapshot.data["galeriaPagina"],
+                            snapshot.data["telefone"],
+                            cidadeEstado,
+                            endereco,
+                            latitude,
+                            longitude,
+                            snapshot.data["latitude"],
+                            snapshot.data["longitude"],
+                          )));
                 },
                 child: Container(
                     width: 200,
@@ -134,15 +137,18 @@ class InformacoesEmpresaTile extends StatelessWidget {
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PaginaEmpresa(
-                                        snapshot.data["nomeEmpresa"],
-                                        snapshot.data["imagem"],
-                                        snapshot.data["descricao"],
-                                        snapshot.data["galeriaPagina"],
-                                        snapshot.data["telefone"],
-                                        cidadeEstado,
-                                        endereco,
-                                        latitude,
-                                        longitude)));
+                                          snapshot.data["nomeEmpresa"],
+                                          snapshot.data["imagem"],
+                                          snapshot.data["descricao"],
+                                          snapshot.data["galeriaPagina"],
+                                          snapshot.data["telefone"],
+                                          cidadeEstado,
+                                          endereco,
+                                          latitude,
+                                          longitude,
+                                          snapshot.data["latitude"],
+                                          snapshot.data["longitude"],
+                                        )));
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: new BorderRadius.circular(18.0),

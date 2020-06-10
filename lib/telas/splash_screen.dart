@@ -1,5 +1,8 @@
 import 'package:compreaidelivery/telas/Login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'geolocalizacaoUsuario.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,15 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   openStartPage() async {
-    await Future.delayed(
-      Duration(seconds: 6),
-      () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(),
-        ),
-      ),
-    );
+    await Future.delayed(Duration(seconds: 6), () => _loadCurrentUser());
   }
 
   @override
@@ -55,5 +50,21 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
       ),
     );
+  }
+
+  Future<Null> _loadCurrentUser() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser;
+    if (firebaseUser == null) {
+      print("aqui");
+      firebaseUser = await _auth.currentUser();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Login()));
+    }
+    if (firebaseUser != null) {
+      print(firebaseUser.uid);
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+    }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 class CartResumo extends StatelessWidget {
   String nomeEmpresa, cidadeEstado, endereco;
@@ -10,8 +13,38 @@ class CartResumo extends StatelessWidget {
 
   CartResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
+  final TextEditingController _startCoordinatesTextController =
+      TextEditingController();
+  final TextEditingController _endCoordinatesTextController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    Future<void> _onCalculatePressed() async {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+
+      var distanceBetweenPoints = SphericalUtil.computeAngleBetween(
+          LatLng(position.latitude, position.longitude),
+          LatLng(-12.9704, -38.5124));
+
+      double distanceInMeters = await Geolocator().distanceBetween(
+          position.latitude, position.longitude, -12.9704, -38.5124);
+
+      double distancia = distanceInMeters / 1000;
+      String distanciaReal = distancia.toStringAsFixed(1);
+      print('The distance is: $distanciaReal');
+    }
+
+    double calculateDistance(lat1, lon1, lat2, lon2) {
+      var p = 0.017453292519943295;
+      var c = cos;
+      var a = 0.5 -
+          c((lat2 - lat1) * p) / 2 +
+          c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+      return 12742 * asin(sqrt(a));
+    }
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Container(
@@ -108,5 +141,12 @@ class CartResumo extends StatelessWidget {
             },
           )),
     );
+  }
+
+  calcularDistancia() async {
+    double distanceInMeters = await Geolocator()
+        .distanceBetween(52.2165157, 6.9437819, 52.3546274, 4.8285838);
+
+    print(distanceInMeters.toString() + " Metros");
   }
 }

@@ -32,7 +32,7 @@ class OrdersTab extends StatelessWidget {
                 Container(
                   decoration: new BoxDecoration(
                     image: new DecorationImage(
-                      image: new AssetImage("assets/bg_meuspedidos.png"),
+                      image: new AssetImage("assets/bg_selecaocategoria.webp"),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -41,7 +41,7 @@ class OrdersTab extends StatelessWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                      padding: EdgeInsets.only(top: 50),
+                      padding: EdgeInsets.only(top: 20),
                       child: Column(
                         children: <Widget>[
                           Card(
@@ -50,8 +50,8 @@ class OrdersTab extends StatelessWidget {
                                 borderRadius: new BorderRadius.circular(100.0),
                                 side: BorderSide(color: Colors.white30)),
                             child: Container(
-                                width: 150.0,
-                                height: 150.0,
+                                width: 100.0,
+                                height: 100.0,
                                 decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: new DecorationImage(
@@ -59,15 +59,16 @@ class OrdersTab extends StatelessWidget {
                                       image: new NetworkImage(imagemEmpresa),
                                     ))),
                           ),
-                          Text("Solicitações Realizadas",
+                          Text("Minhas Solicitações",
                               style: TextStyle(
-                                  fontFamily: "QuickSand", fontSize: 25))
+                                  fontFamily: "QuickSand", fontSize: 20))
                         ],
                       )),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(16, 220, 16, 1),
+                  padding: EdgeInsets.fromLTRB(16, 180, 16, 1),
                   child: ListView(
+                    scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
                         .map((doc) => OrderTile(
                             doc.documentID, nomeEmpresa, cidadeEstado))
