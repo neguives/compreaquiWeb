@@ -4,7 +4,6 @@ import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:flutter_cielo/flutter_cielo.dart';
 
 class CardCartaoCredito extends StatefulWidget {
   const CardCartaoCredito({
@@ -69,12 +68,12 @@ class _CardCartaoCreditoState extends State<CardCartaoCredito> {
         cardNumber, expiryDate, cardHolderName, cvvCode, isCvvFocused);
   }
 
-  final CieloEcommerce cielo = CieloEcommerce(
-      environment: Environment.SANDBOX, // ambiente de desenvolvimento
-      merchant: Merchant(
-        merchantId: "7cb5a0a9-9504-40eb-9914-c801eb50d783",
-        merchantKey: "nA0xWwQBu9QeHIlTi1AtYif5VgWz7szzmNbiNdGY",
-      ));
+//  final CieloEcommerce cielo = CieloEcommerce(
+//      environment: Environment.SANDBOX, // ambiente de desenvolvimento
+//      merchant: Merchant(
+//        merchantId: "7cb5a0a9-9504-40eb-9914-c801eb50d783",
+//        merchantKey: "nA0xWwQBu9QeHIlTi1AtYif5VgWz7szzmNbiNdGY",
+//      ));
   _incrementCounter() async {
 //    print("Iniciando pagamento....");
 //    Sale sale = Sale(
@@ -128,23 +127,23 @@ class _CardCartaoCreditoState extends State<CardCartaoCredito> {
 
     print("Tokenizando cartão....");
 
-    CreditCard cart = CreditCard(
-      customerName: "Comprador Teste Cielo",
-      cardNumber: "1234123412341231",
-      securityCode: "123",
-      holder: "SARA M M F",
-      expirationDate: "10/2026",
-      brand: "Visa",
-    );
-    try {
-      var response = await cielo.tokenizeCard(cart);
-      print(response.cardToken);
-      print(response.cardNumber);
-    } catch (e) {
-      print(e.message);
-      print(e.errors[0].message);
-      print(e.errors[0].code);
-    }
+//    CreditCard cart = CreditCard(
+//      customerName: "Comprador Teste Cielo",
+//      cardNumber: "1234123412341231",
+//      securityCode: "123",
+//      holder: "SARA M M F",
+//      expirationDate: "10/2026",
+//      brand: "Visa",
+//    );
+//    try {
+//      var response = await cielo.tokenizeCard(cart);
+//      print(response.cardToken);
+//      print(response.cardNumber);
+//    } catch (e) {
+//      print(e.message);
+//      print(e.errors[0].message);
+//      print(e.errors[0].code);
+//    }
   }
 
   @override

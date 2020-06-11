@@ -38,7 +38,6 @@ dependencies:
   dio: ^3.0.9
   pdf: ^1.8.1
   flare_flutter: ^2.0.3
-  flutter_cielo:
   cloud_firestore: ^0.12.9
   transparent_image: ^1.0.0
   scoped_model: ^1.0.1
