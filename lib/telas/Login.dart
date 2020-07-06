@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/introducao.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
@@ -673,7 +674,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   void _onSucess() {
-    Future.delayed(Duration(seconds: 2)).then((_) {
+    Future.delayed(Duration(seconds: 1)).then((_) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
