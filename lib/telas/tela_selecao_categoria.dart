@@ -2,6 +2,10 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
+import 'package:compreaidelivery/versao_empresa/demonstrativos.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
+import 'package:compreaidelivery/versao_empresa/perfil_da_loja.dart';
+import 'package:compreaidelivery/versao_empresa/produtos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -58,12 +62,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => EmpresasTab(
-                                      cidade: "Catalão - GO",
-                                      endereco: endereco,
-                                      latitude: latitude,
-                                      longitude: longitude,
-                                      categoria: "Farmácia")));
+                                  builder: (context) => PedidosRecebidos(
+                                      snapshot.data["nome"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -75,12 +75,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => EmpresasTab(
-                                      cidade: "Catalão - GO",
-                                      endereco: endereco,
-                                      latitude: latitude,
-                                      longitude: longitude,
-                                      categoria: "Farmácia")));
+                                  builder: (context) => Produtos()));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -96,12 +91,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => EmpresasTab(
-                                      cidade: "Catalão - GO",
-                                      endereco: endereco,
-                                      latitude: latitude,
-                                      longitude: longitude,
-                                      categoria: "Farmácia")));
+                                  builder: (context) => Demonstrativos()));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -113,12 +103,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => EmpresasTab(
-                                      cidade: "Catalão - GO",
-                                      endereco: endereco,
-                                      latitude: latitude,
-                                      longitude: longitude,
-                                      categoria: "Farmácia")));
+                                  builder: (context) => PerfilLoja()));
                             },
                             child: FlatButton(
                               child: Image.asset(
