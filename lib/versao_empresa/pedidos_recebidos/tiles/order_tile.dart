@@ -119,7 +119,8 @@ class OrderTile extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      _buildCircle("1", "Pagamento", status, 1),
+                                      _buildCircle(
+                                          "1", "Em Separação", status, 1),
                                       Container(
                                         height: 1,
                                         width: 20,

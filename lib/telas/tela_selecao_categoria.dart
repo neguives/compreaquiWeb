@@ -6,6 +6,7 @@ import 'package:compreaidelivery/versao_empresa/demonstrativos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
 import 'package:compreaidelivery/versao_empresa/perfil_da_loja.dart';
 import 'package:compreaidelivery/versao_empresa/produtos.dart';
+import 'package:compreaidelivery/versao_empresa/versaoEmpresa_categorias.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +76,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Produtos()));
+                                  builder: (context) =>
+                                      VersaoEmpresaCategorias()));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -103,11 +105,12 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PerfilLoja()));
+                                  builder: (context) =>
+                                      VersaoEmpresaCategorias()));
                             },
                             child: FlatButton(
                               child: Image.asset(
-                                "assets/btn_perfil_da_loja.png",
+                                "assets/btn_categorias.png",
                                 height: 140,
                                 width: 140,
                               ),
