@@ -27,6 +27,13 @@ class CategoriaTile extends StatefulWidget {
 class _CategoriaTileState extends State<CategoriaTile> {
   final _nomeCategoria = TextEditingController();
   final _posCategoria = TextEditingController();
+  final _nomeProdutoController = TextEditingController();
+  final _codigoBarraProdutoController = TextEditingController();
+  final _preferenciaProdutoController = TextEditingController();
+  final _descricaoProdutoController = TextEditingController();
+  final _precoAtualProdutoController = TextEditingController();
+  final _precoAnteriorProdutoController = TextEditingController();
+  final _quantidadeEstoqueProdutoController = TextEditingController();
   File _image;
 
   final DocumentSnapshot snapshot;
@@ -46,6 +53,8 @@ class _CategoriaTileState extends State<CategoriaTile> {
 
   @override
   Widget build(BuildContext context) {
+    _nomeCategoria.text = snapshot.data["title"];
+    _posCategoria.text = snapshot.data["pos"];
     Future getImage() async {
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -202,20 +211,39 @@ class _CategoriaTileState extends State<CategoriaTile> {
               title: Text("Adicionar Novo Produto"),
               children: [
                 Card(
+                  color: Colors.white70,
                   elevation: 10,
                   child: Padding(
                     padding: EdgeInsets.all(5),
                     child: Column(
                       children: [
                         TextField(
+                          controller: _nomeProdutoController,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
                               fontSize: 16.0,
                               color: Colors.black),
-                          controller: _nomeCategoria,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "Nome da Categoria",
+                            hintText: "Nome do Produto",
+                            labelText: "Nome do Produto",
+                            hintStyle: TextStyle(
+                                fontFamily: "QuickSand",
+                                fontSize: 17.0,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          controller: _codigoBarraProdutoController,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Código de Barras",
+                            labelText: "Código de Barras",
                             hintStyle: TextStyle(
                                 fontFamily: "QuickSand",
                                 fontSize: 17.0,
@@ -226,14 +254,16 @@ class _CategoriaTileState extends State<CategoriaTile> {
                           height: 5,
                         ),
                         TextField(
+                          controller: _precoAtualProdutoController,
+                          keyboardType: TextInputType.number,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
                               fontSize: 16.0,
                               color: Colors.black),
-                          controller: _posCategoria,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "Posição da categoria",
+                            hintText: "Preço Atual",
+                            labelText: "Preço Atual",
                             hintStyle: TextStyle(
                                 fontFamily: "QuickSand",
                                 fontSize: 17.0,
@@ -243,22 +273,217 @@ class _CategoriaTileState extends State<CategoriaTile> {
                         SizedBox(
                           height: 5,
                         ),
-                        InkWell(
-                          onTap: () async {
-                            await getImage();
+                        TextField(
+                          controller: _preferenciaProdutoController,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Preferência",
+                            hintText: "Preferencia",
+                            hintStyle: TextStyle(
+                                fontFamily: "QuickSand",
+                                fontSize: 17.0,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        TextField(
+                          maxLines: 6,
+                          controller: _descricaoProdutoController,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Descrição",
+                            hintText: "Descrição",
+                            hintStyle: TextStyle(
+                                fontFamily: "QuickSand",
+                                fontSize: 17.0,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        ExpansionTile(
+                          title: Text("Produto Promocional ?"),
+                          subtitle: Text(
+                            "Se o produto estiver em promoção, adicione o Preço Anterior.",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    controller: _precoAtualProdutoController,
+                                    keyboardType: TextInputType.number,
+                                    enabled: false,
+                                    style: TextStyle(
+                                        fontFamily: "WorkSansSemiBold",
+                                        fontSize: 16.0,
+                                        color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Preço Atual",
+                                      hintStyle: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          fontSize: 15.0,
+                                          color: Colors.black87),
+                                    ),
+                                  ),
+                                  TextField(
+                                    keyboardType: TextInputType.number,
+                                    enabled: true,
+                                    controller: _precoAnteriorProdutoController,
+                                    style: TextStyle(
+                                        fontFamily: "WorkSansSemiBold",
+                                        fontSize: 16.0,
+                                        color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Preço Anterior",
+                                      hintStyle: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          fontSize: 15.0,
+                                          color: Colors.black87),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          enabled: true,
+                          controller: _quantidadeEstoqueProdutoController,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Quantidade em Estoque",
+                            hintStyle: TextStyle(
+                                fontFamily: "QuickSand",
+                                fontSize: 15.0,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Column(
+                          children: [
+                            Text("Defina as imagens do produto: ",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: "QuickSand",
+                                )),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () async {
+                                        await getImage();
+                                      },
+                                      child: Container(
+                                          width: 100.0,
+                                          height: 100.0,
+                                          decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: new DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: new NetworkImage(
+                                                    snapshot.data["icon"] !=
+                                                            null
+                                                        ? snapshot.data["icon"]
+                                                        : ""),
+                                              ))),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "Imagem 1",
+                                      style: TextStyle(fontFamily: "QuickSand"),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () async {
+                                        await getImage();
+                                      },
+                                      child: Container(
+                                          width: 100.0,
+                                          height: 100.0,
+                                          decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: new DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: new NetworkImage(
+                                                    snapshot.data["icon"] !=
+                                                            null
+                                                        ? snapshot.data["icon"]
+                                                        : ""),
+                                              ))),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "Imagem 2",
+                                      style: TextStyle(fontFamily: "QuickSand"),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        OutlineButton(
+                          hoverColor: Colors.white,
+                          highlightColor: Colors.white70,
+                          highlightElevation: 10,
+
+                          onPressed: () {
+                            snapshot.reference
+                                .updateData({"title": _nomeCategoria.text});
+                            snapshot.reference
+                                .updateData({"pos": _posCategoria.text});
+                            _showToast();
+                            _nomeCategoria.text = "";
+                            _posCategoria.text = "";
                           },
-                          child: Container(
-                              width: 150.0,
-                              height: 150.0,
-                              decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: new DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: new NetworkImage(
-                                        snapshot.data["icon"] != null
-                                            ? snapshot.data["icon"]
-                                            : ""),
-                                  ))),
+                          child: Text(
+                            'Cadastrar Produto',
+                          ),
+
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(18.0),
+                              side: BorderSide(
+                                  color: Colors
+                                      .white30)), // callback when button is clicked
+                          borderSide: BorderSide(
+                            color: Colors.blueGrey, //Color of the border
+                            style: BorderStyle.solid, //Style of the border
+                            width: 0.8, //width of the border
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         SizedBox(
                           height: 5,
@@ -337,6 +562,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
                           controller: _posCategoria,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
+                            labelText: "Posição da categoria",
                             hintText: "Posição da categoria",
                             hintStyle: TextStyle(
                                 fontFamily: "QuickSand",
