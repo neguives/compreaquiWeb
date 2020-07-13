@@ -37,6 +37,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
+              return CircularProgressIndicator();
             } else {
               if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
                 return Column(
@@ -76,8 +77,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      VersaoEmpresaCategorias()));
+                                  builder: (context) => VersaoEmpresaCategorias(
+                                      snapshot.data["nome"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -105,8 +106,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      VersaoEmpresaCategorias()));
+                                  builder: (context) => VersaoEmpresaCategorias(
+                                      snapshot.data["nome"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(

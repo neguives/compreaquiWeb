@@ -93,6 +93,7 @@ class ProdutosScreen extends StatelessWidget {
                               snapshot.data.documents[index]);
                           data.category = this.snapshot.documentID;
                           print(data.quantidade);
+
                           return ProductTile(
                             "grid",
                             data,

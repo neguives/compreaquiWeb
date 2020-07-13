@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 class CategoriaTab extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
+  CategoriaTab(this.nomeEmpresa);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
       future: Firestore.instance
           .collection("Catalão - GO")
-          .document("Supermecado Bretas")
+          .document(nomeEmpresa)
           .collection("Produtos e Servicos")
           .orderBy("pos")
           .getDocuments(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
-          return Center(
-            child: Text(nomeEmpresa),
-          );
+          return LinearProgressIndicator();
         else {
           return Stack(
             children: <Widget>[
@@ -31,7 +30,7 @@ class CategoriaTab extends StatelessWidget {
               ),
               ListView(
                   children: snapshot.data.documents.map((doc) {
-                return CategoriaTile(doc);
+                return CategoriaTile(doc, nomeEmpresa);
               }).toList())
             ],
           );

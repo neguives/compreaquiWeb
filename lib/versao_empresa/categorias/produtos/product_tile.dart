@@ -13,7 +13,6 @@ class ProductTile extends StatelessWidget {
     this.type,
     this.product,
     @required this.nomeEmpresa,
-
   );
   @override
   Widget build(BuildContext context) {
@@ -126,7 +125,7 @@ class ProductTile extends StatelessWidget {
                             Text(
                               product.promo == true && product.quantidade > 0
                                   ? "Restam ${product.quantidade} unidades"
-                                  : "Esgotado",
+                                  : "",
                               style:
                                   TextStyle(fontSize: 8, color: Colors.black54),
                             ),
