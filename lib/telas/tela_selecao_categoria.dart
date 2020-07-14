@@ -2,7 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
-import 'package:compreaidelivery/versao_empresa/demonstrativos.dart';
+import 'file:///C:/Users/Suporteti/FlutterProjetosAtualizados/CompreAqui-Delivery/lib/versao_empresa/demonstrativos/demonstrativos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
 import 'package:compreaidelivery/versao_empresa/perfil_da_loja.dart';
 import 'package:compreaidelivery/versao_empresa/produtos.dart';
@@ -94,7 +94,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Demonstrativos()));
+                                  builder: (context) => Demonstrativos(snapshot.data["nome"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -103,19 +103,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                 width: 140,
                               ),
                             )),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => VersaoEmpresaCategorias(
-                                      snapshot.data["nome"].toString())));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_categorias.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
+
                       ],
                     )
                   ],

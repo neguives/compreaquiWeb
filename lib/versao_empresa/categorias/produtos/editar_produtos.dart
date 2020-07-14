@@ -43,7 +43,8 @@ class _EditarProdutosState extends State<EditarProdutos> {
               appBar: AppBar(),
               body: ListView(
                   children: snapshot1.data.documents.map((doc) {
-                return ProductTile("list", nomeEmpresa, doc);
+
+                return ProductTile("list", nomeEmpresa, doc, doc.documentID.toString(), categoria);
               }).toList()));
         }
       },

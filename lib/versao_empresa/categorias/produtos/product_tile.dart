@@ -10,20 +10,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProductTile extends StatefulWidget {
-  final String type;
+  final String type, idDocument, categoria;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   final DocumentSnapshot snapshot;
 
-  ProductTile(this.type, @required this.nomeEmpresa, this.snapshot);
+  ProductTile(this.type, @required this.nomeEmpresa, this.snapshot, this.idDocument, this.categoria);
 
   @override
   _ProductTileState createState() =>
-      _ProductTileState(type, nomeEmpresa, snapshot);
+      _ProductTileState(type, nomeEmpresa, snapshot, idDocument, categoria);
 }
 
 class _ProductTileState extends State<ProductTile> {
-  final String type;
+  final String type, idDocument, categoria;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   final DocumentSnapshot snapshot;
@@ -43,10 +43,13 @@ class _ProductTileState extends State<ProductTile> {
   FlutterToast flutterToast;
   var listImages;
   String urlImagem1 = "url", urlImagem2 = "url";
-  _ProductTileState(this.type, @required this.nomeEmpresa, this.snapshot);
+  _ProductTileState(this.type, @required this.nomeEmpresa, this.snapshot, this.idDocument, this.categoria);
   @override
   Widget build(BuildContext context) {
     List<dynamic> img = snapshot.data["images"];
+
+    urlImagem1 = img.first;
+    urlImagem2 = img.last;
 
     List variac = snapshot.data["variacao"];
     String variacao = variac.first;
@@ -80,7 +83,24 @@ class _ProductTileState extends State<ProductTile> {
             print(docUrl);
           });
 
+          DocumentReference documentReference =
+          await Firestore.instance
+              .collection("Catalão - GO")
+              .document(nomeEmpresa)
+              .collection(
+              "Produtos e Servicos")
+              .document(
+              categoria)
+              .collection("itens")
+              .document(
+              idDocument);
+
           urlImagem1 = docUrl;
+
+          listImages = [urlImagem1, urlImagem2];
+          documentReference.updateData({"images": listImages});
+
+
         }
 
         _showImagemCarregada("imagem 1");
@@ -758,10 +778,10 @@ class _ProductTileState extends State<ProductTile> {
                                                 image: new DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: new NetworkImage(
-                                                      snapshot.data["images"] !=
+                                                     urlImagem1.length< 5 !=
                                                               null
-                                                          ? img.first
-                                                          : ""),
+                                                          ? urlImagem1
+                                                          : img.first),
                                                 ))),
                                       ),
                                       SizedBox(
@@ -791,10 +811,10 @@ class _ProductTileState extends State<ProductTile> {
                                                 image: new DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: new NetworkImage(
-                                                      snapshot.data["images"] !=
-                                                              null
-                                                          ? img.last
-                                                          : ""),
+                                                      urlImagem2.length< 5 !=
+                                                          null
+                                                          ? urlImagem2
+                                                          : img.last),
                                                 ))),
                                       ),
                                       SizedBox(
@@ -843,7 +863,7 @@ class _ProductTileState extends State<ProductTile> {
                                                 .length >
                                             1
                                     ? () async {
-                                        listImages = [urlImagem1, urlImagem2];
+
                                         var variacao = [
                                           _preferenciaProdutoController.text
                                         ];
@@ -872,13 +892,12 @@ class _ProductTileState extends State<ProductTile> {
                                                 .collection(
                                                     "Produtos e Servicos")
                                                 .document(
-                                                    snapshot.data["title"])
+                                                    categoria)
                                                 .collection("itens")
                                                 .document(
-                                                    _codigoBarraProdutoController
-                                                        .text);
+                                                    idDocument);
 
-                                        await referenciaOrdem.setData(({
+                                        await referenciaOrdem.updateData(({
                                           "title": _nomeProdutoController.text,
                                           "codigoBarras": codigoBarras,
                                           "price": price,
@@ -888,40 +907,14 @@ class _ProductTileState extends State<ProductTile> {
                                                       null
                                                   ? true
                                                   : false,
-                                          "images": listImages,
                                           "precoAnterior": precoAnterior,
                                           "quantidade": quantidade,
+                                          "images": urlImagem1,
                                           "variacao": variacao,
                                           "description":
                                               _descricaoProdutoController.text,
                                         }));
 
-                                        DocumentReference referenciaOrdemBase =
-                                            await Firestore.instance
-                                                .collection("BaseGlobal")
-                                                .document("Produtos")
-                                                .collection("itens")
-                                                .document(
-                                                    _codigoBarraProdutoController
-                                                        .text);
-
-                                        await referenciaOrdemBase.setData(({
-                                          "title": _nomeProdutoController.text,
-                                          "codigoBarras": codigoBarras,
-                                          "price": price,
-                                          "promo":
-                                              _precoAnteriorProdutoController
-                                                          .text !=
-                                                      null
-                                                  ? true
-                                                  : false,
-                                          "images": listImages,
-                                          "precoAnterior": precoAnterior,
-                                          "quantidade": quantidade,
-                                          "variacao": variacao,
-                                          "description":
-                                              _descricaoProdutoController.text,
-                                        }));
 
                                         _showToastProdutoCadastrado();
                                       }
