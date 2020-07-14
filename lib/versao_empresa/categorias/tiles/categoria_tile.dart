@@ -146,13 +146,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              nomeEmpresa = snapshot.data["title"];
 //                  snapshot.reference.updateData({"title": "Carnes"});
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProdutosScreen(
-                        snapshot,
-                        nomeEmpresa,
-                      )));
             },
           ),
           children: [
@@ -712,11 +706,14 @@ class _CategoriaTileState extends State<CategoriaTile> {
                         ),
                         InkWell(
                             onTap: () async {
+                              double codigoBarras = double.parse(
+                                  _codigoBarraBuscaController.text);
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => EditarProdutos(
                                       nomeEmpresa,
                                       snapshot.data["title"],
-                                      _codigoBarraBuscaController.text)));
+                                      codigoBarras)));
                             },
                             child: Icon(Icons.search)),
                         SizedBox(
