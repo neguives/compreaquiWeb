@@ -28,26 +28,30 @@ class _DemonstrativosState extends State<Demonstrativos> {
         future: Firestore.instance
             .collection("Catalão - GO")
             .document(nomeEmpresa)
-            .collection("Produtos e Servicos")
-            .orderBy("pos")
+            .collection("ordensSolicitadas")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
             return LinearProgressIndicator();
           else {
-            return Stack(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Colors.white,
-                        Colors.white10,
-                      ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+            return Column(
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-                ListView(
-                    children: snapshot.data.documents.map((doc) {
-                      return CategoriaTile(doc, nomeEmpresa);
-                    }).toList())
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+
+                          ],
+                        )
+                      ],
+                    )                 ),
+                )
               ],
             );
           }
