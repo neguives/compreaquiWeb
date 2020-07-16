@@ -2,7 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
-import 'file:///C:/Users/Suporteti/FlutterProjetosAtualizados/CompreAqui-Delivery/lib/versao_empresa/demonstrativos/demonstrativos.dart';
+import 'package:compreaidelivery/versao_empresa/demonstrativos/demonstrativos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
 import 'package:compreaidelivery/versao_empresa/perfil_da_loja.dart';
 import 'package:compreaidelivery/versao_empresa/produtos.dart';
@@ -94,7 +94,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                         InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Demonstrativos(snapshot.data["nome"].toString())));
+                                  builder: (context) => Demonstrativos(
+                                      snapshot.data["nome"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -103,9 +104,61 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                 width: 140,
                               ),
                             )),
-
                       ],
                     )
+                  ],
+                );
+              } else if (snapshot.data["tipoPerfil"].toString() ==
+                  "Entregador") {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 1.0),
+                      child: new Padding(
+                          padding: EdgeInsets.only(
+                              left: 30, right: 30, top: 30, bottom: 20),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/logo.png',
+                                width: 150,
+                                height: 150,
+                              ),
+                              Text("Versão Entregador",
+                                  style: TextStyle(fontFamily: "QuickSand"))
+                            ],
+                          )),
+                    ),
+                    Row(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PedidosRecebidos(
+                                      snapshot.data["nome"].toString())));
+                            },
+                            child: FlatButton(
+                              child: Image.asset(
+                                "assets/btn_pedidos_recebidos.png",
+                                height: 140,
+                                width: 140,
+                              ),
+                            )),
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Demonstrativos(
+                                      snapshot.data["nome"].toString())));
+                            },
+                            child: FlatButton(
+                              child: Image.asset(
+                                "assets/btn_demonstrativos.png",
+                                height: 140,
+                                width: 140,
+                              ),
+                            )),
+                      ],
+                    ),
                   ],
                 );
               } else {
