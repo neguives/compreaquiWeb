@@ -7,7 +7,9 @@ import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_
 import 'package:compreaidelivery/versao_empresa/perfil_da_loja.dart';
 import 'package:compreaidelivery/versao_empresa/produtos.dart';
 import 'package:compreaidelivery/versao_empresa/versaoEmpresa_categorias.dart';
+import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TelaSelecaoCategoria extends StatelessWidget {
@@ -26,6 +28,17 @@ class TelaSelecaoCategoria extends StatelessWidget {
     return Scaffold(
         drawer: CustomDrawer(uid),
         appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Padding(
+              child: Image.asset(
+          'assets/logo.png',
+            width: 50,
+            height: 50,
+          ),
+              padding: EdgeInsets.only(right: 50)
+              ,
+            )],),
           iconTheme: new IconThemeData(color: Colors.black),
           backgroundColor: Colors.white,
         ),
@@ -110,56 +123,25 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 );
               } else if (snapshot.data["tipoPerfil"].toString() ==
                   "Entregador") {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 1.0),
-                      child: new Padding(
-                          padding: EdgeInsets.only(
-                              left: 30, right: 30, top: 30, bottom: 20),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/logo.png',
-                                width: 150,
-                                height: 150,
-                              ),
-                              Text("Versão Entregador",
-                                  style: TextStyle(fontFamily: "QuickSand"))
-                            ],
-                          )),
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PedidosRecebidos(
-                                      snapshot.data["nome"].toString())));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_pedidos_recebidos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Demonstrativos(
-                                      snapshot.data["nome"].toString())));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_demonstrativos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                      ],
-                    ),
-                  ],
+                return FutureBuilder<QuerySnapshot>(
+                  future: Firestore.instance.collection("Entregador").getDocuments(),
+                  builder: (context, snapshot){
+                      if(!snapshot.hasData){
+                        return Center(
+                          child: Text("Nenhum pedido em aberto"),
+                        );
+                      }
+                      else {
+                        return Center(
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: snapshot.data.documents
+                                .map((doc) => OrderTile(doc.documentID))
+                                .toList(),
+                          ),
+                        );
+                      }
+                  },
                 );
               } else {
                 return Stack(
