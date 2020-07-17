@@ -30,15 +30,17 @@ class TelaSelecaoCategoria extends StatelessWidget {
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Padding(
-              child: Image.asset(
-          'assets/logo.png',
-            width: 50,
-            height: 50,
+            children: [
+              Padding(
+                child: Image.asset(
+                  'assets/logo.png',
+                  width: 50,
+                  height: 50,
+                ),
+                padding: EdgeInsets.only(right: 50),
+              )
+            ],
           ),
-              padding: EdgeInsets.only(right: 50)
-              ,
-            )],),
           iconTheme: new IconThemeData(color: Colors.black),
           backgroundColor: Colors.white,
         ),
@@ -124,23 +126,32 @@ class TelaSelecaoCategoria extends StatelessWidget {
               } else if (snapshot.data["tipoPerfil"].toString() ==
                   "Entregador") {
                 return FutureBuilder<QuerySnapshot>(
-                  future: Firestore.instance.collection("Entregador").getDocuments(),
-                  builder: (context, snapshot){
-                      if(!snapshot.hasData){
-                        return Center(
-                          child: Text("Nenhum pedido em aberto"),
-                        );
-                      }
-                      else {
-                        return Center(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: snapshot.data.documents
-                                .map((doc) => OrderTile(doc.documentID))
-                                .toList(),
-                          ),
-                        );
-                      }
+                  future: Firestore.instance
+                      .collection("Entregador")
+                      .getDocuments(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: (Padding(
+                              padding: EdgeInsets.only(top: 50),
+                              child: ListView(
+                                scrollDirection: Axis.vertical,
+                                children: snapshot.data.documents
+                                    .map((doc) => OrderTile(doc.documentID))
+                                    .toList(),
+                              ),
+                            )),
+                          )
+                        ],
+                      );
+                    }
                   },
                 );
               } else {

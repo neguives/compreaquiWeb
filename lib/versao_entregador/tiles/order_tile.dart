@@ -21,29 +21,32 @@ class OrderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(orderId);
-    return SingleChildScrollView(
-      child: Card(
-          elevation: 20,
-          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: StreamBuilder<DocumentSnapshot>(
-                    stream: Firestore.instance
-                        .collection("Entregador")
-                        .document(orderId)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      else {
-                        return Center(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Card(
+              elevation: 20,
+              margin: EdgeInsets.all(50),
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: StreamBuilder<DocumentSnapshot>(
+                        stream: Firestore.instance
+                            .collection("Entregador")
+                            .document(orderId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          else {
+                            return Center(
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
 //                            Container(
 //                              decoration: new BoxDecoration(
 //                                image: new DecorationImage(
@@ -53,66 +56,116 @@ class OrderTile extends StatelessWidget {
 //                                ),
 //                              ),
 //                            ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Card(
-                                    elevation: 10,
-                                    child: QrImage(
-                                      data: "${snapshot.data.documentID}",
-                                      version: QrVersions.auto,
-                                      size: 100.0,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Card(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Text(
-                                        "Empresa: "+ snapshot.data["empresa"],
-                                        style:
-                                            TextStyle(fontFamily: "QuickSand"),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Card(
+                                        elevation: 10,
+                                        child: QrImage(
+                                          data: "${snapshot.data.documentID}",
+                                          version: QrVersions.auto,
+                                          size: 100.0,
+                                        ),
                                       ),
-                                    ),
-                                    elevation: 10,
+                                      SizedBox(height: 4),
+                                      Card(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: Text(
+                                            "Empresa: " +
+                                                snapshot.data["empresa"],
+                                            style: TextStyle(
+                                                fontFamily: "QuickSand"),
+                                          ),
+                                        ),
+                                        elevation: 10,
 //                                Text(
 //                                  "" + _buildProductsText(snapshot.data),
 //                                  style: TextStyle(fontSize: 20),
 //                                ),,
-                                  ),
-                                  SizedBox(height: 4),
-
-                                  SizedBox(height: 2),
-                                  SizedBox(height: 3),
-                                  RaisedButton(
-                                    color: Colors.black54,
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CompradosTileEmpresa(
-                                                    orderId,
-                                                    nomeEmpresa,
-                                                  )));
-                                    },
-                                    child: Text(
-                                      "Solicitar Entregador",
-                                      style: TextStyle(
-                                          fontFamily: "QuickSand",
-                                          color: Colors.white),
-                                    ),
-                                  ),
-
+                                      ),
+                                      SizedBox(height: 4),
+                                      SizedBox(height: 2),
+                                      SizedBox(height: 3),
+                                      StreamBuilder(
+                                        stream: Firestore.instance
+                                            .collection(snapshot.data["cidade"]
+                                                .toString())
+                                            .document(snapshot.data["empresa"])
+                                            .collection("ordensSolicitadas")
+                                            .document(
+                                                snapshot.data["codigoPedido"])
+                                            .snapshots(),
+                                        builder: (context, snapshot2) {
+                                          if (!snapshot2.hasData) {
+                                          } else {
+                                            return Column(
+                                              children: [
+                                                Text(
+                                                  "R\$" +
+                                                      snapshot2
+                                                          .data["precoDoFrete"]
+                                                          .toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontFamily: "QuickSand",
+                                                      fontSize: 20),
+                                                ),
+                                                Text(
+                                                  snapshot2
+                                                      .data["enderecoCliente"]
+                                                      .toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                StreamBuilder(
+                                                  stream: Firestore.instance
+                                                      .collection(snapshot2
+                                                          .data["clienteId"]
+                                                          .toString())
+                                                      .snapshots(),
+                                                  builder:
+                                                      (context, snapshot3) {
+                                                    if (!snapshot3.hasData) {
+                                                    } else {}
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      RaisedButton(
+                                        color: Colors.black54,
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CompradosTileEmpresa(
+                                                        orderId,
+                                                        nomeEmpresa,
+                                                      )));
+                                        },
+                                        child: Text(
+                                          "Vou Entregar",
+                                          style: TextStyle(
+                                              fontFamily: "QuickSand",
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                    }),
-              )
-            ],
-          )),
+                              ),
+                            );
+                          }
+                        }),
+                  )
+                ],
+              )),
+        )
+      ],
     );
   }
 }
