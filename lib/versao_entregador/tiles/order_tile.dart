@@ -19,7 +19,7 @@ class OrderTile extends StatelessWidget {
   String orderId, nomeEmpresa, uid;
   String cidade, empresa, codigoPedido;
 
-  OrderTile(this.orderId, uid);
+  OrderTile(this.orderId, this.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +395,8 @@ class OrderTile extends StatelessWidget {
 
                                           documentReference
                                               .updateData({"status": 3});
+
+
                                           documentReference3.setData({
                                             "codigoPedido": codigoPedido,
                                             "cidade": cidade,

@@ -1,9 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_abertos.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_entregues.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_transporte.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_entregues.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:flutter/material.dart';
 
 import '../../versao_empresa/pedidos_recebidos/blocs/orders_bloc.dart';
