@@ -8,15 +8,17 @@ import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
 
-class OrderTile extends StatelessWidget {
+class OrderTileAbertos extends StatelessWidget {
   String orderId, nomeEmpresa;
+  FlutterToast flutterToast;
 
-  OrderTile(this.orderId, this.nomeEmpresa);
+  OrderTileAbertos(this.orderId, this.nomeEmpresa);
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +162,54 @@ class OrderTile extends StatelessWidget {
                                           color: Colors.white),
                                     ),
                                   ),
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: snapshot.data[
+                                                    "solicitadoEntregador"] ==
+                                                false ||
+                                            snapshot.data[
+                                                    "solicitadoEntregador"] ==
+                                                null
+                                        ? () async {
+                                            DocumentReference
+                                                documentReference =
+                                                await Firestore.instance
+                                                    .collection("Entregadores")
+                                                    .document(
+                                                        "PedidosRecebidos")
+                                                    .collection("TempoReal")
+                                                    .document(snapshot
+                                                        .data.documentID);
+
+                                            documentReference.setData({
+                                              "empresa": nomeEmpresa,
+                                              "codigoPedido":
+                                                  snapshot.data.documentID,
+                                              "cidade": "Catalão - GO"
+                                            });
+
+//                                            _showToastEntregador();
+
+                                            DocumentReference
+                                                documentReferenceDois =
+                                                Firestore.instance
+                                                    .collection("Catalão - GO")
+                                                    .document(nomeEmpresa)
+                                                    .collection(
+                                                        "ordensSolicitadas")
+                                                    .document(orderId);
+
+                                            documentReferenceDois.updateData(
+                                                {"solicitadoEntregador": true});
+                                          }
+                                        : null,
+                                    child: Text(
+                                      "Solicitar Entregador",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
+                                  ),
                                   Text(_recuperarData(snapshot.data)),
                                 ],
                               )
@@ -171,6 +221,32 @@ class OrderTile extends StatelessWidget {
               )
             ],
           )),
+    );
+  }
+
+  _showToastEntregador() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Solicitação enviada para os entregadores!"),
+        ],
+      ),
+    );
+
+    flutterToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 3),
     );
   }
 }

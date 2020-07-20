@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_abertos.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/orders_bloc.dart';
@@ -10,7 +11,8 @@ class PedidosRecebidosAbertos extends StatefulWidget {
 
   PedidosRecebidosAbertos(this.nomeEmpresa);
   @override
-  _PedidosRecebidosAbertosState createState() => _PedidosRecebidosAbertosState(nomeEmpresa);
+  _PedidosRecebidosAbertosState createState() =>
+      _PedidosRecebidosAbertosState(nomeEmpresa);
 }
 
 class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
@@ -71,7 +73,8 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
-                        .map((doc) => OrderTile(doc.documentID, nomeEmpresa))
+                        .map((doc) =>
+                            OrderTileAbertos(doc.documentID, nomeEmpresa))
                         .toList(),
                   ),
                 )

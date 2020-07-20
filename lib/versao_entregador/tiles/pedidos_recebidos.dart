@@ -6,17 +6,21 @@ import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
-class PedidosRecebidos extends StatefulWidget {
-  String nomeEmpresa;
+import '../../versao_empresa/pedidos_recebidos/blocs/orders_bloc.dart';
 
-  PedidosRecebidos(this.nomeEmpresa);
+class PedidosRecebidos extends StatefulWidget {
+  String uid;
+
+  PedidosRecebidos(this.uid);
   @override
-  _PedidosRecebidosState createState() => _PedidosRecebidosState(nomeEmpresa);
+  _PedidosRecebidosState createState() => _PedidosRecebidosState(uid);
 }
 
 class _PedidosRecebidosState extends State<PedidosRecebidos> {
-  String nomeEmpresa;
-  _PedidosRecebidosState(this.nomeEmpresa);
+  String uid;
+
+  _PedidosRecebidosState(this.uid);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,26 +34,13 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: EdgeInsets.only(top: 20),
-                  child: Column(
+                  child: Row(
                     children: [
                       InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    PedidosRecebidosAbertos(nomeEmpresa)));
-                          },
-                          child: FlatButton(
-                            child: Image.asset(
-                              "assets/btn_pedidos_em_aberto.png",
-                              height: 140,
-                              width: 140,
-                            ),
-                          )),
-                      InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    PedidosRecebidosTransporte(nomeEmpresa)));
+                                    PedidosRecebidosTransporte(uid)));
                           },
                           child: FlatButton(
                             child: Image.asset(
@@ -62,7 +53,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    PedidosRecebidosEntregues(nomeEmpresa)));
+                                    PedidosRecebidosEntregues(uid)));
                           },
                           child: FlatButton(
                             child: Image.asset(

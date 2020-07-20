@@ -6,18 +6,18 @@ import 'package:flutter/material.dart';
 import '../blocs/orders_bloc.dart';
 
 class PedidosRecebidosTransporte extends StatefulWidget {
-  String nomeEmpresa;
+  String uid;
 
-  PedidosRecebidosTransporte(this.nomeEmpresa);
+  PedidosRecebidosTransporte(this.uid);
   @override
   _PedidosRecebidosTransporteState createState() =>
-      _PedidosRecebidosTransporteState(nomeEmpresa);
+      _PedidosRecebidosTransporteState(uid);
 }
 
 class _PedidosRecebidosTransporteState
     extends State<PedidosRecebidosTransporte> {
-  String nomeEmpresa;
-  _PedidosRecebidosTransporteState(this.nomeEmpresa);
+  String uid;
+  _PedidosRecebidosTransporteState(this.uid);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +27,11 @@ class _PedidosRecebidosTransporteState
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection("Catalão - GO")
-            .document(nomeEmpresa)
-            .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 2)
+            .collection("Entregadores")
+            .document("PedidosRecebidos")
+            .collection("Motoristas")
+            .document(uid)
+            .collection("PedidosAceitos")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -73,7 +74,7 @@ class _PedidosRecebidosTransporteState
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
-                        .map((doc) => OrderTile(doc.documentID, nomeEmpresa))
+                        .map((doc) => OrderTile(doc.documentID, uid))
                         .toList(),
                   ),
                 )

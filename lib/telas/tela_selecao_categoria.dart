@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
+import 'package:compreaidelivery/drawer/custom_drawer_entregador.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
 import 'package:compreaidelivery/versao_empresa/demonstrativos/demonstrativos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
@@ -11,6 +12,7 @@ import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class TelaSelecaoCategoria extends StatelessWidget {
   String cidadeEstado, endereco, imagem, uid;
@@ -127,7 +129,9 @@ class TelaSelecaoCategoria extends StatelessWidget {
                   "Entregador") {
                 return FutureBuilder<QuerySnapshot>(
                   future: Firestore.instance
-                      .collection("Entregador")
+                      .collection("Entregadores")
+                      .document("PedidosRecebidos")
+                      .collection("TempoReal")
                       .getDocuments(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -142,9 +146,9 @@ class TelaSelecaoCategoria extends StatelessWidget {
                             child: (Padding(
                               padding: EdgeInsets.only(top: 50),
                               child: ListView(
-                                scrollDirection: Axis.vertical,
                                 children: snapshot.data.documents
-                                    .map((doc) => OrderTile(doc.documentID))
+                                    .map(
+                                        (doc) => OrderTile(doc.documentID, uid))
                                     .toList(),
                               ),
                             )),

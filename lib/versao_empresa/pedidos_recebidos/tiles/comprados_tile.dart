@@ -10,12 +10,13 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CompradosTileEmpresa extends StatelessWidget {
-  String orderId, nomeEmpresa;
+  String orderId, nomeEmpresa, clienteId;
   String cidadeEstado = "Catalão - GO";
 
-  CompradosTileEmpresa(this.orderId, this.nomeEmpresa);
+  CompradosTileEmpresa(this.orderId, this.nomeEmpresa, this.clienteId);
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +98,136 @@ class CompradosTileEmpresa extends StatelessWidget {
 //                                ),,
                                     ),
                                     SizedBox(height: 4),
+                                    StreamBuilder(
+                                      stream: Firestore.instance
+                                          .collection("ConsumidorFinal")
+                                          .document(clienteId)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                        } else {
+                                          final nomeCliente =
+                                              TextEditingController();
+                                          final emailController =
+                                              TextEditingController();
+                                          nomeCliente.text =
+                                              snapshot.data["nome"].toString();
+                                          emailController.text =
+                                              snapshot.data["email"].toString();
+                                          String telefone = snapshot
+                                              .data["telefone"]
+                                              .toString();
+                                          return ExpansionTile(
+                                            title:
+                                                Text("Informações do Cliente"),
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Column(
+                                                  children: [
+                                                    TextField(
+                                                      controller: nomeCliente,
+                                                      enabled: false,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              "WorkSansSemiBold",
+                                                          fontSize: 16.0,
+                                                          color: Colors.black),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText:
+                                                            "Nome do Cliente",
+                                                        labelText:
+                                                            "Nome do Cliente",
+                                                        hintStyle: TextStyle(
+                                                            fontFamily:
+                                                                "QuickSand",
+                                                            fontSize: 17.0,
+                                                            color:
+                                                                Colors.black87),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    TextField(
+                                                      controller:
+                                                          emailController,
+                                                      enabled: false,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              "WorkSansSemiBold",
+                                                          fontSize: 16.0,
+                                                          color: Colors.black),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: "E-mail",
+                                                        labelText: "E-mail",
+                                                        hintStyle: TextStyle(
+                                                            fontFamily:
+                                                                "QuickSand",
+                                                            fontSize: 17.0,
+                                                            color:
+                                                                Colors.black87),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        FlatButton(
+                                                          onPressed: () async {
+                                                            var whatsappUrl =
+                                                                "whatsapp://send?phone=+55${telefone}&text=${"Olá, sou motorista e vim através do App CompreAqui!"}";
+                                                            await canLaunch(
+                                                                    whatsappUrl)
+                                                                ? launch(
+                                                                    whatsappUrl)
+                                                                : print(
+                                                                    "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                                                          },
+                                                          child: Image.asset(
+                                                            "assets/icon_zap.png",
+                                                            height: 50,
+                                                            width: 50,
+                                                          ),
+                                                        ),
+                                                        FlatButton(
+                                                          onPressed: () async {
+                                                            var mapsAppUrl =
+                                                                "https://www.google.com/maps/place/@${snapshot.data["latitude"]},${snapshot.data["longitude"]},17z";
+                                                            print(mapsAppUrl);
+                                                            await canLaunch(
+                                                                    mapsAppUrl)
+                                                                ? launch(
+                                                                    mapsAppUrl)
+                                                                : print(
+                                                                    "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                                                          },
+                                                          child: Image.asset(
+                                                            "assets/maps_usuario.png",
+                                                            height: 50,
+                                                            width: 50,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        }
+                                      },
+                                    ),
                                     SizedBox(height: 2),
                                     SizedBox(height: 3),
                                     Text(

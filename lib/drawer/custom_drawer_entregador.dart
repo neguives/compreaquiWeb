@@ -6,7 +6,6 @@ import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/perfil_usuario.dart';
 import 'package:compreaidelivery/telas/recomendar.dart';
 import 'package:compreaidelivery/tiles/drawer_tile.dart';
-import 'package:compreaidelivery/versao_entregador/tiles/pedidos_recebidos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,21 +13,22 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CustomDrawer extends StatefulWidget {
+class CustomDrawerEntregador extends StatefulWidget {
   String uid;
 
-  CustomDrawer(this.uid);
+  CustomDrawerEntregador(this.uid);
 
   @override
-  _CustomDrawerState createState() => _CustomDrawerState(uid);
+  _CustomDrawerEntregadorState createState() =>
+      _CustomDrawerEntregadorState(uid);
 }
 
-class _CustomDrawerState extends State<CustomDrawer> {
+class _CustomDrawerEntregadorState extends State<CustomDrawerEntregador> {
   UserModel user;
   String uid;
   String photo;
 
-  _CustomDrawerState(this.uid);
+  _CustomDrawerEntregadorState(this.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
                 } else {
                   if (snapshot.data["tipoPerfil"] == "Entregador") {
                     return _createDrawerItem(
@@ -65,7 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         text: "Meus Pedidos",
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PedidosRecebidos(uid)));
+                              builder: (context) => PerfilUsuario(uid)));
                         });
                   } else {
                     return _createDrawerItem(
@@ -79,10 +78,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 }
               },
             ),
-
+            _createDrawerItem(
+                icon: Icons.contacts,
+                text: 'Meu Perfil',
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PerfilUsuario(uid)));
+                }),
             _createDrawerItem(
               icon: Icons.business,
-              text: 'Sobre o CompreAqui',
+              text: 'Pedidos Recebidos',
               onTap: () =>
                   Navigator.pushReplacementNamed(context, Routes.profile),
             ),
