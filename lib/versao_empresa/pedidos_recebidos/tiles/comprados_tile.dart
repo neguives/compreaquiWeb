@@ -105,6 +105,7 @@ class CompradosTileEmpresa extends StatelessWidget {
                                           .snapshots(),
                                       builder: (context, snapshot) {
                                         if (!snapshot.hasData) {
+                                          return CircularProgressIndicator();
                                         } else {
                                           final nomeCliente =
                                               TextEditingController();

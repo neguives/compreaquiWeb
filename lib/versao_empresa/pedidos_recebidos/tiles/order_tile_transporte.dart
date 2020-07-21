@@ -8,15 +8,17 @@ import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
 
-class OrderTile extends StatelessWidget {
+class OrderTileTransporte extends StatelessWidget {
   String orderId, nomeEmpresa;
+  FlutterToast flutterToast;
 
-  OrderTile(this.orderId, this.nomeEmpresa);
+  OrderTileTransporte(this.orderId, this.nomeEmpresa);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class OrderTile extends StatelessWidget {
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
                         .collection("Catalão - GO")
-                        .document("Supermecado Bretas")
+                        .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
                         .snapshots(),
@@ -141,39 +143,27 @@ class OrderTile extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 3),
-                                  ExpansionTile(
-                                    title: Text("Entregador"),
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: Column(
-                                          children: [
-                                            Card(
-                                              elevation: 40,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      new BorderRadius.circular(
-                                                          100.0),
-                                                  side: BorderSide(
-                                                      color: Colors.white30)),
-                                              child: Container(
-                                                  width: 100.0,
-                                                  height: 100.0,
-                                                  decoration: new BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image:
-                                                          new DecorationImage(
-                                                        fit: BoxFit.fill,
-                                                        image: new NetworkImage(
-                                                            snapshot.data[
-                                                                    "imagemMotorista"]
-                                                                .toString()),
-                                                      ))),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              InformacoesMotoristas(
+                                                  snapshot
+                                                      .data["imagemMotorista"]
+                                                      .toString(),
+                                                  snapshot.data["nomeMotorista"]
+                                                      .toString(),
+                                                  snapshot.data[
+                                                          "placaCarroMotorista"]
+                                                      .toString())));
+                                    },
+                                    child: Text(
+                                      "Ver Entregador",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
                                   ),
                                   RaisedButton(
                                     color: Colors.black54,
@@ -205,6 +195,32 @@ class OrderTile extends StatelessWidget {
               )
             ],
           )),
+    );
+  }
+
+  _showToastEntregador() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Solicitação enviada para os entregadores!"),
+        ],
+      ),
+    );
+
+    flutterToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 3),
     );
   }
 }
@@ -274,4 +290,57 @@ Widget _buildCircle(String title, String subtitle, int status, int thisStatus) {
       Text(subtitle)
     ],
   );
+}
+
+class InformacoesMotoristas extends StatelessWidget {
+  String fotoPerfil, nomeMotorista, placaCarro;
+
+  InformacoesMotoristas(this.fotoPerfil, this.nomeMotorista, this.placaCarro);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: new IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        title: Text("Entregador"),
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                elevation: 40,
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(100.0),
+                    side: BorderSide(color: Colors.white30)),
+                child: Container(
+                    width: 180.0,
+                    height: 180.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                          fit: BoxFit.fill,
+                          image: new NetworkImage(fotoPerfil),
+                        ))),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            nomeMotorista,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          ),
+          Text(
+            placaCarro,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          )
+        ],
+      ),
+    );
+  }
 }

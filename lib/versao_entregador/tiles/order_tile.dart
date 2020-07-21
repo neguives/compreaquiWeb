@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,8 @@ import 'package:url_launcher/url_launcher.dart';
 class OrderTile extends StatelessWidget {
   String orderId, nomeEmpresa, uid;
   String cidade, empresa, codigoPedido;
+
+  String motorista, placaCarroMotorista, imagemMotorista;
 
   OrderTile(this.orderId, this.uid);
 
@@ -221,6 +224,13 @@ class OrderTile extends StatelessWidget {
                                                     if (!snapshot.hasData) {
                                                       return CircularProgressIndicator();
                                                     } else {
+                                                      placaCarroMotorista =
+                                                          snapshot.data[
+                                                              "placaCarro"];
+                                                      imagemMotorista = snapshot
+                                                          .data["imagem"];
+                                                      motorista =
+                                                          snapshot.data["nome"];
                                                       final nomeCliente =
                                                           TextEditingController();
                                                       final emailController =
@@ -393,9 +403,13 @@ class OrderTile extends StatelessWidget {
                                                   .collection("PedidosAceitos")
                                                   .document(codigoPedido);
 
-                                          documentReference
-                                              .updateData({"status": 3});
-
+                                          documentReference.updateData({
+                                            "status": 3,
+                                            "placaCarroMotorista":
+                                                placaCarroMotorista,
+                                            "nomeMotorista": motorista,
+                                            "imagemMotorista": imagemMotorista
+                                          });
 
                                           documentReference3.setData({
                                             "codigoPedido": codigoPedido,
@@ -403,6 +417,12 @@ class OrderTile extends StatelessWidget {
                                             "empresa": empresa,
                                           });
                                           documentReference2.delete();
+
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PedidosRecebidosTransporte(
+                                                          uid)));
                                         },
                                         child: Text(
                                           "Vou Entregar",
