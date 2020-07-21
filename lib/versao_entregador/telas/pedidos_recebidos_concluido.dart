@@ -1,23 +1,24 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
+import 'package:compreaidelivery/versao_entregador/tiles/order_tile_concluido.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile_transporte.dart';
 import 'package:flutter/material.dart';
 
 
-class PedidosRecebidosTransporte extends StatefulWidget {
+class PedidosRecebidosConcluido extends StatefulWidget {
   String uid;
 
-  PedidosRecebidosTransporte(this.uid);
+  PedidosRecebidosConcluido(this.uid);
   @override
-  _PedidosRecebidosTransporteState createState() =>
-      _PedidosRecebidosTransporteState(uid);
+  _PedidosRecebidosConcluidoState createState() =>
+      _PedidosRecebidosConcluidoState(uid);
 }
 
-class _PedidosRecebidosTransporteState
-    extends State<PedidosRecebidosTransporte> {
+class _PedidosRecebidosConcluidoState
+    extends State<PedidosRecebidosConcluido> {
   String uid;
-  _PedidosRecebidosTransporteState(this.uid);
+  _PedidosRecebidosConcluidoState(this.uid);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +32,7 @@ class _PedidosRecebidosTransporteState
             .document("PedidosRecebidos")
             .collection("Motoristas")
             .document(uid)
-            .collection("PedidosAceitos")
+            .collection("PedidosConcluidos")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -58,7 +59,7 @@ class _PedidosRecebidosTransporteState
                     child: ListView(
                       children: snapshot.data.documents
                           .map(
-                              (doc) => OrderTileTransporte(doc.documentID, uid))
+                              (doc) => OrderTileConcluido(doc.documentID, uid))
                           .toList(),
                     ),
                   )),

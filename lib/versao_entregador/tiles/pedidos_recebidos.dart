@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_concluido.dart';
 import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_entregues.dart';
 import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    PedidosRecebidosEntregues(uid)));
+                                    PedidosRecebidosConcluido(uid)));
                           },
                           child: FlatButton(
                             child: Image.asset(

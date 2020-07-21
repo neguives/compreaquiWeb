@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_concluido.dart';
+import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +17,13 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OrderTile extends StatelessWidget {
+class OrderTileTransporte extends StatelessWidget {
   String orderId, nomeEmpresa, uid;
   String cidade, empresa, codigoPedido;
 
-  OrderTile(this.orderId, this.uid);
+  String motorista, placaCarroMotorista, imagemMotorista;
+
+  OrderTileTransporte(this.orderId, this.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,9 @@ class OrderTile extends StatelessWidget {
                         stream: Firestore.instance
                             .collection("Entregadores")
                             .document("PedidosRecebidos")
-                            .collection("TempoReal")
+                            .collection("Motoristas")
+                        .document(uid)
+                        .collection("PedidosAceitos")
                             .document(orderId)
                             .snapshots(),
                         builder: (context, snapshot) {
@@ -49,9 +55,9 @@ class OrderTile extends StatelessWidget {
                             );
                           else {
                             cidade =
-                                snapshot.data["cidade"].toString().length <= 0
-                                    ? "Catalão - GO"
-                                    : snapshot.data["cidade"];
+                            snapshot.data["cidade"].toString().length <= 0
+                                ? "Catalão - GO"
+                                : snapshot.data["cidade"];
                             empresa = snapshot.data["empresa"];
                             codigoPedido = snapshot.data["codigoPedido"];
                             return Center(
@@ -60,14 +66,14 @@ class OrderTile extends StatelessWidget {
                                 children: <Widget>[
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     children: <Widget>[
                                       StreamBuilder(
                                         stream: Firestore.instance
                                             .collection(snapshot.data["cidade"]
-                                                .toString())
+                                            .toString())
                                             .document(snapshot.data["empresa"]
-                                                .toString())
+                                            .toString())
                                             .snapshots(),
                                         builder: (context, snapshot2) {
                                           if (!snapshot2.hasData) {
@@ -77,8 +83,8 @@ class OrderTile extends StatelessWidget {
                                               elevation: 40,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      new BorderRadius.circular(
-                                                          100.0),
+                                                  new BorderRadius.circular(
+                                                      100.0),
                                                   side: BorderSide(
                                                       color: Colors.white30)),
                                               child: Container(
@@ -87,7 +93,7 @@ class OrderTile extends StatelessWidget {
                                                   decoration: new BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       image:
-                                                          new DecorationImage(
+                                                      new DecorationImage(
                                                         fit: BoxFit.fill,
                                                         image: new NetworkImage(
                                                             snapshot2
@@ -130,7 +136,7 @@ class OrderTile extends StatelessWidget {
                                             return CircularProgressIndicator();
                                           } else {
                                             final enderecoController =
-                                                TextEditingController();
+                                            TextEditingController();
                                             enderecoController.text = snapshot
                                                 .data["enderecoCliente"]
                                                 .toString();
@@ -138,40 +144,40 @@ class OrderTile extends StatelessWidget {
                                               children: [
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                                   children: [
                                                     Card(
                                                       child: Padding(
                                                           padding:
-                                                              EdgeInsets.all(5),
+                                                          EdgeInsets.all(5),
                                                           child: Row(
                                                             children: [
                                                               Text(
                                                                 "Preço do frete: ",
                                                                 textAlign:
-                                                                    TextAlign
-                                                                        .center,
+                                                                TextAlign
+                                                                    .center,
                                                                 style: TextStyle(
                                                                     fontFamily:
-                                                                        "QuickSand",
+                                                                    "QuickSand",
                                                                     fontSize:
-                                                                        12),
+                                                                    12),
                                                               ),
                                                               Text(
                                                                 "R\$" +
                                                                     snapshot
                                                                         .data[
-                                                                            "precoDoFrete"]
+                                                                    "precoDoFrete"]
                                                                         .toStringAsFixed(
-                                                                            2),
+                                                                        2),
                                                                 textAlign:
-                                                                    TextAlign
-                                                                        .center,
+                                                                TextAlign
+                                                                    .center,
                                                                 style:
-                                                                    TextStyle(
+                                                                TextStyle(
 //            fontFamily: "QuickSand",
-                                                                        fontSize:
-                                                                            20),
+                                                                    fontSize:
+                                                                    20),
                                                               ),
                                                             ],
                                                           )),
@@ -183,26 +189,48 @@ class OrderTile extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+
+                                                    Text(
+                                                      "" +
+                                                          snapshot
+                                                              .data[
+                                                          "data"]
+                                                      ,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .center,
+                                                      style:
+                                                      TextStyle(
+//            fontFamily: "QuickSand",
+                                                          fontSize:
+                                                          15),
+                                                    ),
+                                                  ],
+                                                ),
                                                 SizedBox(
                                                   height: 10,
                                                 ),
                                                 TextField(
                                                   maxLines: 4,
                                                   controller:
-                                                      enderecoController,
+                                                  enderecoController,
                                                   enabled: false,
                                                   style: TextStyle(
                                                       fontFamily:
-                                                          "WorkSansSemiBold",
+                                                      "WorkSansSemiBold",
                                                       fontSize: 16.0,
                                                       color: Colors.black),
                                                   decoration: InputDecoration(
                                                     border:
-                                                        OutlineInputBorder(),
+                                                    OutlineInputBorder(),
                                                     hintText:
-                                                        "Endereço de Entrega",
+                                                    "Endereço de Entrega",
                                                     labelText:
-                                                        "Endereço de Entrega",
+                                                    "Endereço de Entrega",
                                                     hintStyle: TextStyle(
                                                         fontFamily: "QuickSand",
                                                         fontSize: 17.0,
@@ -212,18 +240,18 @@ class OrderTile extends StatelessWidget {
                                                 StreamBuilder(
                                                   stream: Firestore.instance
                                                       .collection(
-                                                          "ConsumidorFinal")
+                                                      "ConsumidorFinal")
                                                       .document(snapshot
-                                                          .data["clienteId"])
+                                                      .data["clienteId"])
                                                       .snapshots(),
                                                   builder: (context, snapshot) {
                                                     if (!snapshot.hasData) {
                                                       return CircularProgressIndicator();
                                                     } else {
                                                       final nomeCliente =
-                                                          TextEditingController();
+                                                      TextEditingController();
                                                       final emailController =
-                                                          TextEditingController();
+                                                      TextEditingController();
                                                       nomeCliente.text =
                                                           snapshot.data["nome"]
                                                               .toString();
@@ -239,35 +267,35 @@ class OrderTile extends StatelessWidget {
                                                         children: [
                                                           Padding(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    5),
+                                                            EdgeInsets.all(
+                                                                5),
                                                             child: Column(
                                                               children: [
                                                                 TextField(
                                                                   controller:
-                                                                      nomeCliente,
+                                                                  nomeCliente,
                                                                   enabled:
-                                                                      false,
+                                                                  false,
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          "WorkSansSemiBold",
+                                                                      "WorkSansSemiBold",
                                                                       fontSize:
-                                                                          16.0,
+                                                                      16.0,
                                                                       color: Colors
                                                                           .black),
                                                                   decoration:
-                                                                      InputDecoration(
+                                                                  InputDecoration(
                                                                     border:
-                                                                        OutlineInputBorder(),
+                                                                    OutlineInputBorder(),
                                                                     hintText:
-                                                                        "Nome do Cliente",
+                                                                    "Nome do Cliente",
                                                                     labelText:
-                                                                        "Nome do Cliente",
+                                                                    "Nome do Cliente",
                                                                     hintStyle: TextStyle(
                                                                         fontFamily:
-                                                                            "QuickSand",
+                                                                        "QuickSand",
                                                                         fontSize:
-                                                                            17.0,
+                                                                        17.0,
                                                                         color: Colors
                                                                             .black87),
                                                                   ),
@@ -277,29 +305,29 @@ class OrderTile extends StatelessWidget {
                                                                 ),
                                                                 TextField(
                                                                   controller:
-                                                                      emailController,
+                                                                  emailController,
                                                                   enabled:
-                                                                      false,
+                                                                  false,
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          "WorkSansSemiBold",
+                                                                      "WorkSansSemiBold",
                                                                       fontSize:
-                                                                          16.0,
+                                                                      16.0,
                                                                       color: Colors
                                                                           .black),
                                                                   decoration:
-                                                                      InputDecoration(
+                                                                  InputDecoration(
                                                                     border:
-                                                                        OutlineInputBorder(),
+                                                                    OutlineInputBorder(),
                                                                     hintText:
-                                                                        "E-mail",
+                                                                    "E-mail",
                                                                     labelText:
-                                                                        "E-mail",
+                                                                    "E-mail",
                                                                     hintStyle: TextStyle(
                                                                         fontFamily:
-                                                                            "QuickSand",
+                                                                        "QuickSand",
                                                                         fontSize:
-                                                                            17.0,
+                                                                        17.0,
                                                                         color: Colors
                                                                             .black87),
                                                                   ),
@@ -309,8 +337,8 @@ class OrderTile extends StatelessWidget {
                                                                 ),
                                                                 Row(
                                                                   mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                                   children: [
                                                                     FlatButton(
                                                                       onPressed:
@@ -325,9 +353,9 @@ class OrderTile extends StatelessWidget {
                                                                           .asset(
                                                                         "assets/icon_zap.png",
                                                                         height:
-                                                                            50,
+                                                                        50,
                                                                         width:
-                                                                            50,
+                                                                        50,
                                                                       ),
                                                                     ),
                                                                     FlatButton(
@@ -345,9 +373,9 @@ class OrderTile extends StatelessWidget {
                                                                           .asset(
                                                                         "assets/maps_usuario.png",
                                                                         height:
-                                                                            50,
+                                                                        50,
                                                                         width:
-                                                                            50,
+                                                                        50,
                                                                       ),
                                                                     )
                                                                   ],
@@ -369,31 +397,40 @@ class OrderTile extends StatelessWidget {
                                         color: Colors.black54,
                                         onPressed: () async {
                                           DocumentReference documentReference =
-                                              await Firestore.instance
-                                                  .collection(cidade)
-                                                  .document(empresa)
-                                                  .collection(
-                                                      "ordensSolicitadas")
-                                                  .document(codigoPedido);
+                                          await Firestore.instance
+                                              .collection(cidade)
+                                              .document(empresa)
+                                              .collection(
+                                              "ordensSolicitadas")
+                                              .document(codigoPedido);
 
                                           DocumentReference documentReference2 =
-                                              await Firestore.instance
-                                                  .collection("Entregadores")
-                                                  .document("PedidosRecebidos")
-                                                  .collection("TempoReal")
-                                                  .document(codigoPedido);
+                                          await Firestore.instance
+                                              .collection("Entregadores")
+                                              .document("PedidosRecebidos")
+                                              .collection("TempoReal")
+                                              .document(codigoPedido);
 
                                           DocumentReference documentReference3 =
-                                              await Firestore.instance
-                                                  .collection("Entregadores")
-                                                  .document("PedidosRecebidos")
-                                                  .collection("Motoristas")
-                                                  .document(uid)
-                                                  .collection("PedidosAceitos")
-                                                  .document(codigoPedido);
+                                          await Firestore.instance
+                                              .collection("Entregadores")
+                                              .document("PedidosRecebidos")
+                                              .collection("Motoristas")
+                                              .document(uid)
+                                              .collection("PedidosConcluidos")
+                                              .document(codigoPedido);
+
+                                          DocumentReference documentReference4 =
+                                          await Firestore.instance
+                                              .collection("Entregadores")
+                                              .document("PedidosRecebidos")
+                                              .collection("Motoristas")
+                                              .document(uid)
+                                              .collection("PedidosAceitos")
+                                              .document(codigoPedido);
 
                                           documentReference
-                                              .updateData({"status": 3});
+                                              .updateData({"status": 4});
 
 
                                           documentReference3.setData({
@@ -401,10 +438,17 @@ class OrderTile extends StatelessWidget {
                                             "cidade": cidade,
                                             "empresa": empresa,
                                           });
+
                                           documentReference2.delete();
+                                          documentReference4.delete();
+
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                    PedidosRecebidosConcluido(uid)));
                                         },
                                         child: Text(
-                                          "Vou Entregar",
+                                          "Confirmar Entrega",
                                           style: TextStyle(
                                               fontFamily: "QuickSand",
                                               color: Colors.white),
