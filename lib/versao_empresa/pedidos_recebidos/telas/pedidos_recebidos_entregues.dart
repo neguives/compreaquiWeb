@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_transporte.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/orders_bloc.dart';
@@ -72,7 +73,8 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
-                        .map((doc) => OrderTile(doc.documentID, nomeEmpresa))
+                        .map((doc) =>
+                            OrderTileTransporte(doc.documentID, nomeEmpresa))
                         .toList(),
                   ),
                 )

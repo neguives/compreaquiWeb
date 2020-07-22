@@ -31,7 +31,7 @@ class OrderTile extends StatelessWidget {
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
                         .collection("Catalão - GO")
-                        .document("Supermecado Bretas")
+                        .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
                         .snapshots(),
