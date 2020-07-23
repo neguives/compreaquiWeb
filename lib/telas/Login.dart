@@ -632,8 +632,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                         onPressed: () {
                           if (_formKeyRegister.currentState.validate()) {
                             Map<String, dynamic> userData = {
-                              "photo":
-                                  "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
+                              "photo": "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
                               "nome": _nameController.text,
                               "apelido": _apelidoController.text,
                               "email": _emailController.text,
@@ -641,6 +640,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                               "cidade": _cidadeController.text,
                               "latitude": "-12.117111",
                               "logintude": "-38.430454",
+                              "tipoPerfil": "Entregador"
                             };
 
                             model.signUp(

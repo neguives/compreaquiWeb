@@ -17,7 +17,10 @@ import 'package:flutter/widgets.dart';
 class TelaSelecaoCategoria extends StatelessWidget {
   String cidadeEstado, endereco, imagem, uid;
   double latitude, longitude;
+  final enderecoController =
+  TextEditingController();
 
+  bool enderecoConfirmado = false;
   TelaSelecaoCategoria(
       {this.cidadeEstado,
       this.endereco,
@@ -200,20 +203,10 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                         children: <Widget>[
                                           InkWell(
                                               onTap: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EmpresasTab(
-                                                                cidade:
-                                                                    cidadeEstado,
-                                                                endereco:
-                                                                    endereco,
-                                                                latitude:
-                                                                    latitude,
-                                                                longitude:
-                                                                    longitude,
-                                                                categoria:
-                                                                    "Supermecado")));
+                                                _showDialogEndereco(context);
+
+
+
                                               },
                                               child: FlatButton(
                                                 child: Image.asset(
@@ -300,4 +293,69 @@ class TelaSelecaoCategoria extends StatelessWidget {
           },
         ));
   }
+  void _showDialogEndereco(BuildContext context) {
+
+    enderecoController.text = endereco;
+    // flutter defined function
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Onde será a sua entrega ?"),
+          content: new  TextField(
+            maxLines: 4,
+            controller:
+            enderecoController,
+            enabled: true,
+            style: TextStyle(
+                fontFamily:
+                "WorkSansSemiBold",
+                fontSize: 16.0,
+                color: Colors.black),
+            decoration: InputDecoration(
+              border:
+              OutlineInputBorder(),
+              hintText:
+              "Endereço de Entrega",
+              labelText:
+              "Endereço de Entrega",
+              hintStyle: TextStyle(
+                  fontFamily: "QuickSand",
+                  fontSize: 17.0,
+                  color: Colors.black87),
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Confirmo o Endereço"),
+              onPressed: () {
+                endereco = enderecoController.text;
+                enderecoConfirmado = true;
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EmpresasTab(
+
+                                cidade:
+                                cidadeEstado,
+                                endereco:
+                                endereco,
+                                latitude:
+                                latitude,
+                                longitude:
+                                longitude,
+                                categoria:
+                                "Supermecado")));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

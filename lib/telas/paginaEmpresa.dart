@@ -50,7 +50,7 @@ class PaginaEmpresa extends StatelessWidget {
         latitude, longitude, latitudeEmpresa, longitudeEmpresa);
 
     double distancia = distanceInMeters / 1000;
-    distanciaReal = "Mais de " + distancia.toStringAsFixed(1) + " km";
+    distanciaReal = "Mais de " + distancia.toStringAsFixed(2) + " km";
 
     print('The distance is: $distanciaReal');
     return distanciaReal;
