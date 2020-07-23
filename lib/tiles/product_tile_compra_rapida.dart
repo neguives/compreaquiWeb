@@ -3,13 +3,13 @@ import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
 import 'package:flutter/material.dart';
 
-class ProductTile extends StatelessWidget {
+class ProductTileCompraRapida extends StatelessWidget {
   final String type;
   final ProductData product;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
 
-  ProductTile(
+  ProductTileCompraRapida(
     this.type,
     this.product,
     @required this.nomeEmpresa,
@@ -37,7 +37,7 @@ class ProductTile extends StatelessWidget {
                 telefone)));
       },
       child: Card(
-          child: type == "grid"
+          child: type == "list"
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.start,

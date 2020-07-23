@@ -103,7 +103,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           padding: EdgeInsets.only(
                               left: 30, right: 30, top: 30, bottom: 20),
                           child: Image.asset(
-                            'assets/logomodificada.png',
+                            'assets/logo.png',
                             width: 200,
                             height: 200,
                           )),

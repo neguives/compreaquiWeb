@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/tiles/product_tile.dart';
+import 'package:compreaidelivery/tiles/product_tile_compra_rapida.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
 import 'package:flutter/material.dart';
 
@@ -116,7 +117,7 @@ class Products_Screen extends StatelessWidget {
                           ProductData data = ProductData.fromDocument(
                               snapshot.data.documents[index]);
                           data.category = this.snapshot.documentID;
-                          return ProductTile(
+                          return ProductTileCompraRapida(
                               "list",
                               data,
                               nomeEmpresa,
