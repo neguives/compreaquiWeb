@@ -113,7 +113,7 @@ class CartModel extends Model {
   }
 
   double getDesconto() {
-    return getProductPrice() * discountPercentage / 100;
+    return getProductPrice() + discountPercentage;
   }
 
   double getFrete() {

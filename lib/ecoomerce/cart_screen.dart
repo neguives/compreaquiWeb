@@ -5,6 +5,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/CartTile.dart';
 import 'package:compreaidelivery/widgets/card_cartao_credito.dart';
 import 'package:compreaidelivery/widgets/card_desconto.dart';
+import 'package:compreaidelivery/widgets/card_entrega.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
 import 'package:compreaidelivery/widgets/cart_resumo.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +113,8 @@ class CartScreen extends StatelessWidget {
                   }).toList(),
                 ),
                 CardDesconto(nomeEmpresa),
-                CartResumo(() async {
+                CardEntrega(),
+                CardResumo(() async {
                   String ordemId = await model.finalizarCompra(
                       nomeEmpresa, endereco, cidadeEstado);
                   if (ordemId != null) {

@@ -14,11 +14,11 @@ class CardDesconto extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ExpansionTile(
         title: Text(
-          "Cupom de desconto",
+          "Como será a entrega do pedido ?",
           textAlign: TextAlign.start,
           style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
         ),
-        leading: Icon(Icons.card_giftcard),
+        leading: Icon(Icons.directions_car),
         trailing: Icon(Icons.add),
         children: <Widget>[
           Padding(
@@ -29,7 +29,7 @@ class CardDesconto extends StatelessWidget {
               initialValue: CartModel.of(context).cupomDesconto ?? "",
               onFieldSubmitted: (text) {
                 Firestore.instance
-                    .collection("EmpresasParceiras")
+                    .collection("Catalão - GO")
                     .document(nomeEmpresa)
                     .collection("cuponsDesconto")
                     .document(text)

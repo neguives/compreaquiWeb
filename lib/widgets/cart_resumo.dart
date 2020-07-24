@@ -6,17 +6,29 @@ import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:math' show cos, sqrt, asin;
 
-class CartResumo extends StatelessWidget {
+class CardResumo extends StatefulWidget {
   String nomeEmpresa, cidadeEstado, endereco;
   double latitude, longitude;
   final VoidCallback buy;
 
-  CartResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
+  CardResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
+      this.latitude, this.longitude);
+  @override
+  _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
+      this.latitude, this.longitude);
+}
+
+class _CardResumoState extends State<CardResumo> {
+  String nomeEmpresa, cidadeEstado, endereco;
+  double latitude, longitude;
+  final VoidCallback buy;
+
+  _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
   final TextEditingController _startCoordinatesTextController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _endCoordinatesTextController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +72,25 @@ class CartResumo extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Text(
-                        "Entrega do Pedido",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Entrega Expressa (envio imediato)"),
-                          Text("R\$ ${frete.toStringAsFixed(2)}"),
+                      ExpansionTile(
+                        title: Text(
+                          "Como o seu pedido será entregue ?",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        children: [
+
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Entrega Expressa (envio imediato)"),
+                              Text("R\$ ${frete.toStringAsFixed(2)}"),
+                            ],
+                          ),
                         ],
                       ),
                       Divider(
@@ -149,7 +166,7 @@ class CartResumo extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text("Desconto"),
-                          Text("- R\$ ${desconto.toStringAsFixed(2)}"),
+                          Text("- R\$ ${model.getDesconto()}"),
                         ],
                       ),
                       Divider(),
@@ -173,7 +190,7 @@ class CartResumo extends StatelessWidget {
                                 color: Colors.blue),
                           ),
                           Text(
-                            "R\$ ${(preco + frete - desconto).toStringAsFixed(2)}",
+                            "R\$ ${(preco + frete - model.getDesconto()).toStringAsFixed(2)}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
