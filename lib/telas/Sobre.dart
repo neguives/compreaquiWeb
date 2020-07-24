@@ -23,16 +23,16 @@ class _SobreState extends State<Sobre> {
         payment: Payment(
             currency: "BRL",
             type: TypePayment.creditCard,
-            amount: 10,
+            amount: 20,
             returnMessage: "https://www.cielo.com.br",
             installments: 1,
-            softDescriptor: "Pagameento",
+            softDescriptor: "CompreAqui",
             creditCard: CreditCard(
-              cardNumber: "4551841109742132",
-              holder: "LUCAS S REINALDO",
-              expirationDate: "10/2023",
-              securityCode: "354",
-              brand: "Visa",
+              cardNumber: "5502097794419158",
+              holder: "NATIELLE DE FRIAS NOGUEIRA",
+              expirationDate: "02/2028",
+              securityCode: "944",
+              brand: "Master",
             )));
 
     try {
