@@ -3,6 +3,7 @@ import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/routes/routes.dart';
 import 'package:compreaidelivery/telas/Login.dart';
+import 'package:compreaidelivery/telas/Sobre.dart';
 import 'package:compreaidelivery/telas/perfil_usuario.dart';
 import 'package:compreaidelivery/telas/recomendar.dart';
 import 'package:compreaidelivery/tiles/drawer_tile.dart';
@@ -81,11 +82,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
 
             _createDrawerItem(
-              icon: Icons.business,
-              text: 'Sobre o CompreAqui',
-              onTap: () =>
-                  Navigator.pushReplacementNamed(context, Routes.profile),
-            ),
+                icon: Icons.business,
+                text: 'Sobre o CompreAqui',
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => Sobre()));
+                }),
 //            _createDrawerItem(
 //                icon: Icons.business_center,
 //                text: 'Recomendar Estabelecimento',
