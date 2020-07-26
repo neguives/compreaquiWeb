@@ -36,6 +36,17 @@ class Products_Screen extends StatelessWidget {
             telefone: telefone,
           ),
           appBar: AppBar(
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearchDelegate(),
+                  );
+                },
+              ),
+            ],
             iconTheme: IconThemeData(
               color: Colors.black, //change your color here
             ),
@@ -135,36 +146,75 @@ class Products_Screen extends StatelessWidget {
                             })
                       ],
                     ),
-//                    Align(
-//                      alignment: Alignment.bottomCenter,
-//                      child: Card(
-//                        child: Padding(
-//                          child: TextField(
-//                            maxLines: 1,
-//                            controller: buscarProdutoController,
-//                            enabled: false,
-//                            style: TextStyle(
-//                                fontFamily: "WorkSansSemiBold",
-//                                fontSize: 16.0,
-//                                color: Colors.black),
-//                            decoration: InputDecoration(
-//                              border: InputBorder.none,
-//                              hintText: "Observação",
-//                              labelText: "Observação",
-//                              hintStyle: TextStyle(
-//                                  fontFamily: "QuickSand",
-//                                  fontSize: 12.0,
-//                                  color: Colors.black87),
-//                            ),
-//                          ),
-//                          padding: EdgeInsets.all(5),
-//                        ),
-//                      ),
-//                    )
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Card(
+                        child: Padding(
+                          child: TextField(
+                            maxLines: 1,
+                            controller: buscarProdutoController,
+                            enabled: false,
+                            style: TextStyle(
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Observação",
+                              labelText: "Observação",
+                              hintStyle: TextStyle(
+                                  fontFamily: "QuickSand",
+                                  fontSize: 12.0,
+                                  color: Colors.black87),
+                            ),
+                          ),
+                          padding: EdgeInsets.all(5),
+                        ),
+                      ),
+                    )
                   ],
                 );
             },
           )),
     );
+  }
+}
+
+class CustomSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    print(query);
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    return null;
   }
 }
