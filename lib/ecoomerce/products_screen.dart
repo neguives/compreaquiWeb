@@ -19,6 +19,7 @@ class Products_Screen extends StatelessWidget {
       this.latitude,
       this.longitude,
       this.telefone);
+  final buscarProdutoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,58 +77,90 @@ class Products_Screen extends StatelessWidget {
                 .collection("Produtos e Servicos")
                 .document(snapshot.data["title"])
                 .collection("itens")
-                .getDocuments(),
+                .orderBy("title")
+                .startAt(["ADORALLE"]).getDocuments(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               else
-                return TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: <Widget>[
-                    GridView.builder(
-                        padding: EdgeInsets.all(5),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                            childAspectRatio: 0.65),
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (context, index) {
-                          ProductData data = ProductData.fromDocument(
-                              snapshot.data.documents[index]);
-                          data.category = this.snapshot.documentID;
-                          print(data.quantidade);
-                          return ProductTile(
-                              "grid",
-                              data,
-                              nomeEmpresa,
-                              imagemEmpresa,
-                              cidadeEstado,
-                              endereco,
-                              latitude,
-                              longitude,
-                              telefone);
-                        }),
-                    ListView.builder(
-                        padding: EdgeInsets.all(4),
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (context, index) {
-                          ProductData data = ProductData.fromDocument(
-                              snapshot.data.documents[index]);
-                          data.category = this.snapshot.documentID;
-                          return ProductTileCompraRapida(
-                              "list",
-                              data,
-                              nomeEmpresa,
-                              imagemEmpresa,
-                              cidadeEstado,
-                              endereco,
-                              latitude,
-                              longitude,
-                              telefone);
-                        })
+                return Stack(
+                  children: [
+                    TabBarView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: <Widget>[
+                        GridView.builder(
+                            padding: EdgeInsets.all(5),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 4,
+                                    crossAxisSpacing: 4,
+                                    childAspectRatio: 0.65),
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              ProductData data = ProductData.fromDocument(
+                                  snapshot.data.documents[index]);
+                              data.category = this.snapshot.documentID;
+                              print(data.quantidade);
+                              return ProductTile(
+                                  "grid",
+                                  data,
+                                  nomeEmpresa,
+                                  imagemEmpresa,
+                                  cidadeEstado,
+                                  endereco,
+                                  latitude,
+                                  longitude,
+                                  telefone);
+                            }),
+                        ListView.builder(
+                            padding: EdgeInsets.all(4),
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              ProductData data = ProductData.fromDocument(
+                                  snapshot.data.documents[index]);
+                              data.category = this.snapshot.documentID;
+                              return ProductTileCompraRapida(
+                                  "list",
+                                  data,
+                                  nomeEmpresa,
+                                  imagemEmpresa,
+                                  cidadeEstado,
+                                  endereco,
+                                  latitude,
+                                  longitude,
+                                  telefone);
+                            })
+                      ],
+                    ),
+//                    Align(
+//                      alignment: Alignment.bottomCenter,
+//                      child: Card(
+//                        child: Padding(
+//                          child: TextField(
+//                            maxLines: 1,
+//                            controller: buscarProdutoController,
+//                            enabled: false,
+//                            style: TextStyle(
+//                                fontFamily: "WorkSansSemiBold",
+//                                fontSize: 16.0,
+//                                color: Colors.black),
+//                            decoration: InputDecoration(
+//                              border: InputBorder.none,
+//                              hintText: "Observação",
+//                              labelText: "Observação",
+//                              hintStyle: TextStyle(
+//                                  fontFamily: "QuickSand",
+//                                  fontSize: 12.0,
+//                                  color: Colors.black87),
+//                            ),
+//                          ),
+//                          padding: EdgeInsets.all(5),
+//                        ),
+//                      ),
+//                    )
                   ],
                 );
             },

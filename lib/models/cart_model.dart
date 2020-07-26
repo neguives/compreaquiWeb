@@ -9,8 +9,10 @@ import 'package:scoped_model/scoped_model.dart';
 class CartModel extends Model {
   //Cupom de desconto
   String cupomDesconto;
+  String tipoFrete;
   String nomeEmpresa;
   int discountPercentage = 0;
+  double precoFrete = 0;
 
   UserModel user;
   List<CartProduct> products = [];
@@ -104,6 +106,11 @@ class CartModel extends Model {
     this.discountPercentage = descontoPorcentagem;
   }
 
+  void setFrete(String cupomCodigo, double precoFrete) {
+    this.tipoFrete = cupomCodigo;
+    this.precoFrete = precoFrete;
+  }
+
   double getProductPrice() {
     double price = 0.0;
     for (CartProduct c in products) {
@@ -113,11 +120,13 @@ class CartModel extends Model {
   }
 
   double getDesconto() {
-    return getProductPrice() + discountPercentage;
+    notifyListeners();
+
+    return getProductPrice() - getProductPrice() + discountPercentage;
   }
 
   double getFrete() {
-    return 7.00;
+    return precoFrete;
   }
 
   void updatePrice() {

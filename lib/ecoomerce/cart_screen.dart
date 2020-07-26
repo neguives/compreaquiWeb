@@ -113,7 +113,6 @@ class CartScreen extends StatelessWidget {
                   }).toList(),
                 ),
                 CardDesconto(nomeEmpresa),
-                CardEntrega(),
                 CardResumo(() async {
                   String ordemId = await model.finalizarCompra(
                       nomeEmpresa, endereco, cidadeEstado);

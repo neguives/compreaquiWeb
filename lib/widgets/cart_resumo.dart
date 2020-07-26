@@ -2,6 +2,7 @@ import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:math' show cos, sqrt, asin;
@@ -14,8 +15,8 @@ class CardResumo extends StatefulWidget {
   CardResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
   @override
-  _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
-      this.latitude, this.longitude);
+  _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa,
+      this.cidadeEstado, this.endereco, this.latitude, this.longitude);
 }
 
 class _CardResumoState extends State<CardResumo> {
@@ -23,15 +24,21 @@ class _CardResumoState extends State<CardResumo> {
   double latitude, longitude;
   final VoidCallback buy;
 
+  String opcaoDeFrete;
   _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
   final TextEditingController _startCoordinatesTextController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _endCoordinatesTextController =
-  TextEditingController();
+      TextEditingController();
+  final enderecoController = TextEditingController();
+  final obsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    obsController.text =
+        "A entrega por conta do estabelecimento é gratuita, mas poderá demorar mais de 2 horas para ser finalizada.";
+
     Future<void> _onCalculatePressed() async {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -68,6 +75,7 @@ class _CardResumoState extends State<CardResumo> {
                   double preco = model.getProductPrice();
                   double desconto = model.getDesconto();
                   double frete = model.getFrete();
+                  enderecoController.text = endereco;
 //              model.loadCartItens();
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,16 +87,63 @@ class _CardResumoState extends State<CardResumo> {
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         children: [
-
                           SizedBox(
                             height: 12,
                           ),
                           Divider(),
-                          Row(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text("Entrega Expressa (envio imediato)"),
-                              Text("R\$ ${frete.toStringAsFixed(2)}"),
+                              TextField(
+                                maxLines: 4,
+                                controller: enderecoController,
+                                enabled: false,
+                                style: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: "Endereço de Entrega",
+                                  labelText: "Endereço de Entrega",
+                                  hintStyle: TextStyle(
+                                      fontFamily: "QuickSand",
+                                      fontSize: 17.0,
+                                      color: Colors.black87),
+                                ),
+                              ),
+                              RadioButtonGroup(
+                                  labels: <String>[
+                                    "Retirar no estabelecimento",
+                                    "Entrega Expressa (App Karona)",
+                                    "Entrega do estabelecimento"
+                                  ],
+                                  onSelected: (String selected) => model.setFrete(
+                                      selected,
+                                      selected == "Retirar no estabelecimento"
+                                          ? 0
+                                          : selected ==
+                                                  "Entrega Expressa (App Karona)"
+                                              ? 14
+                                              : 0)),
+                              TextField(
+                                maxLines: 4,
+                                controller: obsController,
+                                enabled: false,
+                                style: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Observação",
+                                  labelText: "Observação",
+                                  hintStyle: TextStyle(
+                                      fontFamily: "QuickSand",
+                                      fontSize: 12.0,
+                                      color: Colors.black87),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -96,7 +151,7 @@ class _CardResumoState extends State<CardResumo> {
                       Divider(
                         color: Colors.brown,
                       ),
-
+//
 //                      OutlineButton(
 //                        hoverColor: Colors.white,
 //                        highlightColor: Colors.white70,
@@ -166,7 +221,8 @@ class _CardResumoState extends State<CardResumo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text("Desconto"),
-                          Text("- R\$ ${model.getDesconto()}"),
+                          Text(
+                              "- R\$ ${model.getDesconto().toStringAsFixed(2)}"),
                         ],
                       ),
                       Divider(),
@@ -174,7 +230,7 @@ class _CardResumoState extends State<CardResumo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text("Entrega"),
-                          Text("R\$ ${frete.toStringAsFixed(2)}"),
+                          Text("R\$ ${model.getFrete().toStringAsFixed(2)}"),
                         ],
                       ),
                       Divider(

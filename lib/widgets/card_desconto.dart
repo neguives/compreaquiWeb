@@ -14,7 +14,7 @@ class CardDesconto extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ExpansionTile(
         title: Text(
-          "Como será a entrega do pedido ?",
+          "Cupom de desconto",
           textAlign: TextAlign.start,
           style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
         ),

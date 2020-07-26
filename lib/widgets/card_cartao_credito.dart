@@ -223,7 +223,7 @@ class _CardCartaoCreditoState extends State<CardCartaoCredito> {
                     showBackView: isCvvFocused,
                     cardbgColor: Colors.green.shade300,
                     height: 175,
-                    textStyle: TextStyle(color: Colors.white),
+                    textStyle: TextStyle(color: Colors.black87),
                     width: MediaQuery.of(context).size.width,
                     animationDuration: Duration(milliseconds: 2000),
                   ),
