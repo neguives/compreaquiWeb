@@ -89,7 +89,7 @@ class Products_Screen extends StatelessWidget {
                 .document(snapshot.data["title"])
                 .collection("itens")
                 .orderBy("title")
-                .startAt(["ADORALLE"]).getDocuments(),
+                .startAt([buscarProdutoController.text]).getDocuments(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
@@ -143,6 +143,24 @@ class Products_Screen extends StatelessWidget {
                                   latitude,
                                   longitude,
                                   telefone);
+                            }),
+                        ListView.builder(
+                            padding: EdgeInsets.all(4),
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              ProductData data = ProductData.fromDocument(
+                                  snapshot.data.documents[index]);
+                              data.category = this.snapshot.documentID;
+                              return ProductTileCompraRapida(
+                                  "list",
+                                  data,
+                                  nomeEmpresa,
+                                  imagemEmpresa,
+                                  cidadeEstado,
+                                  endereco,
+                                  latitude,
+                                  longitude,
+                                  telefone);
                             })
                       ],
                     ),
@@ -153,7 +171,7 @@ class Products_Screen extends StatelessWidget {
                           child: TextField(
                             maxLines: 1,
                             controller: buscarProdutoController,
-                            enabled: false,
+                            enabled: true,
                             style: TextStyle(
                                 fontFamily: "WorkSansSemiBold",
                                 fontSize: 16.0,
@@ -209,12 +227,12 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
     print(query);
-    return null;
+    return Column();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    return null;
+    return Column();
   }
 }
