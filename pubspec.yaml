@@ -45,6 +45,7 @@ dependencies:
   transparent_image: ^1.0.0
   scoped_model: ^1.0.1
   firebase_auth: 0.10.0
+  floating_search_bar:
   firebase_core:
   grouped_buttons:
   rxdart: ^0.20.0

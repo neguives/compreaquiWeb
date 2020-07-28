@@ -55,7 +55,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
       new TextEditingController();
 
   PageController _pageController;
-
+  final telefoneController =
+  TextEditingController();
   Color left = Colors.black;
   Color right = Colors.white;
 
@@ -519,33 +520,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                       left: 25.0,
                                       right: 25.0),
                                   child: TextField(
-                                    focusNode: myFocusNodeTelefone,
-                                    controller: _telefoneController,
-                                    keyboardType: TextInputType.phone,
-                                    style: TextStyle(
-                                        fontFamily: "WorkSansSemiBold",
-                                        fontSize: 16.0,
-                                        color: Colors.black),
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      icon: Icon(
-                                        FontAwesomeIcons.phone,
-                                        color: Colors.black,
-                                      ),
-                                      hintText: "Telefone para contato",
-                                      hintStyle: TextStyle(
-                                          fontFamily: "WorkSansSemiBold",
-                                          fontSize: 16.0),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 20.0,
-                                      bottom: 20.0,
-                                      left: 25.0,
-                                      right: 25.0),
-                                  child: TextField(
                                     focusNode: myFocusNodePassword,
                                     controller: _senhaController,
                                     obscureText: _obscureTextSignup,
@@ -630,26 +604,96 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         onPressed: () {
-                          if (_formKeyRegister.currentState.validate()) {
-                            Map<String, dynamic> userData = {
-                              "photo":
-                                  "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
-                              "nome": _nameController.text,
-                              "apelido": _apelidoController.text,
-                              "email": _emailController.text,
-                              "telefone": _telefoneController.text,
-                              "cidade": _cidadeController.text,
-                              "latitude": "-12.117111",
-                              "logintude": "-38.430454",
-                              "tipoPerfil": "Consumidor"
-                            };
+                          void _showDialogTelefone(BuildContext context) {
 
-                            model.signUp(
-                                userData: userData,
-                                pass: _senhaController.text,
-                                onSucess: _onSucessRegister,
-                                onFail: _onFailRegister);
+                            telefoneController.text = "";
+                            // flutter defined function
+                            showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                // return object of type Dialog
+                                return AlertDialog(
+                                  title: new Center(
+                                    child: Column(children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+
+                                        children: [Image.asset("assets/icon_zap.png", height: 50 , width: 50,),],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [Text("Qual é o seu whatsapp?"),],
+                                      )
+                                    ],),
+                                  ),
+                                  content: new  TextField(
+                                    maxLines: 1,
+                                    controller:
+                                    telefoneController,
+                                    enabled: true,
+                                    keyboardType: TextInputType.number,
+                                    style: TextStyle(
+                                        fontFamily:
+                                        "WorkSansSemiBold",
+                                        fontSize: 16.0,
+                                        color: Colors.black),
+                                    decoration: InputDecoration(
+                                      border:
+                                      OutlineInputBorder(),
+                                      hintText:
+                                      "Telefone para contato",
+                                      labelText:
+                                      "Telefone para contato",
+                                      hintStyle: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          fontSize: 17.0,
+                                          color: Colors.black87),
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    // usually buttons at the bottom of the dialog
+                                    new FlatButton(
+                                      child: new Text("Continuar"),
+                                      onPressed: () {
+                                        if (_formKeyRegister.currentState.validate()) {
+
+                                          print(telefoneController.text);
+                                          Map<String, dynamic> userData = {
+                                            "photo":
+                                            "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
+                                            "nome": _nameController.text,
+                                            "apelido": _apelidoController.text,
+                                            "email": _emailController.text,
+                                            "telefone": telefoneController.text,
+                                            "cidade": _cidadeController.text,
+                                            "latitude": "-12.117111",
+                                            "logintude": "-38.430454",
+                                            "tipoPerfil": "Consumidor"
+                                          };
+
+
+
+                                          model.signUp(
+                                              userData: userData,
+                                              pass: _senhaController.text,
+                                              onSucess: _onSucessRegister,
+                                              onFail: _onFailRegister);
+                                        }
+
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
+
+                          _showDialogTelefone(context);
+
                           ;
                         },
                       ),
@@ -735,4 +779,5 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     }
   }
+
 }

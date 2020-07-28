@@ -14,6 +14,7 @@ class CartModel extends Model {
   int discountPercentage = 0;
   double precoFrete = 0;
 
+  String produtoPesquisar;
   UserModel user;
   List<CartProduct> products = [];
 
@@ -110,6 +111,9 @@ class CartModel extends Model {
     this.tipoFrete = cupomCodigo;
     this.precoFrete = precoFrete;
   }
+  void setProdutoPesquisado(String produtoPesquisado) {
+    this.produtoPesquisar = produtoPesquisado;
+  }
 
   double getProductPrice() {
     double price = 0.0;
@@ -127,6 +131,9 @@ class CartModel extends Model {
 
   double getFrete() {
     return precoFrete;
+  }
+  String getProduto() {
+    return produtoPesquisar;
   }
 
   void updatePrice() {
