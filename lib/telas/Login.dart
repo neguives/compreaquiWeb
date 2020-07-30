@@ -317,8 +317,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {}
                             model.signIn(
-                                email: _emailController.text,
-                                pass: _senhaController.text,
+                                email: _emailController.text.trim(),
+                                pass: _senhaController.text.trim(),
                                 onSucess: _onSucess,
                                 onFail: _onFail);
                           },
@@ -669,11 +669,11 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                           Map<String, dynamic> userData = {
                                             "photo":
                                                 "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
-                                            "nome": _nameController.text,
-                                            "apelido": _apelidoController.text,
-                                            "email": _emailController.text,
-                                            "telefone": telefoneController.text,
-                                            "cidade": _cidadeController.text,
+                                            "nome": _nameController.text.trim(),
+                                            "apelido": _apelidoController.text.trim(),
+                                            "email": _emailController.text.trim(),
+                                            "telefone": telefoneController.text.trim(),
+                                            "cidade": _cidadeController.text.trim(),
                                             "latitude": "-12.117111",
                                             "logintude": "-38.430454",
                                             "tipoPerfil": "Consumidor"

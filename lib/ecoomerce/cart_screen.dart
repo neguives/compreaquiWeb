@@ -114,15 +114,8 @@ class CartScreen extends StatelessWidget {
                 ),
                 CardDesconto(nomeEmpresa),
                 CardResumo(() async {
-                  String ordemId = await model.finalizarCompra(
-                      nomeEmpresa, endereco, cidadeEstado);
-                  if (ordemId != null) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => OrdemPedidoConfirmado(ordemId)));
-                  }
                 }, nomeEmpresa, cidadeEstado, endereco, latitude, longitude),
-                CardCartaoCredito()
-//                CardCartaoCredito(),
+
               ],
             );
           }

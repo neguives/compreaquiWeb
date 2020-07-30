@@ -38,6 +38,9 @@ class _SobreState extends State<Sobre> {
     try {
       var response = await cielo.createSale(sale);
       print(response.payment.status);
+      if(response.payment.status == 1){
+
+      }
     } on CieloException catch (e) {
       print(e.message);
       print(e.errors[0].message);
