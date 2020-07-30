@@ -1,6 +1,9 @@
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
+import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cielo/flutter_cielo.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:maps_toolkit/maps_toolkit.dart';
@@ -12,8 +15,17 @@ class CardResumo extends StatefulWidget {
   double latitude, longitude;
   final VoidCallback buy;
 
+  //Cartao de Credito
+  final String cardNumber;
+  final String expiryDate;
+  final String cardHolderName;
+  final String cvvCode;
+  final void Function(CreditCardModel) onCreditCardModelChange;
+  final Color themeColor;
+  final Color textColor;
   CardResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
-      this.latitude, this.longitude);
+      this.latitude, this.longitude,
+      {this.cardNumber, this.expiryDate, this.cardHolderName, this.cvvCode, this.onCreditCardModelChange, this.themeColor, this.textColor});
   @override
   _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa,
       this.cidadeEstado, this.endereco, this.latitude, this.longitude);
@@ -33,6 +45,81 @@ class _CardResumoState extends State<CardResumo> {
       TextEditingController();
   final enderecoController = TextEditingController();
   final obsController = TextEditingController();
+
+  //WidgetCartao
+  String cardNumber = "0000 0000 0000 0000";
+  String expiryDate;
+  String cardHolderName;
+  String cvvCode;
+  bool isCvvFocused = false;
+  Color themeColor;
+
+  void Function(CreditCardModel) onCreditCardModelChange;
+  CreditCardModel creditCardModel;
+  final MaskedTextController _cardNumberController =
+      MaskedTextController(mask: '0000 0000 0000 0000');
+  final TextEditingController _expiryDateController =
+      MaskedTextController(mask: '00/00');
+  final TextEditingController _cardHolderNameController =
+      TextEditingController();
+  final TextEditingController _cvvCodeController =
+      MaskedTextController(mask: '0000');
+
+  FocusNode cvvFocusNode = FocusNode();
+
+  void textFieldFocusDidChange() {
+    creditCardModel.isCvvFocused = cvvFocusNode.hasFocus;
+    onCreditCardModelChange(creditCardModel);
+  }
+
+  void createCreditCardModel() {
+    cardNumber = widget.cardNumber ?? '';
+    expiryDate = widget.expiryDate ?? '';
+    cardHolderName = widget.cardHolderName ?? '';
+    cvvCode = widget.cvvCode ?? '';
+
+    creditCardModel = CreditCardModel(
+        cardNumber, expiryDate, cardHolderName, cvvCode, isCvvFocused);
+  }
+
+  //Api de Pagamento
+  final CieloEcommerce cielo = CieloEcommerce(
+      environment: Environment.PRODUCTION,
+      merchant: Merchant(
+        merchantId: "0ef47d5f-35f3-4fbd-ab34-54b683a09799",
+        merchantKey: "IhZ5hZIlWO7vxOHK927PbRJiKqwTa7CZ39rv7T6Q",
+      ));
+
+  //Realizar Pagamento
+  _efetuarTransacao(String numeroCartao, titularCartao, validadeCartao,
+      codSegurancaCartao, bandeiraCartao) async {
+    Sale sale = Sale(
+        merchantOrderId: "1233443",
+        customer: Customer(name: "Comprador crédito simples"),
+        payment: Payment(
+            currency: "BRL",
+            type: TypePayment.creditCard,
+            amount: 20,
+            returnMessage: "https://www.cielo.com.br",
+            installments: 1,
+            softDescriptor: "CompreAqui",
+            creditCard: CreditCard(
+              cardNumber: numeroCartao,
+              holder: "NATIELLE DE FRIAS NOGUEIRA",
+              expirationDate: "02/2028",
+              securityCode: "944",
+              brand: numeroCartao.toString().s"Master",
+            )));
+
+    try {
+      var response = await cielo.createSale(sale);
+      print(response.payment.status);
+    } on CieloException catch (e) {
+      print(e.message);
+      print(e.errors[0].message);
+      print(e.errors[0].code);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

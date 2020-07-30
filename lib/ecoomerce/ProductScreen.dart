@@ -107,8 +107,10 @@ class _ProductScreenState extends State<ProductScreen> {
                         height: 10,
                       ),
                       Text(
-                        "Quantidade Disponível: " +
-                            product.quantidade.toString(),
+                        product.promo == true
+                            ? "Quantidade Disponível: " +
+                                product.quantidade.toString()
+                            : "",
                         style: TextStyle(
                             fontSize: 10, fontWeight: FontWeight.w500),
                         maxLines: 3,

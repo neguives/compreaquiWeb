@@ -55,8 +55,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
       new TextEditingController();
 
   PageController _pageController;
-  final telefoneController =
-  TextEditingController();
+  final telefoneController = TextEditingController();
   Color left = Colors.black;
   Color right = Colors.white;
 
@@ -605,7 +604,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                         ),
                         onPressed: () {
                           void _showDialogTelefone(BuildContext context) {
-
                             telefoneController.text = "";
                             // flutter defined function
                             showDialog(
@@ -615,39 +613,45 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                 // return object of type Dialog
                                 return AlertDialog(
                                   title: new Center(
-                                    child: Column(children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-
-                                        children: [Image.asset("assets/icon_zap.png", height: 50 , width: 50,),],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [Text("Qual é o seu whatsapp?"),],
-                                      )
-                                    ],),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/icon_zap.png",
+                                              height: 50,
+                                              width: 50,
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text("Qual é o seu whatsapp?"),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  content: new  TextField(
+                                  content: new TextField(
                                     maxLines: 1,
-                                    controller:
-                                    telefoneController,
+                                    controller: telefoneController,
                                     enabled: true,
                                     keyboardType: TextInputType.number,
                                     style: TextStyle(
-                                        fontFamily:
-                                        "WorkSansSemiBold",
+                                        fontFamily: "WorkSansSemiBold",
                                         fontSize: 16.0,
                                         color: Colors.black),
                                     decoration: InputDecoration(
-                                      border:
-                                      OutlineInputBorder(),
-                                      hintText:
-                                      "Telefone para contato",
-                                      labelText:
-                                      "Telefone para contato",
+                                      border: OutlineInputBorder(),
+                                      hintText: "Telefone para contato",
+                                      labelText: "Telefone para contato",
                                       hintStyle: TextStyle(
                                           fontFamily: "QuickSand",
                                           fontSize: 17.0,
@@ -659,12 +663,12 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                     new FlatButton(
                                       child: new Text("Continuar"),
                                       onPressed: () {
-                                        if (_formKeyRegister.currentState.validate()) {
-
+                                        if (_formKeyRegister.currentState
+                                            .validate()) {
                                           print(telefoneController.text);
                                           Map<String, dynamic> userData = {
                                             "photo":
-                                            "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
+                                                "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
                                             "nome": _nameController.text,
                                             "apelido": _apelidoController.text,
                                             "email": _emailController.text,
@@ -675,15 +679,12 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                             "tipoPerfil": "Consumidor"
                                           };
 
-
-
                                           model.signUp(
                                               userData: userData,
                                               pass: _senhaController.text,
                                               onSucess: _onSucessRegister,
                                               onFail: _onFailRegister);
                                         }
-
                                       },
                                     ),
                                   ],
@@ -775,9 +776,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     if (!res) {
       print("Erro ao fazer o login com o Google");
     } else {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     }
   }
-
 }

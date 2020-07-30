@@ -119,7 +119,6 @@ class PaginaEmpresa extends StatelessWidget {
                         fontFamily: "QuickSand",
                         fontWeight: FontWeight.bold),
                   ),
-                  Card(child: text()),
                   Padding(
                     padding: EdgeInsets.all(5),
                     child: Text(
@@ -230,12 +229,10 @@ class PaginaEmpresa extends StatelessWidget {
 
       double distancia = distanceInMeters / 1000;
       distanciaReal = "Mais de " + distancia.toStringAsFixed(1) + " km";
-
+      double valorCorrida = (distancia + 3) * 2.50;
       print('The distance is: $distanciaReal');
       return distanciaReal;
     }
-
-    _onCalculatePressed();
 
     return Text("");
   }

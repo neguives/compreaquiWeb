@@ -61,8 +61,9 @@ class ProductTile extends StatelessWidget {
                                     child: Padding(
                                   padding: EdgeInsets.all(2),
                                   child: Text(
-                                    product.promo == true
-                                        ? "${((product.precoAnterior / product.price - 1) * 100).toStringAsPrecision(2)}% de Desconto"
+                                    product.promo == true &&
+                                            product.precoAnterior > 0
+                                        ? "${((product.precoAnterior / product.price - 1) * 100).toStringAsPrecision(2)} % de Desconto"
                                         : "",
                                     style: (TextStyle(
                                         fontFamily: "QuickSand",
