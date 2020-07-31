@@ -28,7 +28,14 @@ class CardResumo extends StatefulWidget {
   final Color cursorColor;
   CardResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude,
-      {this.cardNumber, this.expiryDate, this.cardHolderName, this.cvvCode, this.onCreditCardModelChange, this.themeColor, this.textColor, this.cursorColor});
+      {this.cardNumber,
+      this.expiryDate,
+      this.cardHolderName,
+      this.cvvCode,
+      this.onCreditCardModelChange,
+      this.themeColor,
+      this.textColor,
+      this.cursorColor});
   @override
   _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa,
       this.cidadeEstado, this.endereco, this.latitude, this.longitude);
@@ -45,9 +52,9 @@ class _CardResumoState extends State<CardResumo> {
       this.latitude, this.longitude);
 
   final TextEditingController _startCoordinatesTextController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _endCoordinatesTextController =
-  TextEditingController();
+      TextEditingController();
   final enderecoController = TextEditingController();
   final obsController = TextEditingController();
 
@@ -62,15 +69,15 @@ class _CardResumoState extends State<CardResumo> {
   void Function(CreditCardModel) onCreditCardModelChange;
   CreditCardModel creditCardModel;
   final MaskedTextController _cardNumberController =
-  MaskedTextController(mask: '0000 0000 0000 0000');
+      MaskedTextController(mask: '0000 0000 0000 0000');
   final MaskedTextController _cardNumberControllerTrim =
-  MaskedTextController(mask: '0000000000000000');
+      MaskedTextController(mask: '0000000000000000');
   final TextEditingController _expiryDateController =
-  MaskedTextController(mask: '00/0000');
+      MaskedTextController(mask: '00/0000');
   final TextEditingController _cardHolderNameController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _cvvCodeController =
-  MaskedTextController(mask: '0000');
+      MaskedTextController(mask: '0000');
 
   FocusNode cvvFocusNode = FocusNode();
 
@@ -98,49 +105,6 @@ class _CardResumoState extends State<CardResumo> {
       ));
 
 //Realizar Pagamento
-  _finalizarPagamento(String numeroCartao, validadeCartao, nomeCartao , codSeguranca) async {
-
-    _cardNumberControllerTrim.text = numeroCartao;
-    print(_cardNumberControllerTrim.text);
-     bandeira =  numeroCartao.startsWith("51") || numeroCartao.startsWith("55") || numeroCartao.startsWith("2221") || numeroCartao.startsWith("2229") || numeroCartao.startsWith("223") || numeroCartao.startsWith("229") || numeroCartao.startsWith("23") || numeroCartao.startsWith("26") || numeroCartao.startsWith("270") || numeroCartao.startsWith("271") || numeroCartao.startsWith("2720") ? "Master": numeroCartao.startsWith("4") ? "Visa": numeroCartao.startsWith("34") ||
-        numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") ||  numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo": numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners": numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover":"Invalida";
-        Sale sale = Sale(
-        merchantOrderId: "1233443",
-        customer: Customer(name: "Comprador crédito simples"),
-        payment: Payment(
-            currency: "BRL",
-            type: TypePayment.creditCard,
-            amount: 2,
-            returnMessage: "https://www.cielo.com.br",
-            installments: 1,
-            softDescriptor: "CompreAqui",
-            creditCard: CreditCard(
-              cardNumber: _cardNumberControllerTrim.text,
-              holder: nomeCartao,
-              expirationDate: validadeCartao,
-              securityCode: codSeguranca,
-              brand: numeroCartao.startsWith("51") || numeroCartao.startsWith("55") || numeroCartao.startsWith("2221") || numeroCartao.startsWith("2229") || numeroCartao.startsWith("223") || numeroCartao.startsWith("229") || numeroCartao.startsWith("23") || numeroCartao.startsWith("26") || numeroCartao.startsWith("270") || numeroCartao.startsWith("271") || numeroCartao.startsWith("2720") ? "Master": numeroCartao.startsWith("4") ? "Visa": numeroCartao.startsWith("34") ||
-                  numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") ||  numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo": numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners": numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover":"Master",
-            )));
-
-    try {
-      var response = await cielo.createSale(sale);
-      print(response.payment.status);
-      print(bandeira);
-      if(response.payment.status == 1){
-        _pagamentoAprovado(context);
-      }
-      else{
-        _pagamentoReprovado(context);
-      }
-
-    } on CieloException catch (e) {
-      print(e.message);
-      print(e.errors[0].message);
-      print(e.errors[0].code);
-    }
-  }
-
 
   @override
   void initState() {
@@ -184,11 +148,13 @@ class _CardResumoState extends State<CardResumo> {
       });
     });
   }
+
   @override
   void didChangeDependencies() {
     themeColor = widget.themeColor ?? Theme.of(context).primaryColor;
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     obsController.text =
@@ -345,15 +311,15 @@ class _CardResumoState extends State<CardResumo> {
         ),
         Card(
           margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: ScopedModelDescendant<CartModel>(
-                builder: (context, child, model) {
-                  double preco = model.getProductPrice();
-                  double desconto = model.getDesconto();
-                  double frete = model.getFrete();
+          child: Container(child: ScopedModelDescendant<CartModel>(
+            builder: (context, child, model) {
+              double preco = model.getProductPrice();
+              double desconto = model.getDesconto();
+              double frete = model.getFrete();
 //              model.loadCartItens();
-                  return Column(
+              return Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
@@ -406,173 +372,314 @@ class _CardResumoState extends State<CardResumo> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
                           ),
-
                         ],
                       ),
-
-                    ],
-                  );
-                },
-              )),
-        ),
-        Card(
-          elevation: 10,
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: ExpansionTile(
-            title: Text(
-              "Pagar com Cartão",
-              textAlign: TextAlign.start,
-              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
-            ),
-            leading: Icon(Icons.credit_card),
-            trailing: Icon(Icons.add_circle_outline),
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      CreditCardWidget(
-                        cardNumber: cardNumber,
-                        expiryDate: expiryDate,
-                        cardHolderName: cardHolderName,
-                        cvvCode: cvvCode,
-                        showBackView: isCvvFocused,
-                        cardbgColor: Colors.green.shade300,
-                        height: 175,
-                        textStyle: TextStyle(color: Colors.black87),
-                        width: MediaQuery.of(context).size.width,
-                        animationDuration: Duration(milliseconds: 2000),
-                      ),
-                      Form(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              margin: const EdgeInsets.only(
-                                  left: 16, top: 16, right: 16),
-                              child: TextFormField(
-                                onChanged: (String text) {
-                                  setState(() {});
-                                  isCvvFocused = false;
-                                },
-                                controller: _cardNumberController,
-                                cursorColor: widget.cursorColor ?? themeColor,
-                                style: TextStyle(
-                                  color: widget.textColor,
-                                ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Número do Cartão',
-                                  hintText: 'xxxx xxxx xxxx xxxx',
-                                ),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              margin: const EdgeInsets.only(
-                                  left: 16, top: 8, right: 16),
-                              child: TextFormField(
-                                onChanged: (String text) {
-                                  setState(() {});
-                                  isCvvFocused = false;
-                                },
-                                controller: _expiryDateController,
-                                cursorColor: widget.cursorColor ?? themeColor,
-                                style: TextStyle(
-                                  color: widget.textColor,
-                                ),
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Data de Validade',
-                                    hintText: 'MM/AAAA'),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              margin: const EdgeInsets.only(
-                                  left: 16, top: 8, right: 16),
-                              child: TextField(
-                                focusNode: cvvFocusNode,
-                                controller: _cvvCodeController,
-                                cursorColor: widget.cursorColor ?? themeColor,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Código de Segurança',
-                                  hintText: 'XXXX',
-                                ),
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.done,
-                                onChanged: (String text) {
-                                  setState(() {
-                                    cvvCode = text;
-                                    isCvvFocused = true;
-                                  });
-                                },
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              margin: const EdgeInsets.only(
-                                  left: 16, top: 8, right: 16),
-                              child: TextFormField(
-                                onChanged: (String text) {
-                                  setState(() {});
-                                  isCvvFocused = false;
-                                },
-                                controller: _cardHolderNameController,
-                                cursorColor: widget.cursorColor ?? themeColor,
-                                style: TextStyle(
-                                  color: widget.textColor,
-                                ),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Nome do Titular',
-                                ),
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                              ),
-                            ),
-                          ],
+                      ExpansionTile(
+                        title: Text(
+                          "Pagar com Cartão",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, color: Colors.grey),
                         ),
-                      ),
-                      OutlineButton(
-                        hoverColor: Colors.white,
-                        highlightColor: Colors.white70,
-                        highlightElevation: 10,
+                        leading: Icon(Icons.credit_card),
+                        trailing: Icon(Icons.add_circle_outline),
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                children: <Widget>[
+                                  CreditCardWidget(
+                                    cardNumber: cardNumber,
+                                    expiryDate: expiryDate,
+                                    cardHolderName: cardHolderName,
+                                    cvvCode: cvvCode,
+                                    showBackView: isCvvFocused,
+                                    cardbgColor: Colors.green.shade300,
+                                    height: 175,
+                                    textStyle: TextStyle(color: Colors.black87),
+                                    width: MediaQuery.of(context).size.width,
+                                    animationDuration:
+                                        Duration(milliseconds: 2000),
+                                  ),
+                                  Form(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          margin: const EdgeInsets.only(
+                                              left: 16, top: 16, right: 16),
+                                          child: TextFormField(
+                                            onChanged: (String text) {
+                                              setState(() {});
+                                              isCvvFocused = false;
+                                            },
+                                            controller: _cardNumberController,
+                                            cursorColor: widget.cursorColor ??
+                                                themeColor,
+                                            style: TextStyle(
+                                              color: widget.textColor,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: 'Número do Cartão',
+                                              hintText: 'xxxx xxxx xxxx xxxx',
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          margin: const EdgeInsets.only(
+                                              left: 16, top: 8, right: 16),
+                                          child: TextFormField(
+                                            onChanged: (String text) {
+                                              setState(() {});
+                                              isCvvFocused = false;
+                                            },
+                                            controller: _expiryDateController,
+                                            cursorColor: widget.cursorColor ??
+                                                themeColor,
+                                            style: TextStyle(
+                                              color: widget.textColor,
+                                            ),
+                                            decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'Data de Validade',
+                                                hintText: 'MM/AAAA'),
+                                            keyboardType: TextInputType.number,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          margin: const EdgeInsets.only(
+                                              left: 16, top: 8, right: 16),
+                                          child: TextField(
+                                            focusNode: cvvFocusNode,
+                                            controller: _cvvCodeController,
+                                            cursorColor: widget.cursorColor ??
+                                                themeColor,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: 'Código de Segurança',
+                                              hintText: 'XXXX',
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            onChanged: (String text) {
+                                              setState(() {
+                                                cvvCode = text;
+                                                isCvvFocused = true;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          margin: const EdgeInsets.only(
+                                              left: 16, top: 8, right: 16),
+                                          child: TextFormField(
+                                            onChanged: (String text) {
+                                              setState(() {});
+                                              isCvvFocused = false;
+                                            },
+                                            controller:
+                                                _cardHolderNameController,
+                                            cursorColor: widget.cursorColor ??
+                                                themeColor,
+                                            style: TextStyle(
+                                              color: widget.textColor,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: 'Nome do Titular',
+                                            ),
+                                            keyboardType: TextInputType.text,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  OutlineButton(
+                                    hoverColor: Colors.white,
+                                    highlightColor: Colors.white70,
+                                    highlightElevation: 10,
+                                    onPressed: () {
+                                      String valorTotal =
+                                          (preco + frete - model.getDesconto())
+                                              .toString()
+                                              .replaceAll(".", "");
+                                      String valorTotalCorrigido =
+                                          valorTotal.replaceAll(",", "").trim();
+                                      int valorTotalFinal =
+                                          int.parse(valorTotalCorrigido);
+                                      _finalizarPagamento(
+                                          String numeroCartao,
+                                          validadeCartao,
+                                          nomeCartao,
+                                          codSeguranca) async {
+                                        _cardNumberControllerTrim.text =
+                                            numeroCartao;
+                                        print(_cardNumberControllerTrim.text);
+                                        bandeira = numeroCartao.startsWith("51") ||
+                                                numeroCartao.startsWith("55") ||
+                                                numeroCartao
+                                                    .startsWith("2221") ||
+                                                numeroCartao
+                                                    .startsWith("2229") ||
+                                                numeroCartao
+                                                    .startsWith("223") ||
+                                                numeroCartao
+                                                    .startsWith("229") ||
+                                                numeroCartao.startsWith("23") ||
+                                                numeroCartao.startsWith("26") ||
+                                                numeroCartao
+                                                    .startsWith("270") ||
+                                                numeroCartao
+                                                    .startsWith("271") ||
+                                                numeroCartao.startsWith("2720")
+                                            ? "Master"
+                                            : numeroCartao.startsWith("4")
+                                                ? "Visa"
+                                                : numeroCartao.startsWith("34") ||
+                                                        numeroCartao
+                                                            .startsWith("37")
+                                                    ? "Amex"
+                                                    : numeroCartao.startsWith("38") ||
+                                                            numeroCartao.startsWith(
+                                                                "60")
+                                                        ? "Hiper"
+                                                        : numeroCartao.startsWith("636368") ||
+                                                                numeroCartao.startsWith("636369") ||
+                                                                numeroCartao.startsWith("438935") ||
+                                                                numeroCartao.startsWith("504175") ||
+                                                                numeroCartao.startsWith("451416") ||
+                                                                numeroCartao.startsWith("636297") ||
+                                                                numeroCartao.startsWith("5067") ||
+                                                                numeroCartao.startsWith("4576") ||
+                                                                numeroCartao.startsWith("4011") ||
+                                                                numeroCartao.startsWith("506699")
+                                                            ? "Elo"
+                                                            : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
+                                        Sale sale = Sale(
+                                            merchantOrderId: "1233443",
+                                            customer: Customer(
+                                                name:
+                                                    "Comprador crédito simples"),
+                                            payment: Payment(
+                                                currency: "BRL",
+                                                type: TypePayment.creditCard,
+                                                amount: valorTotalFinal,
+                                                returnMessage:
+                                                    "https://www.cielo.com.br",
+                                                installments: 1,
+                                                softDescriptor: "CompreAqui",
+                                                creditCard: CreditCard(
+                                                  cardNumber:
+                                                      _cardNumberControllerTrim
+                                                          .text,
+                                                  holder: nomeCartao
+                                                      .toString()
+                                                      .toUpperCase(),
+                                                  expirationDate:
+                                                      validadeCartao,
+                                                  securityCode: codSeguranca,
+                                                  brand: numeroCartao.startsWith("51") ||
+                                                          numeroCartao.startsWith(
+                                                              "55") ||
+                                                          numeroCartao.startsWith(
+                                                              "2221") ||
+                                                          numeroCartao.startsWith(
+                                                              "2229") ||
+                                                          numeroCartao.startsWith(
+                                                              "223") ||
+                                                          numeroCartao.startsWith(
+                                                              "229") ||
+                                                          numeroCartao.startsWith(
+                                                              "23") ||
+                                                          numeroCartao.startsWith(
+                                                              "26") ||
+                                                          numeroCartao.startsWith(
+                                                              "270") ||
+                                                          numeroCartao
+                                                              .startsWith(
+                                                                  "271") ||
+                                                          numeroCartao
+                                                              .startsWith("2720")
+                                                      ? "Master"
+                                                      : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Master",
+                                                )));
 
-                        onPressed: () {
+                                        try {
+                                          var response =
+                                              await cielo.createSale(sale);
+                                          print(response.payment.status);
+                                          print(bandeira);
+                                          if (response.payment.status == 1) {
+                                            model.finalizarCompra(nomeEmpresa,
+                                                endereco, cidadeEstado);
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrdemPedidoConfirmado(
+                                                            "1")));
+                                          } else {
+                                            _pagamentoReprovado(context);
+                                          }
+                                        } on CieloException catch (e) {
+                                          print(e.message);
+                                          print(e.errors[0].message);
+                                          print(e.errors[0].code);
+                                        }
+                                      }
+
 //      numeroCartao, bandeiraCartao, validadeCartao, nomeCartao , codSeguranca
-                          _finalizarPagamento(_cardNumberController.text,_expiryDateController.text, _cardHolderNameController.text, _cvvCodeController.text );
-                        },
-                        child: Text(
-                          'Pagar',
-                        ),
+                                      _finalizarPagamento(
+                                          _cardNumberController.text,
+                                          _expiryDateController.text,
+                                          _cardHolderNameController.text,
+                                          _cvvCodeController.text);
+                                    },
+                                    child: Text(
+                                      'Pagar',
+                                    ),
 
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                            side: BorderSide(
-                                color: Colors
-                                    .white30)), // callback when button is clicked
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey, //Color of the border
-                          style: BorderStyle.solid, //Style of the border
-                          width: 0.8, //width of the border
-                        ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(18.0),
+                                        side: BorderSide(
+                                            color: Colors
+                                                .white30)), // callback when button is clicked
+                                    borderSide: BorderSide(
+                                      color:
+                                          Colors.blueGrey, //Color of the border
+                                      style: BorderStyle
+                                          .solid, //Style of the border
+                                      width: 0.8, //width of the border
+                                    ),
+                                  ),
+                                ],
+                              ))
+                        ],
                       ),
                     ],
-                  ))
-            ],
-          ),
-        )
-
-
+                  ));
+            },
+          )),
+        ),
       ],
     );
   }
@@ -585,7 +692,6 @@ class _CardResumoState extends State<CardResumo> {
   }
 
   void _pagamentoAprovado(BuildContext context) {
-
     // flutter defined function
     showDialog(
       barrierDismissible: true,
@@ -597,18 +703,14 @@ class _CardResumoState extends State<CardResumo> {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
-                  children: [
-                FlareActor("assets/sucess_check.flr", alignment:Alignment.center, fit:BoxFit.contain, animation:"Untitled"),
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [],
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("Pagamento Aprovado"),
                   ],
@@ -620,18 +722,15 @@ class _CardResumoState extends State<CardResumo> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Fechar"),
-              onPressed: () {
-
-
-              },
+              onPressed: () {},
             ),
           ],
         );
       },
     );
   }
-  void _pagamentoReprovado(BuildContext context) {
 
+  void _pagamentoReprovado(BuildContext context) {
     // flutter defined function
     showDialog(
       barrierDismissible: true,
@@ -643,18 +742,20 @@ class _CardResumoState extends State<CardResumo> {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.verified_user, size: 100,),
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 100,
+                    ),
                   ],
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("Pagamento Reprovado"),
                   ],
@@ -666,10 +767,7 @@ class _CardResumoState extends State<CardResumo> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Fechar"),
-              onPressed: () {
-
-
-              },
+              onPressed: () {},
             ),
           ],
         );

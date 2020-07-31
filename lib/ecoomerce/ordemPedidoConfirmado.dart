@@ -1,3 +1,4 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class OrdemPedidoConfirmado extends StatelessWidget {
@@ -19,23 +20,23 @@ class OrdemPedidoConfirmado extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.only(left: 30, right: 30, top: 20),
-                child: Image.asset(
-                  'assets/in.png',
-                  width: 200,
-                  height: 200,
-                )),
-            Icon(
-              Icons.check,
-              color: Colors.green,
-              size: 80,
+              padding: EdgeInsets.only(left: 30, right: 30, top: 20),
+              child: Container(
+                width: 100,
+                height: 100,
+                child: Center(
+                    child: FlareActor("assets/success_check.flr",
+                        alignment: Alignment.center,
+                        fit: BoxFit.contain,
+                        animation: "Untitled")),
+              ),
             ),
             Text(
               "O seu pedido foi realizado com sucesso",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              "Entraremos em contato com você para confirmar",
+              "Verifique o Status no menu \"Minhas Solicitações\".",
               style: TextStyle(fontSize: 14),
             ),
             SizedBox(

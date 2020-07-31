@@ -17,8 +17,7 @@ import 'package:flutter/widgets.dart';
 class TelaSelecaoCategoria extends StatelessWidget {
   String cidadeEstado, endereco, imagem, uid;
   double latitude, longitude;
-  final enderecoController =
-  TextEditingController();
+  final enderecoController = TextEditingController();
 
   bool enderecoConfirmado = false;
   TelaSelecaoCategoria(
@@ -57,7 +56,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return CircularProgressIndicator();
+              return LinearProgressIndicator();
             } else {
               if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
                 return Column(
@@ -204,9 +203,6 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                           InkWell(
                                               onTap: () {
                                                 _showDialogEndereco(context);
-
-
-
                                               },
                                               child: FlatButton(
                                                 child: Image.asset(
@@ -217,20 +213,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                               )),
                                           InkWell(
                                               onTap: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EmpresasTab(
-                                                                cidade:
-                                                                    "Catalão - GO",
-                                                                endereco:
-                                                                    endereco,
-                                                                latitude:
-                                                                    latitude,
-                                                                longitude:
-                                                                    longitude,
-                                                                categoria:
-                                                                    "Farmácia")));
+                                                _showDialogEnderecoCat2(
+                                                    context);
                                               },
                                               child: FlatButton(
                                                 child: Image.asset(
@@ -293,8 +277,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
           },
         ));
   }
-  void _showDialogEndereco(BuildContext context) {
 
+  void _showDialogEndereco(BuildContext context) {
     enderecoController.text = endereco;
     // flutter defined function
     showDialog(
@@ -304,23 +288,18 @@ class TelaSelecaoCategoria extends StatelessWidget {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Onde será a sua entrega ?"),
-          content: new  TextField(
+          content: new TextField(
             maxLines: 4,
-            controller:
-            enderecoController,
+            controller: enderecoController,
             enabled: true,
             style: TextStyle(
-                fontFamily:
-                "WorkSansSemiBold",
+                fontFamily: "WorkSansSemiBold",
                 fontSize: 16.0,
                 color: Colors.black),
             decoration: InputDecoration(
-              border:
-              OutlineInputBorder(),
-              hintText:
-              "Endereço de Entrega",
-              labelText:
-              "Endereço de Entrega",
+              border: OutlineInputBorder(),
+              hintText: "Endereço de Entrega",
+              labelText: "Endereço de Entrega",
               hintStyle: TextStyle(
                   fontFamily: "QuickSand",
                   fontSize: 17.0,
@@ -335,21 +314,64 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 endereco = enderecoController.text;
                 enderecoConfirmado = true;
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            EmpresasTab(
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EmpresasTab(
+                        cidade: cidadeEstado,
+                        endereco: endereco,
+                        latitude: latitude,
+                        longitude: longitude,
+                        categoria: "Supermecado")));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-                                cidade:
-                                cidadeEstado,
-                                endereco:
-                                endereco,
-                                latitude:
-                                latitude,
-                                longitude:
-                                longitude,
-                                categoria:
-                                "Supermecado")));
+  void _showDialogEnderecoCat2(BuildContext context) {
+    enderecoController.text = endereco;
+    // flutter defined function
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Onde será a sua entrega ?"),
+          content: new TextField(
+            maxLines: 4,
+            controller: enderecoController,
+            enabled: true,
+            style: TextStyle(
+                fontFamily: "WorkSansSemiBold",
+                fontSize: 16.0,
+                color: Colors.black),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Endereço de Entrega",
+              labelText: "Endereço de Entrega",
+              hintStyle: TextStyle(
+                  fontFamily: "QuickSand",
+                  fontSize: 17.0,
+                  color: Colors.black87),
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Confirmo o Endereço"),
+              onPressed: () {
+                endereco = enderecoController.text;
+                enderecoConfirmado = true;
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EmpresasTab(
+                        cidade: cidadeEstado,
+                        endereco: endereco,
+                        latitude: latitude,
+                        longitude: longitude,
+                        categoria: "Farmácia")));
               },
             ),
           ],
@@ -358,4 +380,3 @@ class TelaSelecaoCategoria extends StatelessWidget {
     );
   }
 }
-

@@ -27,56 +27,76 @@ class OrdersTab extends StatelessWidget {
             );
           else {
             return Scaffold(
+                appBar: AppBar(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        child: Image.asset(
+                          'assets/logo.png',
+                          width: 50,
+                          height: 50,
+                        ),
+                        padding: EdgeInsets.only(right: 50),
+                      )
+                    ],
+                  ),
+                  iconTheme: new IconThemeData(color: Colors.black),
+                  backgroundColor: Colors.white,
+                ),
                 body: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: new BoxDecoration(
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/bg_selecaocategoria.webp"),
-                      fit: BoxFit.fill,
+                  children: <Widget>[
+                    Container(
+                      decoration: new BoxDecoration(
+                        image: new DecorationImage(
+                          image:
+                              new AssetImage("assets/bg_selecaocategoria.webp"),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      /* add child content content here */
                     ),
-                  ),
-                  /* add child content content here */
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Column(
-                        children: <Widget>[
-                          Card(
-                            elevation: 40,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(100.0),
-                                side: BorderSide(color: Colors.white30)),
-                            child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: new DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: new NetworkImage(imagemEmpresa),
-                                    ))),
-                          ),
-                          Text("Minhas Solicitações",
-                              style: TextStyle(
-                                  fontFamily: "QuickSand", fontSize: 20))
-                        ],
-                      )),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(16, 180, 16, 1),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: snapshot.data.documents
-                        .map((doc) => OrderTile(
-                            doc.documentID, nomeEmpresa, cidadeEstado))
-                        .toList(),
-                  ),
-                )
-              ],
-            ));
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Column(
+                            children: <Widget>[
+                              Card(
+                                elevation: 40,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(100.0),
+                                    side: BorderSide(color: Colors.white30)),
+                                child: Container(
+                                    width: 100.0,
+                                    height: 100.0,
+                                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: new DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image:
+                                              new NetworkImage(imagemEmpresa),
+                                        ))),
+                              ),
+                              Text("Minhas Solicitações",
+                                  style: TextStyle(
+                                      fontFamily: "QuickSand", fontSize: 20))
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16, 180, 16, 1),
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: snapshot.data.documents
+                            .map((doc) => OrderTile(
+                                doc.documentID, nomeEmpresa, cidadeEstado))
+                            .toList(),
+                      ),
+                    )
+                  ],
+                ));
           }
         },
       );

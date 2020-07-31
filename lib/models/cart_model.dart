@@ -111,6 +111,7 @@ class CartModel extends Model {
     this.tipoFrete = cupomCodigo;
     this.precoFrete = precoFrete;
   }
+
   void setProdutoPesquisado(String produtoPesquisado) {
     this.produtoPesquisar = produtoPesquisado;
   }
@@ -132,6 +133,7 @@ class CartModel extends Model {
   double getFrete() {
     return precoFrete;
   }
+
   String getProduto() {
     return produtoPesquisar;
   }
@@ -168,7 +170,7 @@ class CartModel extends Model {
       "data": formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +
           " às ${formatDate(DateTime.now(), [HH, ':', nn, ':', ss])}",
       "precoTotal": productsPrice - productsDesconto + productsFrete,
-      "status": 1
+      "status": 2
     });
 
     await Firestore.instance

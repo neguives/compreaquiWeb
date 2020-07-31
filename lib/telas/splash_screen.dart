@@ -1,5 +1,6 @@
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 import 'geolocalizacaoUsuario.dart';
@@ -41,10 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 200,
               height: 200,
               child: Center(
-                child: Transform.scale(
-                    scale: 1.2,
-                    child: Image.asset("assets/logomodificada.png")),
-              ),
+                  child: FlareActor("assets/success_check.flr",
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
+                      animation: "Untitled")),
             ),
           )
         ],

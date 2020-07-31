@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/Bottom/bottom_principal.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:compreaidelivery/tab/ordersTab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,150 +76,156 @@ class PaginaEmpresa extends StatelessWidget {
                     "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
           },
         ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-                decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/fundo_pg_empresa.png"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: null /* add child content content here */
-                ),
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Center(
-                        child: Card(
-                      elevation: 40,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(100.0),
-                          side: BorderSide(color: Colors.white30)),
-                      child: Container(
-                          width: 180.0,
-                          height: 180.0,
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: new NetworkImage(imagemEmpresa),
-                              ))),
-                    )),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    nomeEmpresa,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: "QuickSand",
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      descricaoEmpresa,
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(color: Colors.black38),
+        body: ScopedModelDescendant<CartModel>(
+          builder: (context, child, model) {
+            model.limparCarrinho(nomeEmpresa, endereco);
+            return Stack(
+              children: <Widget>[
+                Container(
+                    decoration: new BoxDecoration(
+                      image: new DecorationImage(
+                        image: new AssetImage("assets/fundo_pg_empresa.png"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 60,
-                  ),
-                  SizedBox(
-                      height: 150.0,
-                      width: 350.0,
-                      child: Carousel(
-                        images: [
-                          Image.network(galeriaPagina.elementAt(0)),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => BottomPrincipal(
-                                      nomeEmpresa,
-                                      imagemEmpresa,
-                                      cidadeEstado,
-                                      endereco,
-                                      latitude,
-                                      longitude,
-                                      whatsapp)));
-                            },
-                            child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
-                                child:
-                                    Image.network(galeriaPagina.elementAt(1)),
-                              ),
-                            ),
-                          ),
-                          Image.network(galeriaPagina.elementAt(2)),
-                        ],
-                        dotSize: 4.0,
-                        dotSpacing: 15.0,
-                        dotColor: Colors.lightGreenAccent,
-                        indicatorBgPadding: 5.0,
-                        dotBgColor: Colors.green.withOpacity(0.5),
-                        borderRadius: true,
-                        moveIndicatorFromBottom: 180.0,
-                        noRadiusForIndicator: true,
-                      )),
-                  Container(child: ScopedModelDescendant<CartModel>(
-                    builder: (context, child, model) {
-//                      model.limparCarrinho(nomeEmpresa, endereco);
-                      return SizedBox(
-                        width: 200,
-                        child: InkWell(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.keyboard_return,
-                              color: Colors.green.shade600,
-                            ),
-                          ),
-                          onTap: () {
-                            if (Navigator.canPop(context)) {
-//                              model.finalizarCompra(nomeEmpresa, endereco);
-                              Navigator.pop(context);
-                            }
-                          },
+                    child: null /* add child content content here */
+                    ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Center(
+                            child: Card(
+                          elevation: 40,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(100.0),
+                              side: BorderSide(color: Colors.white30)),
+                          child: Container(
+                              width: 180.0,
+                              height: 180.0,
+                              decoration: new BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: new DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: new NetworkImage(imagemEmpresa),
+                                  ))),
+                        )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        nomeEmpresa,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontFamily: "QuickSand",
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          descricaoEmpresa,
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(color: Colors.black38),
                         ),
-                      );
-                    },
-                  )),
-                  OutlineButton(
-                    hoverColor: Colors.white,
-                    highlightColor: Colors.white70,
-                    highlightElevation: 10,
-                    child: Text('Entrar na Loja'),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BottomPrincipal(
-                              nomeEmpresa,
-                              imagemEmpresa,
-                              cidadeEstado,
-                              endereco,
-                              latitude,
-                              longitude,
-                              whatsapp)));
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.white30)),
-                    // callback when button is clicked
-                    borderSide: BorderSide(
-                      color: Colors.blueGrey, //Color of the border
-                      style: BorderStyle.solid, //Style of the border
-                      width: 0.8, //width of the border
-                    ),
+                      ),
+                      SizedBox(
+                        height: 60,
+                      ),
+                      SizedBox(
+                          height: 150.0,
+                          width: 350.0,
+                          child: Carousel(
+                            images: [
+                              Image.network(galeriaPagina.elementAt(0)),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BottomPrincipal(
+                                          nomeEmpresa,
+                                          imagemEmpresa,
+                                          cidadeEstado,
+                                          endereco,
+                                          latitude,
+                                          longitude,
+                                          whatsapp)));
+                                },
+                                child: Container(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: Image.network(
+                                        galeriaPagina.elementAt(1)),
+                                  ),
+                                ),
+                              ),
+                              Image.network(galeriaPagina.elementAt(2)),
+                            ],
+                            dotSize: 4.0,
+                            dotSpacing: 15.0,
+                            dotColor: Colors.lightGreenAccent,
+                            indicatorBgPadding: 5.0,
+                            dotBgColor: Colors.green.withOpacity(0.5),
+                            borderRadius: true,
+                            moveIndicatorFromBottom: 180.0,
+                            noRadiusForIndicator: true,
+                          )),
+                      OutlineButton(
+                        hoverColor: Colors.white,
+                        highlightColor: Colors.white70,
+                        highlightElevation: 10,
+                        child: Text('Entrar na Loja'),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => BottomPrincipal(
+                                  nomeEmpresa,
+                                  imagemEmpresa,
+                                  cidadeEstado,
+                                  endereco,
+                                  latitude,
+                                  longitude,
+                                  whatsapp)));
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.white30)),
+                        // callback when button is clicked
+                        borderSide: BorderSide(
+                          color: Colors.blueGrey, //Color of the border
+                          style: BorderStyle.solid, //Style of the border
+                          width: 0.8, //width of the border
+                        ),
+                      ),
+                      OutlineButton(
+                        hoverColor: Colors.white,
+                        highlightColor: Colors.white70,
+                        highlightElevation: 10,
+                        child: Text('Meus Pedidos'),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => OrdersTab(
+                                    nomeEmpresa,
+                                    imagemEmpresa,
+                                    cidadeEstado,
+                                  )));
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.white30)),
+                        // callback when button is clicked
+                        borderSide: BorderSide(
+                          color: Colors.blueGrey, //Color of the border
+                          style: BorderStyle.solid, //Style of the border
+                          width: 0.8, //width of the border
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          ],
+                )
+              ],
+            );
+          },
         ));
   }
 

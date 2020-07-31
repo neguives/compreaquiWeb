@@ -28,11 +28,6 @@ class BottomPrincipal extends StatefulWidget {
       iconData: Icons.add_circle_outline,
       color: Colors.blueAccent.shade700,
     ),
-    BarItem(
-      text: "Minhas Solicitações",
-      iconData: Icons.check,
-      color: Colors.lightBlue.shade900,
-    ),
 
     /*BarItem(
       text: "Search",
@@ -88,7 +83,7 @@ class _BottomPrincipal extends State<BottomPrincipal> {
           endereco, latitude, longitude, telefone),
       SelecaoCategoria(nomeEmpresa, imagemEmpresa, cidadeEstado, endereco,
           latitude, longitude, telefone),
-      OrdersTab(nomeEmpresa, imagemEmpresa, cidadeEstado),
+//      OrdersTab(nomeEmpresa, imagemEmpresa, cidadeEstado),
     ];
     return Scaffold(
       body: telas[selectedBarIndex],

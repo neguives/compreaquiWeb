@@ -371,20 +371,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        height: 40,
-                        child: FlatButton(
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            disabledColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            color: Colors.transparent,
-                            onPressed: () {},
-                            child: Image.asset(
-                              'assets/fb.png',
-                            )),
-                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -670,10 +656,17 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                             "photo":
                                                 "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
                                             "nome": _nameController.text.trim(),
-                                            "apelido": _apelidoController.text.trim(),
-                                            "email": _emailController.text.trim(),
-                                            "telefone": telefoneController.text.trim(),
-                                            "cidade": _cidadeController.text.trim(),
+                                            "apelido":
+                                                _apelidoController.text.trim(),
+                                            "email":
+                                                _emailController.text.trim(),
+                                            "telefone": telefoneController
+                                                        .text.length >=
+                                                    5
+                                                ? telefoneController.text.trim()
+                                                : "00000",
+                                            "cidade":
+                                                _cidadeController.text.trim(),
                                             "latitude": "-12.117111",
                                             "logintude": "-38.430454",
                                             "tipoPerfil": "Consumidor"

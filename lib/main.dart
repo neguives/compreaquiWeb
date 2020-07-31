@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               routes: <String, WidgetBuilder>{
                 '/login': (BuildContext context) => new Login(),
               },
-              home: Login(),
+              home: SplashScreen(),
 //      home: Principal(),
               debugShowCheckedModeBanner: false,
               title: "Compreaí Delivery",
