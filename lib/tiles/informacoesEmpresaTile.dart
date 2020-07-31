@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
+import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/telas/paginaEmpresa.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class InformacoesEmpresaTile extends StatelessWidget {
   final DocumentSnapshot snapshot;
@@ -13,6 +16,8 @@ class InformacoesEmpresaTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Column(
       children: <Widget>[
         Card(
@@ -117,26 +122,29 @@ class InformacoesEmpresaTile extends StatelessWidget {
                             SizedBox(
                               height: 20,
                             ),
-                            OutlineButton(
-                              hoverColor: Colors.white,
-                              highlightColor: Colors.white70,
-                              highlightElevation: 10,
-                              child: Container(
-                                width: 130,
-                                height: 30,
-                                child: Row(
-                                  children: <Widget>[
-                                    Text('Fazer Compras'),
-                                    Icon(
-                                      FontAwesomeIcons.cartPlus,
-                                      color: Colors.green.shade300,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => PaginaEmpresa(
+                            ScopedModelDescendant<CartModel>(
+                              builder: (context, child, model){
+                                model.setDisponibilidade(snapshot.data["disponibilidade"]);
+                                return   OutlineButton(
+                                  hoverColor: Colors.white,
+                                  highlightColor: Colors.white70,
+                                  highlightElevation: 10,
+                                  child: Container(
+                                    width: 130,
+                                    height: 30,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text('Fazer Compras'),
+                                        Icon(
+                                          FontAwesomeIcons.cartPlus,
+                                          color: Colors.green.shade300,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => PaginaEmpresa(
                                           snapshot.data["nomeEmpresa"],
                                           snapshot.data["imagem"],
                                           snapshot.data["descricao"],
@@ -148,18 +156,23 @@ class InformacoesEmpresaTile extends StatelessWidget {
                                           longitude,
                                           snapshot.data["latitude"],
                                           snapshot.data["longitude"],
+
                                         )));
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white30)),
+                                  // callback when button is clicked
+                                  borderSide: BorderSide(
+                                    color: Colors.blueGrey, //Color of the border
+                                    style: BorderStyle.solid, //Style of the border
+                                    width: 0.8, //width of the border
+                                  ),
+                                );
+
                               },
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.white30)),
-                              // callback when button is clicked
-                              borderSide: BorderSide(
-                                color: Colors.blueGrey, //Color of the border
-                                style: BorderStyle.solid, //Style of the border
-                                width: 0.8, //width of the border
-                              ),
                             ),
+                            Text("Estabelecimento " +snapshot.data["disponibilidade"], style: TextStyle(fontSize: 8, color: snapshot.data["disponibilidade"] == "aberto" ?Colors.green:Colors.grey),)
                           ],
                         ),
                         SizedBox(

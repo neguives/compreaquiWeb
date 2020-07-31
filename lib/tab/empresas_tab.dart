@@ -83,7 +83,7 @@ class EmpresasTab extends StatelessWidget {
                         width: 350.0,
                         child: Carousel(
                           images: [
-                            Image.asset("assets/logomodificada.png"),
+                            Image.asset("assets/logo.png"),
                           ],
                           dotSize: 4.0,
                           dotSpacing: 15.0,

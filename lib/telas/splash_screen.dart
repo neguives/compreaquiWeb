@@ -42,10 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 200,
               height: 200,
               child: Center(
-                  child: FlareActor("assets/success_check.flr",
-                      alignment: Alignment.center,
-                      fit: BoxFit.contain,
-                      animation: "Untitled")),
+                child: Transform.scale(
+                    scale: 1.2,
+                    child: Image.asset("assets/logo.png")),
+              ),
             ),
           )
         ],

@@ -7,6 +7,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'cart_screen.dart';
 
@@ -170,81 +171,86 @@ class _ProductScreenState extends State<ProductScreen> {
                         height: 16,
                       ),
                       SizedBox(height: 16),
-                      OutlineButton(
-                        color: Colors.green,
-                        hoverColor: Colors.white,
-                        highlightColor: Colors.white70,
-                        highlightElevation: 10,
-                        child: Container(
-                          width: 150,
-                          height: 30,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                product.quantidade > 0
-                                    ? 'Adicionar ao Carrinho'
-                                    : "Produto Indisponível",
-                                textAlign: TextAlign.center,
+                      ScopedModelDescendant<CartModel>(
+                        builder: (context, child , model){
+                          String disponibilidade = model.getDisponibilidade();
+                          return OutlineButton(
+                            color: Colors.green,
+                            hoverColor: Colors.white,
+                            highlightColor: Colors.white70,
+                            highlightElevation: 10,
+                            child: Container(
+                              width: 150,
+                              height: 30,
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    product.quantidade > 0
+                                        ? 'Adicionar ao Carrinho'
+                                        : "Produto Indisponível" ,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        onPressed: preferencia != null && product.quantidade > 0
-                            ? () async {
-                                DocumentReference documentReference = Firestore
-                                    .instance
-                                    .collection(cidadeEstado)
-                                    .document(nomeEmpresa)
-                                    .collection("Produtos e Servicos")
-                                    .document(product.category)
-                                    .collection("itens")
-                                    .document(product.id);
+                            ),
+                            onPressed: preferencia != null && product.quantidade > 0
+                                ? () async {
+                              DocumentReference documentReference = Firestore
+                                  .instance
+                                  .collection(cidadeEstado)
+                                  .document(nomeEmpresa)
+                                  .collection("Produtos e Servicos")
+                                  .document(product.category)
+                                  .collection("itens")
+                                  .document(product.id);
 
-                                Firestore.instance
-                                    .runTransaction((transaction) async {
-                                  await transaction.update(documentReference,
-                                      {"quantidade": product.quantidade - 1});
-                                });
+                              Firestore.instance
+                                  .runTransaction((transaction) async {
+                                await transaction.update(documentReference,
+                                    {"quantidade": product.quantidade - 1});
+                              });
 
-                                if (UserModel.of(context).isLoggedIn()) {
-                                  CartProduct cartProduct = CartProduct();
-                                  cartProduct.variacao = preferencia;
-                                  cartProduct.quantidade = 1;
-                                  cartProduct.pid = product.id;
-                                  cartProduct.categoria = product.category;
-                                  cartProduct.productData = product;
-                                  CartModel.of(context)
-                                      .addCartItem(cartProduct, nomeEmpresa);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => CartScreen(
-                                          cartProduct.productData,
-                                          nomeEmpresa,
-                                          imagemEmpresa,
-                                          cidadeEstado,
-                                          endereco,
-                                          latitude,
-                                          longitude,
-                                          telefone)));
-                                } else {
-                                  _scaffoldKey.currentState
-                                      .showSnackBar(SnackBar(
-                                    content: Text("Você não está conectado!"),
-                                    backgroundColor: Colors.blueGrey,
-                                    duration: Duration(seconds: 2),
-                                  ));
-                                }
+                              if (UserModel.of(context).isLoggedIn()) {
+                                CartProduct cartProduct = CartProduct();
+                                cartProduct.variacao = preferencia;
+                                cartProduct.quantidade = 1;
+                                cartProduct.pid = product.id;
+                                cartProduct.categoria = product.category;
+                                cartProduct.productData = product;
+                                CartModel.of(context)
+                                    .addCartItem(cartProduct, nomeEmpresa);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => CartScreen(
+                                        cartProduct.productData,
+                                        nomeEmpresa,
+                                        imagemEmpresa,
+                                        cidadeEstado,
+                                        endereco,
+                                        latitude,
+                                        longitude,
+                                        telefone)));
+                              } else {
+                                _scaffoldKey.currentState
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Você não está conectado!"),
+                                  backgroundColor: Colors.blueGrey,
+                                  duration: Duration(seconds: 2),
+                                ));
                               }
-                            : null,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                            side: BorderSide(
-                                color: Colors
-                                    .white30)), // callback when button is clicked
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey, //Color of the border
-                          style: BorderStyle.solid, //Style of the border
-                          width: 0.8, //width of the border
-                        ),
+                            }
+                                : null,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(18.0),
+                                side: BorderSide(
+                                    color: Colors
+                                        .white30)), // callback when button is clicked
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey, //Color of the border
+                              style: BorderStyle.solid, //Style of the border
+                              width: 0.8, //width of the border
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: 16),
                       Text(

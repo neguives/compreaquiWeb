@@ -78,7 +78,7 @@ class PaginaEmpresa extends StatelessWidget {
         ),
         body: ScopedModelDescendant<CartModel>(
           builder: (context, child, model) {
-            model.limparCarrinho(nomeEmpresa, endereco);
+
             return Stack(
               children: <Widget>[
                 Container(
@@ -177,6 +177,7 @@ class PaginaEmpresa extends StatelessWidget {
                         highlightElevation: 10,
                         child: Text('Entrar na Loja'),
                         onPressed: () {
+                          model.limparCarrinho(nomeEmpresa, endereco);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => BottomPrincipal(
                                   nomeEmpresa,

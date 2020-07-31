@@ -231,13 +231,13 @@ class TelaSelecaoCategoria extends StatelessWidget {
                           ),
                         )),
                     Padding(
-                      padding: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.only(top: 30),
                       child: Align(
                         alignment: Alignment.topCenter,
                         child: Transform.scale(
                             scale: 1.2,
                             child: Image.asset(
-                              "assets/logomodificada.png",
+                              "assets/logo.png",
                               height: 150,
                               width: 150,
                             )),
