@@ -16,8 +16,6 @@ class InformacoesEmpresaTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Column(
       children: <Widget>[
         Card(
@@ -27,6 +25,8 @@ class InformacoesEmpresaTile extends StatelessWidget {
             children: <Widget>[
               InkWell(
                 onTap: () {
+                  double latitudeEmpresa = snapshot.data["latitude"];
+                  double longitudeEmpresa = snapshot.data["longitude"];
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => PaginaEmpresa(
                             snapshot.data["nomeEmpresa"],
@@ -38,8 +38,8 @@ class InformacoesEmpresaTile extends StatelessWidget {
                             endereco,
                             latitude,
                             longitude,
-                            snapshot.data["latitude"],
-                            snapshot.data["longitude"],
+                            latitudeEmpresa,
+                            longitudeEmpresa,
                           )));
                 },
                 child: Container(
@@ -123,9 +123,10 @@ class InformacoesEmpresaTile extends StatelessWidget {
                               height: 20,
                             ),
                             ScopedModelDescendant<CartModel>(
-                              builder: (context, child, model){
-                                model.setDisponibilidade(snapshot.data["disponibilidade"]);
-                                return   OutlineButton(
+                              builder: (context, child, model) {
+                                model.setDisponibilidade(
+                                    snapshot.data["disponibilidade"]);
+                                return OutlineButton(
                                   hoverColor: Colors.white,
                                   highlightColor: Colors.white70,
                                   highlightElevation: 10,
@@ -143,36 +144,53 @@ class InformacoesEmpresaTile extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => PaginaEmpresa(
-                                          snapshot.data["nomeEmpresa"],
-                                          snapshot.data["imagem"],
-                                          snapshot.data["descricao"],
-                                          snapshot.data["galeriaPagina"],
-                                          snapshot.data["telefone"],
-                                          cidadeEstado,
-                                          endereco,
-                                          latitude,
-                                          longitude,
-                                          snapshot.data["latitude"],
-                                          snapshot.data["longitude"],
+                                    double latitudeEmpresa =
+                                        snapshot.data["latitude"];
+                                    double longitudeEmpresa =
+                                        snapshot.data["longitude"];
 
-                                        )));
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => PaginaEmpresa(
+                                                  snapshot.data["nomeEmpresa"],
+                                                  snapshot.data["imagem"],
+                                                  snapshot.data["descricao"],
+                                                  snapshot
+                                                      .data["galeriaPagina"],
+                                                  snapshot.data["telefone"],
+                                                  cidadeEstado,
+                                                  endereco,
+                                                  latitude,
+                                                  longitude,
+                                                  latitudeEmpresa,
+                                                  longitudeEmpresa,
+                                                )));
                                   },
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(18.0),
+                                      borderRadius:
+                                          new BorderRadius.circular(18.0),
                                       side: BorderSide(color: Colors.white30)),
                                   // callback when button is clicked
                                   borderSide: BorderSide(
-                                    color: Colors.blueGrey, //Color of the border
-                                    style: BorderStyle.solid, //Style of the border
+                                    color:
+                                        Colors.blueGrey, //Color of the border
+                                    style:
+                                        BorderStyle.solid, //Style of the border
                                     width: 0.8, //width of the border
                                   ),
                                 );
-
                               },
                             ),
-                            Text("Estabelecimento " +snapshot.data["disponibilidade"], style: TextStyle(fontSize: 8, color: snapshot.data["disponibilidade"] == "aberto" ?Colors.green:Colors.grey),)
+                            Text(
+                              "Estabelecimento " +
+                                  snapshot.data["disponibilidade"],
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: snapshot.data["disponibilidade"] ==
+                                          "aberto"
+                                      ? Colors.green
+                                      : Colors.grey),
+                            )
                           ],
                         ),
                         SizedBox(

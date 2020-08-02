@@ -46,20 +46,8 @@ class PaginaEmpresa extends StatelessWidget {
     print(galeriaPagina);
   }
 
-  Future<void> _onCalculatePressed() async {
-    double distanceInMeters = await Geolocator().distanceBetween(
-        latitude, longitude, latitudeEmpresa, longitudeEmpresa);
-
-    double distancia = distanceInMeters / 1000;
-    distanciaReal = "Mais de " + distancia.toStringAsFixed(2) + " km";
-
-    print('The distance is: $distanciaReal');
-    return distanciaReal;
-  }
-
   @override
   Widget build(BuildContext context) {
-    _onCalculatePressed();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Image.asset("assets/icon_zap.png"),
@@ -78,7 +66,6 @@ class PaginaEmpresa extends StatelessWidget {
         ),
         body: ScopedModelDescendant<CartModel>(
           builder: (context, child, model) {
-
             return Stack(
               children: <Widget>[
                 Container(
@@ -134,49 +121,74 @@ class PaginaEmpresa extends StatelessWidget {
                       SizedBox(
                         height: 60,
                       ),
-                      SizedBox(
-                          height: 150.0,
-                          width: 350.0,
-                          child: Carousel(
-                            images: [
-                              Image.network(galeriaPagina.elementAt(0)),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => BottomPrincipal(
-                                          nomeEmpresa,
-                                          imagemEmpresa,
-                                          cidadeEstado,
-                                          endereco,
-                                          latitude,
-                                          longitude,
-                                          whatsapp)));
-                                },
-                                child: Container(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.network(
-                                        galeriaPagina.elementAt(1)),
+                      galeriaPagina.elementAt(0).toString().length > 10
+                          ? SizedBox(
+                              height: 150.0,
+                              width: 350.0,
+                              child: Carousel(
+                                images: [
+                                  Image.network(galeriaPagina.elementAt(0)),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomPrincipal(
+                                                      nomeEmpresa,
+                                                      imagemEmpresa,
+                                                      cidadeEstado,
+                                                      endereco,
+                                                      latitude,
+                                                      longitude,
+                                                      whatsapp)));
+                                    },
+                                    child: Container(
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        child: Image.network(
+                                            galeriaPagina.elementAt(1)),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Image.network(galeriaPagina.elementAt(2)),
-                            ],
-                            dotSize: 4.0,
-                            dotSpacing: 15.0,
-                            dotColor: Colors.lightGreenAccent,
-                            indicatorBgPadding: 5.0,
-                            dotBgColor: Colors.green.withOpacity(0.5),
-                            borderRadius: true,
-                            moveIndicatorFromBottom: 180.0,
-                            noRadiusForIndicator: true,
-                          )),
+                                  Image.network(galeriaPagina.elementAt(2)),
+                                ],
+                                dotSize: 4.0,
+                                dotSpacing: 15.0,
+                                dotColor: Colors.lightGreenAccent,
+                                indicatorBgPadding: 5.0,
+                                dotBgColor: Colors.green.withOpacity(0.5),
+                                borderRadius: true,
+                                moveIndicatorFromBottom: 180.0,
+                                noRadiusForIndicator: true,
+                              ))
+                          : Text(""),
                       OutlineButton(
                         hoverColor: Colors.white,
                         highlightColor: Colors.white70,
                         highlightElevation: 10,
-                        child: Text('Entrar na Loja'),
-                        onPressed: () {
+                        child: Text('Entrar na Loja',
+                            style: TextStyle(
+                                fontFamily: "QuickSand", fontSize: 12)),
+                        onPressed: () async {
+                          double laEmpresa = latitudeEmpresa;
+                          double longEmpresa = longitudeEmpresa;
+                          double distanceInMeters = await Geolocator()
+                              .distanceBetween(
+                                  latitude, longitude, laEmpresa, longEmpresa);
+
+                          print(distanceInMeters);
+                          double distancia = distanceInMeters / 1000;
+                          double valorCorrida = (distancia + 1.5) * 2.50 + 2.50;
+                          String valorCorridaNumero =
+                              valorCorrida.toStringAsFixed(2);
+                          double valorCorridaCorrigido =
+                              double.parse(valorCorridaNumero);
+                          print('The distance is: $distancia');
+                          print('Valor corrida é: $valorCorridaCorrigido');
+
+                          model.setFreteKarona(valorCorridaCorrigido);
+                          print(model.getFreteKarona());
                           model.limparCarrinho(nomeEmpresa, endereco);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => BottomPrincipal(
@@ -202,7 +214,9 @@ class PaginaEmpresa extends StatelessWidget {
                         hoverColor: Colors.white,
                         highlightColor: Colors.white70,
                         highlightElevation: 10,
-                        child: Text('Meus Pedidos'),
+                        child: Text('Meus Pedidos',
+                            style: TextStyle(
+                                fontFamily: "QuickSand", fontSize: 12)),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => OrdersTab(
@@ -221,6 +235,34 @@ class PaginaEmpresa extends StatelessWidget {
                           width: 0.8, //width of the border
                         ),
                       ),
+                      OutlineButton(
+                        hoverColor: Colors.white,
+                        highlightColor: Colors.white70,
+                        highlightElevation: 10,
+                        child: Text(
+                          ' Localização ',
+                          style:
+                              TextStyle(fontFamily: "QuickSand", fontSize: 12),
+                        ),
+                        onPressed: () async {
+                          var mapsAppUrl =
+                              "https://www.google.com/maps/place/@${latitudeEmpresa},${longitudeEmpresa},17z";
+                          print(mapsAppUrl);
+                          await canLaunch(mapsAppUrl)
+                              ? launch(mapsAppUrl)
+                              : print(
+                                  "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.white30)),
+                        // callback when button is clicked
+                        borderSide: BorderSide(
+                          color: Colors.blueGrey, //Color of the border
+                          style: BorderStyle.solid, //Style of the border
+                          width: 0.8, //width of the border
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -228,20 +270,5 @@ class PaginaEmpresa extends StatelessWidget {
             );
           },
         ));
-  }
-
-  Widget text() {
-    Future<void> _onCalculatePressed() async {
-      double distanceInMeters = await Geolocator().distanceBetween(
-          latitude, longitude, latitudeEmpresa, longitudeEmpresa);
-
-      double distancia = distanceInMeters / 1000;
-      distanciaReal = "Mais de " + distancia.toStringAsFixed(1) + " km";
-      double valorCorrida = (distancia + 3) * 2.50;
-      print('The distance is: $distanciaReal');
-      return distanciaReal;
-    }
-
-    return Text("");
   }
 }

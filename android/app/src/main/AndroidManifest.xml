@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="CompreAqui"
+        android:label="CompreAqui Delivery"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBN-stBbriJdSb1Qh9K41i_NtxdESrWG-M"/>

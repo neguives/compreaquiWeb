@@ -12,8 +12,10 @@ class CartModel extends Model {
   String disponibilidadeEstabelecimento;
   String tipoFrete;
   String nomeEmpresa;
+  bool entregaGratis;
   int discountPercentage = 0;
   double precoFrete = 0;
+  double precoFreteKarona = 0;
 
   String produtoPesquisar;
   UserModel user;
@@ -73,6 +75,14 @@ class CartModel extends Model {
     notifyListeners();
   }
 
+  bool setEntregaGratuita(bool entrega) {
+    this.entregaGratis = entrega;
+  }
+
+  bool getEntregaGratuita() {
+    return entregaGratis;
+  }
+
   void incProduct(CartProduct cartProduct, String nomeEmpresa) {
     cartProduct.quantidade++;
 
@@ -107,6 +117,7 @@ class CartModel extends Model {
     this.cupomDesconto = cupomCodigo;
     this.discountPercentage = descontoPorcentagem;
   }
+
   void setDisponibilidade(String disponibilidade) {
     this.disponibilidadeEstabelecimento = disponibilidade;
   }
@@ -114,6 +125,10 @@ class CartModel extends Model {
   void setFrete(String cupomCodigo, double precoFrete) {
     this.tipoFrete = cupomCodigo;
     this.precoFrete = precoFrete;
+  }
+
+  void setFreteKarona(double precoFrete) {
+    this.precoFreteKarona = precoFrete;
   }
 
   void setProdutoPesquisado(String produtoPesquisado) {
@@ -133,13 +148,17 @@ class CartModel extends Model {
 
     return getProductPrice() - getProductPrice() + discountPercentage;
   }
-  String getDisponibilidade() {
 
+  String getDisponibilidade() {
     return disponibilidadeEstabelecimento;
   }
 
   double getFrete() {
     return precoFrete;
+  }
+
+  double getFreteKarona() {
+    return precoFreteKarona;
   }
 
   String getProduto() {
@@ -150,8 +169,8 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  Future<String> finalizarCompra(
-      String nomeEmpresa, String endereco, String cidade) async {
+  Future<String> finalizarCompra(String nomeEmpresa, String endereco,
+      String cidade, String freteTipo) async {
     print(endereco + " Deus no comando");
     if (products.length == 0) return null;
 
@@ -161,7 +180,7 @@ class CartModel extends Model {
     String data = formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +
         " às ${formatDate(DateTime.now(), [HH, ':', nn, ':', ss])}";
     double productsPrice = getProductPrice();
-    double productsFrete = getFrete();
+    double productsFrete = entregaGratis == false ? getFreteKarona() : 0.0;
     double productsDesconto = getDesconto();
 
     DocumentReference referenciaOrdem = await Firestore.instance
@@ -173,6 +192,7 @@ class CartModel extends Model {
       "produtos": products.map((catProduct) => catProduct.toMap()).toList(),
       "enderecoCliente": endereco,
       "precoDoFrete": productsFrete,
+      "tipoFrete": freteTipo,
       "precoDosProdutos": productsPrice,
       "desconto": productsDesconto,
       "data": formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +

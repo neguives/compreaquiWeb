@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
@@ -48,7 +49,7 @@ class _CardResumoState extends State<CardResumo> {
   final VoidCallback buy;
   String bandeira;
   String opcaoDeFrete;
-  String freteTipo;
+  String freteTipo = "a";
   _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
 
@@ -158,33 +159,10 @@ class _CardResumoState extends State<CardResumo> {
 
   @override
   Widget build(BuildContext context) {
+    bool entregaGratuita = false;
+
     obsController.text =
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
-
-    Future<void> _onCalculatePressed() async {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-
-      var distanceBetweenPoints = SphericalUtil.computeAngleBetween(
-          LatLng(position.latitude, position.longitude),
-          LatLng(-12.9704, -38.5124));
-
-      double distanceInMeters = await Geolocator().distanceBetween(
-          position.latitude, position.longitude, -12.9704, -38.5124);
-
-      double distancia = distanceInMeters / 1000;
-      String distanciaReal = distancia.toStringAsFixed(1);
-      print('The distance is: $distanciaReal');
-    }
-
-    double calculateDistance(lat1, lon1, lat2, lon2) {
-      var p = 0.017453292519943295;
-      var c = cos;
-      var a = 0.5 -
-          c((lat2 - lat1) * p) / 2 +
-          c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-      return 12742 * asin(sqrt(a));
-    }
 
     return Column(
       children: [
@@ -194,6 +172,9 @@ class _CardResumoState extends State<CardResumo> {
               padding: EdgeInsets.all(16.0),
               child: ScopedModelDescendant<CartModel>(
                 builder: (context, child, model) {
+                  double freteKarona = model.getFreteKarona();
+
+                  double freteKaronaFixo = freteKarona;
                   double preco = model.getProductPrice();
                   double desconto = model.getDesconto();
                   double frete = model.getFrete();
@@ -238,18 +219,15 @@ class _CardResumoState extends State<CardResumo> {
                                   labels: <String>[
                                     "Retirar no estabelecimento",
                                     "Entrega Expressa (App Karona)",
-                                   "Entrega do estabelecimento"
+                                    "Entrega do estabelecimento"
                                   ],
-                                  onSelected: (String selected) {
+                                  onSelected: (String selected) async {
                                     freteTipo = selected;
-                                    model.setFrete(
-                                        selected,
-                                        selected == "Retirar no estabelecimento"
-                                            ? 0
-                                            : selected ==
+
+                                    model.setEntregaGratuita(selected ==
                                             "Entrega Expressa (App Karona)"
-                                            ? 14
-                                            : 0);
+                                        ? false
+                                        : true);
                                   }),
                               TextField(
                                 maxLines: 6,
@@ -319,8 +297,9 @@ class _CardResumoState extends State<CardResumo> {
             builder: (context, child, model) {
               double preco = model.getProductPrice();
               double desconto = model.getDesconto();
-              double frete = model.getFrete();
+              double frete = model.getFreteKarona();
 //              model.loadCartItens();
+
               return Padding(
                   padding: EdgeInsets.all(16),
                   child: Column(
@@ -355,7 +334,10 @@ class _CardResumoState extends State<CardResumo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text("Entrega"),
-                          Text("R\$ ${model.getFrete().toStringAsFixed(2)}"),
+                          Text(model.getEntregaGratuita() == false
+                              ? "R\$ " +
+                                  model.getFreteKarona().toStringAsFixed(2)
+                              : "R\$ 0.00"),
                         ],
                       ),
                       Divider(
@@ -371,7 +353,7 @@ class _CardResumoState extends State<CardResumo> {
                                 color: Colors.blue),
                           ),
                           Text(
-                            "R\$ ${(preco + frete - model.getDesconto()).toStringAsFixed(2)}",
+                            "R\$ ${(preco + (model.getEntregaGratuita() == false ? model.getFreteKarona() : 0.0) - model.getDesconto()).toStringAsFixed(2)}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue),
@@ -517,172 +499,203 @@ class _CardResumoState extends State<CardResumo> {
                                       ],
                                     ),
                                   ),
-                                  OutlineButton(
-                                    hoverColor: Colors.white,
-                                    highlightColor: Colors.white70,
-                                    highlightElevation: 10,
-                                    onPressed: () {
-                                      double total = preco + frete - model.getDesconto();
-                                      if(total <= 60 && freteTipo == "Entrega do estabelecimento" ){
-                                        _pedidoInferior(context);
-                                      }
-                                      else {
-                                        String valorTotal =
-                                        (preco + frete - model.getDesconto())
-                                            .toString()
-                                            .replaceAll(".", "");
-                                        String valorTotalCorrigido =
-                                        valorTotal.replaceAll(",", "").trim();
-                                        int valorTotalFinal =
-                                        int.parse(valorTotalCorrigido);
-                                        _finalizarPagamento(
-                                            String numeroCartao,
-                                            validadeCartao,
-                                            nomeCartao,
-                                            codSeguranca) async {
-                                          _cardNumberControllerTrim.text =
-                                              numeroCartao;
-                                          print(_cardNumberControllerTrim.text);
-                                          bandeira = numeroCartao.startsWith("51") ||
-                                              numeroCartao.startsWith("55") ||
-                                              numeroCartao
-                                                  .startsWith("2221") ||
-                                              numeroCartao
-                                                  .startsWith("2229") ||
-                                              numeroCartao
-                                                  .startsWith("223") ||
-                                              numeroCartao
-                                                  .startsWith("229") ||
-                                              numeroCartao.startsWith("23") ||
-                                              numeroCartao.startsWith("26") ||
-                                              numeroCartao
-                                                  .startsWith("270") ||
-                                              numeroCartao
-                                                  .startsWith("271") ||
-                                              numeroCartao.startsWith("2720")
-                                              ? "Master"
-                                              : numeroCartao.startsWith("4")
-                                              ? "Visa"
-                                              : numeroCartao.startsWith("34") ||
-                                              numeroCartao
-                                                  .startsWith("37")
-                                              ? "Amex"
-                                              : numeroCartao.startsWith("38") ||
-                                              numeroCartao.startsWith(
-                                                  "60")
-                                              ? "Hiper"
-                                              : numeroCartao.startsWith("636368") ||
-                                              numeroCartao.startsWith("636369") ||
-                                              numeroCartao.startsWith("438935") ||
-                                              numeroCartao.startsWith("504175") ||
-                                              numeroCartao.startsWith("451416") ||
-                                              numeroCartao.startsWith("636297") ||
-                                              numeroCartao.startsWith("5067") ||
-                                              numeroCartao.startsWith("4576") ||
-                                              numeroCartao.startsWith("4011") ||
-                                              numeroCartao.startsWith("506699")
-                                              ? "Elo"
-                                              : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
-                                          Sale sale = Sale(
-                                              merchantOrderId: "1233443",
-                                              customer: Customer(
-                                                  name:
-                                                  "Comprador crédito simples"),
-                                              payment: Payment(
-                                                  currency: "BRL",
-                                                  type: TypePayment.creditCard,
-                                                  amount: valorTotalFinal,
-                                                  returnMessage:
-                                                  "https://www.cielo.com.br",
-                                                  installments: 1,
-                                                  softDescriptor: "CompreAqui",
-                                                  creditCard: CreditCard(
-                                                    cardNumber:
-                                                    _cardNumberControllerTrim
-                                                        .text,
-                                                    holder: nomeCartao
-                                                        .toString()
-                                                        .toUpperCase(),
-                                                    expirationDate:
-                                                    validadeCartao,
-                                                    securityCode: codSeguranca,
-                                                    brand: numeroCartao.startsWith("51") ||
-                                                        numeroCartao.startsWith(
-                                                            "55") ||
-                                                        numeroCartao.startsWith(
-                                                            "2221") ||
-                                                        numeroCartao.startsWith(
-                                                            "2229") ||
-                                                        numeroCartao.startsWith(
-                                                            "223") ||
-                                                        numeroCartao.startsWith(
-                                                            "229") ||
-                                                        numeroCartao.startsWith(
-                                                            "23") ||
-                                                        numeroCartao.startsWith(
-                                                            "26") ||
-                                                        numeroCartao.startsWith(
-                                                            "270") ||
-                                                        numeroCartao
-                                                            .startsWith(
-                                                            "271") ||
-                                                        numeroCartao
-                                                            .startsWith("2720")
-                                                        ? "Master"
-                                                        : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Master",
-                                                  )));
+                                  StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection(cidadeEstado)
+                                        .document(nomeEmpresa)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      return Column(
+                                        children: [
+                                        OutlineButton(
+                                        hoverColor: Colors.white,
+                                        highlightColor: Colors.white70,
+                                        highlightElevation: 10,
+                                        onPressed: snapshot
+                                            .data["disponibilidade"] ==
+                                            "aberto"
+                                            ? () {
+                                          double total = preco +
+                                              frete -
+                                              model.getDesconto();
+                                          if (total <= 50 &&
+                                              freteTipo ==
+                                                  "Entrega do estabelecimento") {
+                                            _pedidoInferior(context);
+                                          } else {
+                                            String valorTotal = (preco +
+                                                (model.getEntregaGratuita() ==
+                                                    false
+                                                    ? model
+                                                    .getFreteKarona()
+                                                    : 0.0) -
+                                                model.getDesconto())
+                                                .toString()
+                                                .replaceAll(".", "");
+                                            String valorTotalCorrigido =
+                                            valorTotal
+                                                .replaceAll(",", "")
+                                                .trim();
+                                            int valorTotalFinal =
+                                            int.parse(
+                                                valorTotalCorrigido);
+                                            _finalizarPagamento(
+                                                String numeroCartao,
+                                                validadeCartao,
+                                                nomeCartao,
+                                                codSeguranca) async {
+                                              _cardNumberControllerTrim
+                                                  .text = numeroCartao;
+                                              print(
+                                                  _cardNumberControllerTrim
+                                                      .text);
+                                              bandeira = numeroCartao
+                                                  .startsWith(
+                                                  "51") ||
+                                                  numeroCartao.startsWith(
+                                                      "55") ||
+                                                  numeroCartao.startsWith(
+                                                      "2221") ||
+                                                  numeroCartao.startsWith(
+                                                      "2229") ||
+                                                  numeroCartao.startsWith(
+                                                      "223") ||
+                                                  numeroCartao.startsWith(
+                                                      "229") ||
+                                                  numeroCartao.startsWith(
+                                                      "23") ||
+                                                  numeroCartao.startsWith(
+                                                      "26") ||
+                                                  numeroCartao.startsWith(
+                                                      "270") ||
+                                                  numeroCartao
+                                                      .startsWith("271") ||
+                                                  numeroCartao.startsWith("2720")
+                                                  ? "Master"
+                                                  : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
+                                              Sale sale = Sale(
+                                                  merchantOrderId:
+                                                  "1233443",
+                                                  customer: Customer(
+                                                      name:
+                                                      "Comprador crédito simples"),
+                                                  payment: Payment(
+                                                      currency: "BRL",
+                                                      type: TypePayment
+                                                          .creditCard,
+                                                      amount:
+                                                      valorTotalFinal,
+                                                      returnMessage:
+                                                      "https://www.cielo.com.br",
+                                                      installments: 1,
+                                                      softDescriptor:
+                                                      "CompreAqui",
+                                                      creditCard:
+                                                      CreditCard(
+                                                        cardNumber:
+                                                        _cardNumberControllerTrim
+                                                            .text,
+                                                        holder: nomeCartao
+                                                            .toString()
+                                                            .toUpperCase(),
+                                                        expirationDate:
+                                                        validadeCartao,
+                                                        securityCode:
+                                                        codSeguranca,
+                                                        brand: numeroCartao.startsWith("51") ||
+                                                            numeroCartao.startsWith(
+                                                                "55") ||
+                                                            numeroCartao.startsWith(
+                                                                "2221") ||
+                                                            numeroCartao.startsWith(
+                                                                "2229") ||
+                                                            numeroCartao.startsWith(
+                                                                "223") ||
+                                                            numeroCartao.startsWith(
+                                                                "229") ||
+                                                            numeroCartao.startsWith(
+                                                                "23") ||
+                                                            numeroCartao.startsWith(
+                                                                "26") ||
+                                                            numeroCartao.startsWith(
+                                                                "270") ||
+                                                            numeroCartao.startsWith(
+                                                                "271") ||
+                                                            numeroCartao.startsWith(
+                                                                "2720")
+                                                            ? "Master"
+                                                            : numeroCartao.startsWith("4")
+                                                            ? "Visa"
+                                                            : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Master",
+                                                      )));
 
-                                          try {
-                                            var response =
-                                            await cielo.createSale(sale);
-                                            print(response.payment.status);
-                                            print(bandeira);
-                                            if (response.payment.status == 1) {
-                                              model.finalizarCompra(nomeEmpresa,
-                                                  endereco, cidadeEstado);
-                                              Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OrdemPedidoConfirmado(
-                                                              "1")));
-                                            } else {
-                                              _pagamentoReprovado(context);
+                                              try {
+                                                var response = await cielo
+                                                    .createSale(sale);
+                                                print(response
+                                                    .payment.status);
+                                                print(bandeira);
+                                                if (response
+                                                    .payment.status ==
+                                                    1) {
+                                                  model.finalizarCompra(
+                                                      nomeEmpresa,
+                                                      endereco,
+                                                      cidadeEstado,freteTipo);
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OrdemPedidoConfirmado(
+                                                                  "1")));
+                                                } else {
+                                                  _pagamentoReprovado(
+                                                      context);
+                                                }
+                                              } on CieloException catch (e) {
+                                                print(e.message);
+                                                print(
+                                                    e.errors[0].message);
+                                                print(e.errors[0].code);
+                                              }
                                             }
-                                          } on CieloException catch (e) {
-                                            print(e.message);
-                                            print(e.errors[0].message);
-                                            print(e.errors[0].code);
-                                          }
-                                        }
 
 //      numeroCartao, bandeiraCartao, validadeCartao, nomeCartao , codSeguranca
-                                        _finalizarPagamento(
-                                            _cardNumberController.text,
-                                            _expiryDateController.text,
-                                            _cardHolderNameController.text,
-                                            _cvvCodeController.text);
+                                            _finalizarPagamento(
+                                                _cardNumberController
+                                                    .text,
+                                                _expiryDateController
+                                                    .text,
+                                                _cardHolderNameController
+                                                    .text,
+                                                _cvvCodeController.text);
+                                          }
+                                        }
+                                            : null,
+                                        child: Text(
+                                          'Pagar',
+                                        ),
 
-                                      }
-
-                                    },
-                                    child: Text(
-                                      'Pagar',
-                                    ),
-
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
                                             new BorderRadius.circular(18.0),
-                                        side: BorderSide(
-                                            color: Colors
-                                                .white30)), // callback when button is clicked
-                                    borderSide: BorderSide(
-                                      color:
-                                          Colors.blueGrey, //Color of the border
-                                      style: BorderStyle
-                                          .solid, //Style of the border
-                                      width: 0.8, //width of the border
-                                    ),
-                                  ),
+                                            side: BorderSide(
+                                                color: Colors
+                                                    .white30)), // callback when button is clicked
+                                        borderSide: BorderSide(
+                                          color: Colors
+                                              .blueGrey, //Color of the border
+                                          style: BorderStyle
+                                              .solid, //Style of the border
+                                          width: 0.8, //width of the border
+                                        ),
+                                      ), Text(snapshot
+                                              .data["disponibilidade"] !=
+                                              "aberto"?"(estabelecimento fechado)":"", style: TextStyle(fontSize: 10),)
+                                        ],
+                                      );
+                                    },
+                                  )
                                 ],
                               ))
                         ],
@@ -696,12 +709,6 @@ class _CardResumoState extends State<CardResumo> {
     );
   }
 
-  calcularDistancia() async {
-    double distanceInMeters = await Geolocator()
-        .distanceBetween(52.2165157, 6.9437819, 52.3546274, 4.8285838);
-
-    print(distanceInMeters.toString() + " Metros");
-  }
   void _pedidoInferior(BuildContext context) {
     // flutter defined function
     showDialog(
@@ -710,28 +717,42 @@ class _CardResumoState extends State<CardResumo> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          backgroundColor: Colors.transparent,
-          title: new Card(
-            child: Center(
-              child: Padding(
+            backgroundColor: Colors.transparent,
+            title: new Card(
+              child: Center(
+                  child: Padding(
                 padding: EdgeInsets.all(5),
                 child: Column(
                   children: [
-                    Icon(Icons.local_car_wash, size: 70,),
-                    SizedBox(height: 20,),
-                    Text("Compra não processada!", style: TextStyle(fontFamily: "QuickSand", fontSize: 15),),
-                    SizedBox(height: 20,),
-                    Text("A entrega realizada pelo estabelecimento só está disponível em pedidos acima de R\$60,00.", style: TextStyle(fontFamily: "QuickSand", fontSize: 12),),
-                    SizedBox(height: 20,),
-                    Text("Adicione mais itens no seu carrinho ou altere a modalidade da entrega para confirmar o seu pedido!", style: TextStyle(fontFamily: "QuickSand", fontSize: 12),)
+                    Icon(
+                      Icons.local_car_wash,
+                      size: 70,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Compra não processada!",
+                      style: TextStyle(fontFamily: "QuickSand", fontSize: 15),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "A entrega realizada pelo estabelecimento só está disponível em pedidos acima de R\$60,00.",
+                      style: TextStyle(fontFamily: "QuickSand", fontSize: 12),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Adicione mais itens no seu carrinho ou altere a modalidade da entrega para confirmar o seu pedido!",
+                      style: TextStyle(fontFamily: "QuickSand", fontSize: 12),
+                    )
                   ],
                 ),
-              )
-            ),
-          )
-
-
-        );
+              )),
+            ));
       },
     );
   }
@@ -763,7 +784,6 @@ class _CardResumoState extends State<CardResumo> {
               ],
             ),
           ),
-
         );
       },
     );

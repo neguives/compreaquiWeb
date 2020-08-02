@@ -137,14 +137,14 @@ class _MyMapPageState extends State<MyMapPage> {
 
 //            Mudar quando for lançar
 //            documentReference.updateData({"cidade": cidadeEstado});
-            documentReference.updateData({"cidade": "Catalão - GO"});
+            documentReference.updateData({"cidade": cidadeEstado});
             documentReference.updateData({"endereco": endereco});
             documentReference.updateData({"latitude": latitude});
             documentReference.updateData({"longitude": logintude});
 
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => TelaSelecaoCategoria(
-                      cidadeEstado: "Catalão - GO",
+                      cidadeEstado: cidadeEstado,
                       endereco: endereco,
                       latitude: latitudeAtualizada,
                       longitude: logintudeAtualizada,

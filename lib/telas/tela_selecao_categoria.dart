@@ -316,7 +316,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EmpresasTab(
-                        cidade: cidadeEstado,
+                        cidade: "Catalão - GO",
                         endereco: endereco,
                         latitude: latitude,
                         longitude: longitude,
