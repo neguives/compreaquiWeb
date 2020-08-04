@@ -499,6 +499,22 @@ class _CardResumoState extends State<CardResumo> {
                                       ],
                                     ),
                                   ),
+                                  RaisedButton(
+                                    child: Text("Comprar Sem Cartao"),
+                                    onPressed: (){
+
+                                      model.finalizarCompra(
+                                          nomeEmpresa,
+                                          endereco,
+                                          cidadeEstado,freteTipo);
+                                      Navigator.of(context)
+                                          .pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrdemPedidoConfirmado(
+                                                      "1")));
+                                    },
+                                  ),
                                   StreamBuilder(
                                     stream: Firestore.instance
                                         .collection(cidadeEstado)
