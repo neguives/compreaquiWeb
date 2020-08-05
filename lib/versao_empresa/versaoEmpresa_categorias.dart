@@ -2,17 +2,17 @@ import 'package:compreaidelivery/versao_empresa/categorias/tabs/categoria_tab.da
 import 'package:flutter/material.dart';
 
 class VersaoEmpresaCategorias extends StatefulWidget {
-  String nome;
-  VersaoEmpresaCategorias(this.nome);
+  String nome, cidadeEstado;
+  VersaoEmpresaCategorias(this.nome, this.cidadeEstado);
   @override
   _VersaoEmpresaCategoriasState createState() =>
-      _VersaoEmpresaCategoriasState(nome);
+      _VersaoEmpresaCategoriasState(nome, cidadeEstado);
 }
 
 class _VersaoEmpresaCategoriasState extends State<VersaoEmpresaCategorias> {
-  String nome;
+  String nome, cidadeEstado;
 
-  _VersaoEmpresaCategoriasState(this.nome);
+  _VersaoEmpresaCategoriasState(this.nome, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class _VersaoEmpresaCategoriasState extends State<VersaoEmpresaCategorias> {
             "Categorias",
             style: TextStyle(color: Colors.black87),
           )),
-      body: CategoriaTab(this.nome),
+      body: CategoriaTab(nome, cidadeEstado),
     );
   }
 }

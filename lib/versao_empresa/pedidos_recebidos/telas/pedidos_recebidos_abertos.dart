@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 import '../blocs/orders_bloc.dart';
 
 class PedidosRecebidosAbertos extends StatefulWidget {
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
 
-  PedidosRecebidosAbertos(this.nomeEmpresa);
+  PedidosRecebidosAbertos(this.nomeEmpresa, this.cidadeEstado);
   @override
   _PedidosRecebidosAbertosState createState() =>
-      _PedidosRecebidosAbertosState(nomeEmpresa);
+      _PedidosRecebidosAbertosState(nomeEmpresa, cidadeEstado);
 }
 
 class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
-  String nomeEmpresa;
-  _PedidosRecebidosAbertosState(this.nomeEmpresa);
+  String nomeEmpresa, cidadeEstado;
+  _PedidosRecebidosAbertosState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +27,10 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection("Catalão - GO")
+            .collection("Alagoinhas-Bahia")
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 1)
+            .where("status", isEqualTo: 3)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

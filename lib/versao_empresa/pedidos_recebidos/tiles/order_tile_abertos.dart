@@ -32,7 +32,7 @@ class OrderTileAbertos extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection("Catalão - GO")
+                        .collection("Alagoinhas-Bahia")
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
@@ -122,20 +122,20 @@ class OrderTileAbertos extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       _buildCircle(
-                                          "1", "Em Separação", status, 1),
+                                          "1", "Em Separação", status, 2),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
                                       _buildCircle(
-                                          "2", "Em Transporte", status, 2),
+                                          "2", "Em Transporte", status, 3),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
-                                      _buildCircle("3", "Entregue", status, 3),
+                                      _buildCircle("3", "Entregue", status, 5),
                                       Container(
                                           height: 1,
                                           width: 20,

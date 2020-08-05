@@ -8,18 +8,18 @@ import 'package:flutter/material.dart';
 import '../blocs/orders_bloc.dart';
 
 class PedidosRecebidosTransporte extends StatefulWidget {
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
 
-  PedidosRecebidosTransporte(this.nomeEmpresa);
+  PedidosRecebidosTransporte(this.nomeEmpresa, this.cidadeEstado);
   @override
   _PedidosRecebidosTransporteState createState() =>
-      _PedidosRecebidosTransporteState(nomeEmpresa);
+      _PedidosRecebidosTransporteState(nomeEmpresa, cidadeEstado);
 }
 
 class _PedidosRecebidosTransporteState
     extends State<PedidosRecebidosTransporte> {
-  String nomeEmpresa;
-  _PedidosRecebidosTransporteState(this.nomeEmpresa);
+  String nomeEmpresa, cidadeEstado;
+  _PedidosRecebidosTransporteState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +29,7 @@ class _PedidosRecebidosTransporteState
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection("Catalão - GO")
+            .collection(cidadeEstado)
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 3)

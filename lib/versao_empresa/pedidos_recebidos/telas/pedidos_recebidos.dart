@@ -7,16 +7,17 @@ import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_ti
 import 'package:flutter/material.dart';
 
 class PedidosRecebidos extends StatefulWidget {
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
 
-  PedidosRecebidos(this.nomeEmpresa);
+  PedidosRecebidos(this.nomeEmpresa, this.cidadeEstado);
   @override
-  _PedidosRecebidosState createState() => _PedidosRecebidosState(nomeEmpresa);
+  _PedidosRecebidosState createState() =>
+      _PedidosRecebidosState(nomeEmpresa, cidadeEstado);
 }
 
 class _PedidosRecebidosState extends State<PedidosRecebidos> {
-  String nomeEmpresa;
-  _PedidosRecebidosState(this.nomeEmpresa);
+  String nomeEmpresa, cidadeEstado;
+  _PedidosRecebidosState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +36,8 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                       InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    PedidosRecebidosAbertos(nomeEmpresa)));
+                                builder: (context) => PedidosRecebidosAbertos(
+                                    nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
                             child: Image.asset(
@@ -49,7 +50,8 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    PedidosRecebidosTransporte(nomeEmpresa)));
+                                    PedidosRecebidosTransporte(
+                                        nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
                             child: Image.asset(
@@ -61,8 +63,8 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                       InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    PedidosRecebidosEntregues(nomeEmpresa)));
+                                builder: (context) => PedidosRecebidosEntregues(
+                                    nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
                             child: Image.asset(

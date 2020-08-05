@@ -198,7 +198,7 @@ class CartModel extends Model {
       "data": formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +
           " às ${formatDate(DateTime.now(), [HH, ':', nn, ':', ss])}",
       "precoTotal": productsPrice - productsDesconto + productsFrete,
-      "status": 2
+      "status": 3
     });
 
     await Firestore.instance

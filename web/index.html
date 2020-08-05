@@ -1,33 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta charset="UTF-8" />
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+  <meta name="description" content="A new Flutter project." />
 
   <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="compreai_delivery">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="compreai_delivery" />
+  <link rel="apple-touch-icon" href="/icons/Icon-192.png" />
 
-  <!-- Favicon -->
-  <link rel="shortcut icon" type="image/png" href="favicon.png"/>
-
-  <title>compreai_delivery</title>
-  <link rel="manifest" href="manifest.json">
+  <title>flutter_to_do</title>
+  <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
-  <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('flutter_service_worker.js');
-      });
-    }
-  </script>
-  <script src="main.dart.js" type="application/javascript"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-firestore.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+ https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+         apiKey: "AIzaSyCvriqlZA3YGfQXMH2jIIzLChH_dxPLbcs",
+         authDomain: "compreai-delivery.firebaseapp.com",
+         databaseURL: "https://compreai-delivery.firebaseio.com",
+         projectId: "compreai-delivery",
+         storageBucket: "compreai-delivery.appspot.com",
+         messagingSenderId: "175139261417",
+         appId: "1:175139261417:web:69b7b3fbd765aa16349978",
+         measurementId: "G-659YNBWNVQ"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+<!-- This script installs service_worker.js to provide PWA functionality to
+   application. For more information, see:
+   https://developers.google.com/web/fundamentals/primers/service-workers -->
+<script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker.register("/flutter_service_worker.js");
+        });
+      }
+    </script>
+<script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CompradosTileEmpresa extends StatelessWidget {
   String orderId, nomeEmpresa, clienteId;
-  String cidadeEstado = "Catalão - GO";
+  String cidadeEstado = "Alagoinhas-Bahia";
 
   CompradosTileEmpresa(this.orderId, this.nomeEmpresa, this.clienteId);
 

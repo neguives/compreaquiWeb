@@ -5,19 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class Demonstrativos extends StatefulWidget {
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
 
-  Demonstrativos(this.nomeEmpresa);
+  Demonstrativos(this.nomeEmpresa, this.cidadeEstado);
   @override
-  _DemonstrativosState createState() => _DemonstrativosState(nomeEmpresa);
+  _DemonstrativosState createState() =>
+      _DemonstrativosState(nomeEmpresa, cidadeEstado);
 }
 
 class _DemonstrativosState extends State<Demonstrativos> {
-  String nomeEmpresa;
+  String nomeEmpresa, cidadeEstado;
   double counterTotal = 0;
   double comissao;
 
-  _DemonstrativosState(this.nomeEmpresa);
+  _DemonstrativosState(this.nomeEmpresa, this.cidadeEstado);
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
             )),
         body: FutureBuilder<QuerySnapshot>(
           future: Firestore.instance
-              .collection("Catalão - GO")
+              .collection(cidadeEstado)
               .document(nomeEmpresa)
               .collection("ordensSolicitadas")
               .getDocuments(),
@@ -50,7 +51,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                 children: [
                   StreamBuilder(
                     stream: Firestore.instance
-                        .collection("Catalão - GO")
+                        .collection(cidadeEstado)
                         .document(nomeEmpresa)
                         .snapshots(),
                     builder: (context, snapshot2) {
@@ -70,7 +71,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                     image: new DecorationImage(
                                       fit: BoxFit.cover,
                                       image: new NetworkImage(
-                                          snapshot2.data["imagem"].toString()),
+                                          snapshot2.data["photo"].toString()),
                                     ))),
                             Text(
                               snapshot2.data["nomeEmpresa"],
@@ -137,7 +138,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                                     FutureBuilder(
                                                       future: Firestore.instance
                                                           .collection(
-                                                              "Catalão - GO")
+                                                              cidadeEstado)
                                                           .document(nomeEmpresa)
                                                           .collection(
                                                               "ordensSolicitadas")
@@ -253,7 +254,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                           ))),
                   StreamBuilder(
                     stream: Firestore.instance
-                        .collection("Catalão - GO")
+                        .collection(cidadeEstado)
                         .document(nomeEmpresa)
                         .snapshots(),
                     builder: (context, snapshot3) {
@@ -305,7 +306,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
 
   getTotalProdutos() async {
     Firestore.instance
-        .collection("Catalão - GO")
+        .collection(cidadeEstado)
         .document(nomeEmpresa)
         .collection("ordensSolicitadas")
         .snapshots()

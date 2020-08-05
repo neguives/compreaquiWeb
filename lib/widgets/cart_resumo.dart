@@ -531,6 +531,9 @@ class _CardResumoState extends State<CardResumo> {
                                             .data["disponibilidade"] ==
                                             "aberto"
                                             ? () {
+                                        if(freteTipo.length == 1){
+                                          _dialogSelecioneEntrega(context);
+                                        }else{
                                           double total = preco +
                                               frete -
                                               model.getDesconto();
@@ -686,6 +689,7 @@ class _CardResumoState extends State<CardResumo> {
                                                     .text,
                                                 _cvvCodeController.text);
                                           }
+                                        }
                                         }
                                             : null,
                                         child: Text(
@@ -843,6 +847,52 @@ class _CardResumoState extends State<CardResumo> {
             new FlatButton(
               child: new Text("Fechar"),
               onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _dialogSelecioneEntrega(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Center(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.red,
+                      size: 100,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Frete não escolhido"),
+                  ],
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         );

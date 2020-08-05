@@ -18,7 +18,7 @@ class CategoriaTile extends StatefulWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
 
-  CategoriaTile(this.snapshot, this.nomeEmpresa);
+  CategoriaTile(this.snapshot, this.nomeEmpresa, this.cidadeEstado);
   @override
   _CategoriaTileState createState() =>
       _CategoriaTileState(this.snapshot, this.nomeEmpresa);

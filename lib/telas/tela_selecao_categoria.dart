@@ -84,7 +84,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => PedidosRecebidos(
-                                      snapshot.data["nome"].toString())));
+                                      snapshot.data["nome"].toString(),
+                                      snapshot.data["cidade"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -97,7 +98,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => VersaoEmpresaCategorias(
-                                      snapshot.data["nome"].toString())));
+                                      snapshot.data["nome"].toString(),
+                                      snapshot.data["cidade"].toString())));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -114,7 +116,9 @@ class TelaSelecaoCategoria extends StatelessWidget {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => Demonstrativos(
-                                      snapshot.data["nome"].toString())));
+                                        snapshot.data["nome"].toString(),
+                                        snapshot.data["cidade"].toString(),
+                                      )));
                             },
                             child: FlatButton(
                               child: Image.asset(
