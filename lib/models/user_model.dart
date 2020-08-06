@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -21,6 +24,11 @@ class UserModel extends Model {
     _loadCurrentUser();
   }
 
+  DocumentReference get firestoreRef => Firestore.instance.document('users/');
+
+  CollectionReference get cartReference => firestoreRef.collection('cart');
+
+  CollectionReference get tokensReference => firestoreRef.collection('tokens');
   void signUp(
       {@required Map<String, dynamic> userData,
       String pass,
@@ -69,6 +77,7 @@ class UserModel extends Model {
         .then((user) async {
       firebaseUser = user;
       await _loadCurrentUser();
+
       onSucess();
       isLoading = false;
       notifyListeners();
@@ -103,5 +112,15 @@ class UserModel extends Model {
       userData = docUser.data;
     }
     notifyListeners();
+  }
+
+  Future<void> saveToken() async {
+    final token = await FirebaseMessaging().getToken();
+    await tokensReference.document(token).setData({
+      'token': token,
+      'updatedAt': FieldValue.serverTimestamp(),
+      'platform': Platform.operatingSystem,
+    });
+    print("token $token");
   }
 }

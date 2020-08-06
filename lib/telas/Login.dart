@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/introducao.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:compreaidelivery/style/theme.dart' as Theme;
@@ -322,6 +326,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                 pass: _senhaController.text.trim(),
                                 onSucess: _onSucess,
                                 onFail: _onFail);
+
+                            model.saveToken();
                           },
                         )),
                   ],
@@ -712,7 +718,9 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
         }));
   }
 
-  void _onSucessRegister() {
+  Future<void> _onSucessRegister() async {
+    final token = await FirebaseMessaging().getToken();
+    print("token $token");
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text("Parabéns, sua conta foi criada com sucesso !"),
       backgroundColor: Colors.blueGrey,
@@ -725,7 +733,9 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   void _onSucess() {
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(Duration(seconds: 1)).then((_) async {
+      final token = await FirebaseMessaging().getToken();
+      print("token $token");
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
@@ -781,6 +791,20 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     if (!res) {
       print("Erro ao fazer o login com o Google");
     } else {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseUser firebaseUser;
+      firebaseUser = await _auth.currentUser();
+      CollectionReference documentReference = await Firestore.instance
+          .collection("ConsumidorFinal")
+          .document(firebaseUser.uid)
+          .collection("tokens");
+      final token = await FirebaseMessaging().getToken();
+      await documentReference.document(token).setData({
+        'token': token,
+        'updatedAt': FieldValue.serverTimestamp(),
+        'platform': Platform.operatingSystem,
+      });
+      print("token $token");
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     }

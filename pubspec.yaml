@@ -35,6 +35,7 @@ dependencies:
   flutter_icons: ^1.1.0
   carousel_slider: ^2.0.0
   flutter_login:
+  firebase_messaging: ^6.0.16
   flutter_cielo:
   date_format:
   flutter_credit_card: 0.1.0
