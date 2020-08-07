@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:compreaidelivery/introducao.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
@@ -791,6 +792,10 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     if (!res) {
       print("Erro ao fazer o login com o Google");
     } else {
+      final response = await CloudFunctions.instance
+          .getHttpsCallable(functionName: "getUserData")
+          .call();
+      print(response);
       FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseUser firebaseUser;
       firebaseUser = await _auth.currentUser();
