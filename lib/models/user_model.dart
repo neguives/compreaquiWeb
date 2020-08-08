@@ -24,7 +24,8 @@ class UserModel extends Model {
     _loadCurrentUser();
   }
 
-  DocumentReference get firestoreRef => Firestore.instance.document('users/');
+  DocumentReference get firestoreRef =>
+      Firestore.instance.document('ConsumidorFinal/');
 
   CollectionReference get cartReference => firestoreRef.collection('cart');
 
@@ -121,6 +122,6 @@ class UserModel extends Model {
       'updatedAt': FieldValue.serverTimestamp(),
       'platform': Platform.operatingSystem,
     });
-    print("token $token");
+    print("token com Deus no comando $token");
   }
 }

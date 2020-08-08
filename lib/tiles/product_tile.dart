@@ -95,7 +95,8 @@ class ProductTile extends StatelessWidget {
                                           maxLines: 4,
                                           style: TextStyle(
                                               fontSize: 9,
-                                              fontFamily: "Georgia"),
+                                              fontFamily: "Georgia",
+                                              color: Colors.black),
                                         ),
                                       ],
                                     ))),

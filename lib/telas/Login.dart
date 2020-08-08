@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:compreaidelivery/introducao.dart';
@@ -322,12 +320,12 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {}
+
                             model.signIn(
-                                email: _emailController.text.trim(),
-                                pass: _senhaController.text.trim(),
+                                email: _emailController.text,
+                                pass: _senhaController.text,
                                 onSucess: _onSucess,
                                 onFail: _onFail);
-
                             model.saveToken();
                           },
                         )),
@@ -733,10 +731,9 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     });
   }
 
-  void _onSucess() {
+  _onSucess() async {
+    UserModel user;
     Future.delayed(Duration(seconds: 1)).then((_) async {
-      final token = await FirebaseMessaging().getToken();
-      print("token $token");
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
@@ -792,25 +789,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     if (!res) {
       print("Erro ao fazer o login com o Google");
     } else {
-      final response = await CloudFunctions.instance
-          .getHttpsCallable(functionName: "getUserData")
-          .call();
-      print(response);
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      FirebaseUser firebaseUser;
-      firebaseUser = await _auth.currentUser();
-      CollectionReference documentReference = await Firestore.instance
-          .collection("ConsumidorFinal")
-          .document(firebaseUser.uid)
-          .collection("tokens");
-      final token = await FirebaseMessaging().getToken();
-      await documentReference.document(token).setData({
-        'token': token,
-        'updatedAt': FieldValue.serverTimestamp(),
-        'platform': Platform.operatingSystem,
-      });
-      print("token $token");
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     }
   }
