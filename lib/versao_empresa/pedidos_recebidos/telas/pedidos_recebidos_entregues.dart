@@ -2,6 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_transporte.dart';
+import 'package:compreaidelivery/versao_entregador/tiles/order_tile_concluido.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/orders_bloc.dart';
@@ -30,7 +31,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
             .collection(cidadeEstado)
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 4)
+            .where("status", isEqualTo: 3)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -74,7 +75,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
                         .map((doc) =>
-                            OrderTileTransporte(doc.documentID, nomeEmpresa))
+                            OrderTileConcluido(doc.documentID, nomeEmpresa))
                         .toList(),
                   ),
                 )

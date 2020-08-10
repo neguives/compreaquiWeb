@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/routes/routes.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/perfil_usuario.dart';
-import 'package:compreaidelivery/telas/recomendar.dart';
-import 'package:compreaidelivery/tiles/drawer_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +10,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class CustomDrawerEntregador extends StatefulWidget {
   String uid;
 
@@ -55,6 +53,7 @@ class _CustomDrawerEntregadorState extends State<CustomDrawerEntregador> {
                   .collection("ConsumidorFinal")
                   .document(uid)
                   .snapshots(),
+              // ignore: missing_return
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                 } else {
@@ -156,11 +155,7 @@ class _CustomDrawerEntregadorState extends State<CustomDrawerEntregador> {
   }
 
   Widget _createHeader() {
-    teste() async {
-      final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-      FirebaseUser user = await _firebaseAuth.currentUser();
-    }
+    teste() async {}
 
     teste();
     return StreamBuilder(
@@ -168,6 +163,7 @@ class _CustomDrawerEntregadorState extends State<CustomDrawerEntregador> {
             .collection("ConsumidorFinal")
             .document(uid)
             .snapshots(),
+        // ignore: missing_return
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
           } else {
@@ -244,9 +240,6 @@ Future<Login> _desconectar(BuildContext context) async {
   return Login();
 }
 
-drawerComImagem() async {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FirebaseUser user = await _firebaseAuth.currentUser();
-}
+drawerComImagem() async {}
 
 void signOut() {}

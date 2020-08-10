@@ -1,8 +1,10 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
+const db = admin.firestore();
+const fcm = admin.messaging();
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -59,7 +61,31 @@ async function getDeviceTokens(uid: string){
 
 
 
+export const sendToDevice = functions.firestore
+  .document('orders/{orderId}')
+  .onCreate(async snapshot => {
 
+
+
+    const querySnapshot = await db
+      .collection('ConsumidorFinal')
+      .doc("Njs1sVyfEUQbka0OGETfIJzRI8Q2")
+      .collection('tokens')
+      .get();
+
+    const tokens = querySnapshot.docs.map(snap => snap.id);
+
+    const payload: admin.messaging.MessagingPayload = {
+      notification: {
+        title: 'New Order!',
+        body: `you sold a `,
+        icon: 'your-icon-url',
+        click_action: 'FLUTTER_NOTIFICATION_CLICK'
+      }
+    };
+
+    return fcm.sendToDevice(tokens, payload);
+  });
 async function sendPushFCM(tokens: string[], title: string, message: string){
     if(tokens.length > 0){
         const payload = {

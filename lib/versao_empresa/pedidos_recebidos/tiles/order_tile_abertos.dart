@@ -122,20 +122,20 @@ class OrderTileAbertos extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       _buildCircle(
-                                          "1", "Em Separação", status, 2),
+                                          "1", "Em Separação", status, 1),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
                                       _buildCircle(
-                                          "2", "Em Transporte", status, 3),
+                                          "2", "Em Transporte", status, 2),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
-                                      _buildCircle("3", "Entregue", status, 5),
+                                      _buildCircle("3", "Entregue", status, 3),
                                       Container(
                                           height: 1,
                                           width: 20,
@@ -168,8 +168,57 @@ class OrderTileAbertos extends StatelessWidget {
                                                     "solicitadoEntregador"] ==
                                                 false ||
                                             snapshot.data[
+                                                        "solicitadoEntregador"] ==
+                                                    null &&
+                                                snapshot.data["tipoFrete"] ==
+                                                    "Entrega do estabelecimento"
+                                        ? () async {
+                                            DocumentReference
+                                                documentReference =
+                                                await Firestore.instance
+                                                    .collection(
+                                                        "Alagoinhas-Bahia")
+                                                    .document(nomeEmpresa)
+                                                    .collection(
+                                                        "ordensSolicitadas")
+                                                    .document(orderId);
+
+                                            documentReference
+                                                .updateData({"status": 2});
+
+//                                            _showToastEntregador();
+
+                                            DocumentReference
+                                                documentReferenceDois =
+                                                Firestore.instance
+                                                    .collection(
+                                                        "Alagoinhas-Bahia")
+                                                    .document(nomeEmpresa)
+                                                    .collection(
+                                                        "ordensSolicitadas")
+                                                    .document(orderId);
+
+                                            documentReferenceDois.updateData(
+                                                {"solicitadoEntregador": true});
+                                          }
+                                        : null,
+                                    child: Text(
+                                      "Avançar Status",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: snapshot.data[
                                                     "solicitadoEntregador"] ==
-                                                null
+                                                false ||
+                                            snapshot.data[
+                                                        "solicitadoEntregador"] ==
+                                                    null &&
+                                                snapshot.data["tipoFrete"] ==
+                                                    "Entrega Expressa (App Karona)"
                                         ? () async {
                                             DocumentReference
                                                 documentReference =
@@ -185,7 +234,7 @@ class OrderTileAbertos extends StatelessWidget {
                                               "empresa": nomeEmpresa,
                                               "codigoPedido":
                                                   snapshot.data.documentID,
-                                              "cidade": "Catalão - GO"
+                                              "cidade": "Alagoinhas-Bahia"
                                             });
 
 //                                            _showToastEntregador();

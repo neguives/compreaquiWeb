@@ -32,7 +32,7 @@ class OrderTileTransporte extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection("Catalão - GO")
+                        .collection("Alagoinhas-Bahia")
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
@@ -145,21 +145,50 @@ class OrderTileTransporte extends StatelessWidget {
                                   SizedBox(height: 3),
                                   RaisedButton(
                                     color: Colors.black54,
-                                    onPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              InformacoesMotoristas(
-                                                  snapshot
-                                                      .data["imagemMotorista"]
-                                                      .toString(),
-                                                  snapshot.data["nomeMotorista"]
-                                                      .toString(),
-                                                  snapshot.data[
-                                                          "placaCarroMotorista"]
-                                                      .toString())));
-                                    },
+                                    onPressed: snapshot.data[
+                                                    "solicitadoEntregador"] ==
+                                                false ||
+                                            snapshot.data[
+                                                        "solicitadoEntregador"] ==
+                                                    null &&
+                                                snapshot.data["tipoFrete"] ==
+                                                    "Entrega do estabelecimento"
+                                        ? () async {
+                                            DocumentReference
+                                                documentReference =
+                                                await Firestore.instance
+                                                    .collection(
+                                                        "Alagoinhas-Bahia")
+                                                    .document(nomeEmpresa)
+                                                    .collection(
+                                                        "ordensSolicitadas")
+                                                    .document(orderId);
+
+                                            documentReference
+                                                .updateData({"status": 4});
+
+//                                            _showToastEntregador();
+
+                                            DocumentReference
+                                                documentReferenceDois =
+                                                Firestore.instance
+                                                    .collection(
+                                                        "Alagoinhas-Bahia")
+                                                    .document(nomeEmpresa)
+                                                    .collection(
+                                                        "ordensSolicitadas")
+                                                    .document(orderId);
+
+                                            if (snapshot.data["tipoFrete"] ==
+                                                "Entrega Expressa (App Karona)") {
+                                              documentReferenceDois.updateData({
+                                                "solicitadoEntregador": true
+                                              });
+                                            }
+                                          }
+                                        : null,
                                     child: Text(
-                                      "Ver Entregador",
+                                      "Avançar Status",
                                       style: TextStyle(
                                           fontFamily: "QuickSand",
                                           color: Colors.white),
@@ -179,6 +208,35 @@ class OrderTileTransporte extends StatelessWidget {
                                     },
                                     child: Text(
                                       "Vizualizar Itens",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: snapshot.data[
+                                                    "solicitadoEntregador"] ==
+                                                null &&
+                                            snapshot.data["tipoFrete"] ==
+                                                "Entrega Expressa (App Karona)"
+                                        ? () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InformacoesMotoristas(
+                                                        snapshot.data[
+                                                                "imagemMotorista"]
+                                                            .toString(),
+                                                        snapshot.data[
+                                                                "nomeMotorista"]
+                                                            .toString(),
+                                                        snapshot.data[
+                                                                "placaCarroMotorista"]
+                                                            .toString())));
+                                          }
+                                        : null,
+                                    child: Text(
+                                      "Ver Entregador",
                                       style: TextStyle(
                                           fontFamily: "QuickSand",
                                           color: Colors.white),

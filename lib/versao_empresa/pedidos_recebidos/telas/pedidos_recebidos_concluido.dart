@@ -3,23 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_abertos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_transporte.dart';
+import 'package:compreaidelivery/versao_entregador/tiles/order_tile_concluido.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/orders_bloc.dart';
 
-class PedidosRecebidosTransporte extends StatefulWidget {
+class PedidosRecebidosConcluido extends StatefulWidget {
   String nomeEmpresa, cidadeEstado;
 
-  PedidosRecebidosTransporte(this.nomeEmpresa, this.cidadeEstado);
+  PedidosRecebidosConcluido(this.nomeEmpresa, this.cidadeEstado);
   @override
-  _PedidosRecebidosTransporteState createState() =>
-      _PedidosRecebidosTransporteState(nomeEmpresa, cidadeEstado);
+  _PedidosRecebidosConcluidoState createState() =>
+      _PedidosRecebidosConcluidoState(nomeEmpresa, cidadeEstado);
 }
 
-class _PedidosRecebidosTransporteState
-    extends State<PedidosRecebidosTransporte> {
+class _PedidosRecebidosConcluidoState extends State<PedidosRecebidosConcluido> {
   String nomeEmpresa, cidadeEstado;
-  _PedidosRecebidosTransporteState(this.nomeEmpresa, this.cidadeEstado);
+  _PedidosRecebidosConcluidoState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _PedidosRecebidosTransporteState
             .collection(cidadeEstado)
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 2)
+            .where("status", isEqualTo: 4)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -76,7 +76,7 @@ class _PedidosRecebidosTransporteState
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
                         .map((doc) =>
-                            OrderTileTransporte(doc.documentID, nomeEmpresa))
+                            OrderTileConcluido(doc.documentID, nomeEmpresa))
                         .toList(),
                   ),
                 )

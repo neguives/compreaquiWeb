@@ -1,19 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cielo/flutter_cielo.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'dart:math' show cos, sqrt, asin;
 
-class CardResumo extends StatefulWidget {
+class FinalizarPagamento extends StatefulWidget {
   String nomeEmpresa, cidadeEstado, endereco;
   double latitude, longitude;
   final VoidCallback buy;
@@ -29,8 +23,8 @@ class CardResumo extends StatefulWidget {
   final Color textColor;
   final Color cursorColor;
 
-  CardResumo(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
-      this.latitude, this.longitude,
+  FinalizarPagamento(this.buy, this.nomeEmpresa, this.cidadeEstado,
+      this.endereco, this.latitude, this.longitude,
       {this.cardNumber,
       this.expiryDate,
       this.cardHolderName,
@@ -40,19 +34,24 @@ class CardResumo extends StatefulWidget {
       this.textColor,
       this.cursorColor});
   @override
-  _CardResumoState createState() => _CardResumoState(this.buy, this.nomeEmpresa,
-      this.cidadeEstado, this.endereco, this.latitude, this.longitude);
+  _FinalizarPagamentoState createState() => _FinalizarPagamentoState(
+      this.buy,
+      this.nomeEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude);
 }
 
-class _CardResumoState extends State<CardResumo> {
+class _FinalizarPagamentoState extends State<FinalizarPagamento> {
   String nomeEmpresa, cidadeEstado, endereco;
   double latitude, longitude;
   final VoidCallback buy;
   String bandeira;
   String opcaoDeFrete;
   String freteTipo = "a";
-  _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
-      this.latitude, this.longitude);
+  _FinalizarPagamentoState(this.buy, this.nomeEmpresa, this.cidadeEstado,
+      this.endereco, this.latitude, this.longitude);
 
   final TextEditingController _startCoordinatesTextController =
       TextEditingController();
@@ -108,7 +107,6 @@ class _CardResumoState extends State<CardResumo> {
       ));
 
 //Realizar Pagamento
-
   @override
   void initState() {
     super.initState();
@@ -165,212 +163,176 @@ class _CardResumoState extends State<CardResumo> {
     obsController.text =
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
-    return Column(
-      children: [
-        Card(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: ScopedModelDescendant<CartModel>(
-                builder: (context, child, model) {
-                  double freteKarona = model.getFreteKarona();
-
-                  double freteKaronaFixo = freteKarona;
-                  double preco = model.getProductPrice();
-                  double desconto = model.getDesconto();
-                  double frete = model.getFrete();
-                  enderecoController.text = endereco;
-//              model.loadCartItens();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      ExpansionTile(
-                        title: Text(
-                          "Como o seu pedido será entregue ?",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        children: [
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Divider(),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              TextField(
-                                maxLines: 4,
-                                controller: enderecoController,
-                                enabled: false,
-                                style: TextStyle(
-                                    fontFamily: "WorkSansSemiBold",
-                                    fontSize: 16.0,
-                                    color: Colors.black),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: "Endereço de Entrega",
-                                  labelText: "Endereço de Entrega",
-                                  hintStyle: TextStyle(
-                                      fontFamily: "QuickSand",
-                                      fontSize: 17.0,
-                                      color: Colors.black87),
-                                ),
-                              ),
-                              RadioButtonGroup(
-                                  labels: <String>[
-                                    "Retirar no estabelecimento",
-                                    "Entrega Expressa (App Karona)",
-                                    "Entrega do estabelecimento"
-                                  ],
-                                  onSelected: (String selected) async {
-                                    freteTipo = selected;
-
-                                    model.setEntregaGratuita(selected ==
-                                            "Entrega Expressa (App Karona)"
-                                        ? false
-                                        : true);
-                                  }),
-                              TextField(
-                                maxLines: 6,
-                                controller: obsController,
-                                enabled: false,
-                                style: TextStyle(
-                                    fontFamily: "WorkSansSemiBold",
-                                    fontSize: 16.0,
-                                    color: Colors.black),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Observação",
-                                  labelText: "Observação",
-                                  hintStyle: TextStyle(
-                                      fontFamily: "QuickSand",
-                                      fontSize: 12.0,
-                                      color: Colors.black87),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.brown,
-                      ),
-//
-                    ],
-                  );
-                },
-              )),
-        ),
-        Card(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Container(child: ScopedModelDescendant<CartModel>(
-            builder: (context, child, model) {
+    return Scaffold(
+      floatingActionButton: ScopedModelDescendant<CartModel>(
+        builder: (context, child, model) {
+          return StreamBuilder(
+            stream: Firestore.instance
+                .collection(cidadeEstado)
+                .document(nomeEmpresa)
+                .snapshots(),
+            builder: (context, snapshot) {
               double preco = model.getProductPrice();
               double desconto = model.getDesconto();
               double frete = model.getFreteKarona();
+              return FloatingActionButton(
+                child: ,
+              );
+            },
+          );
+        },
+      ),
+      appBar: AppBar(),
+      body: ScopedModelDescendant<CartModel>(
+        builder: (context, child, model) {
+          double preco = model.getProductPrice();
+          double desconto = model.getDesconto();
+          double frete = model.getFreteKarona();
 //              model.loadCartItens();
 
-              return Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        "Resumo do Pedido",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Subtotal"),
-                          Text("R\$ ${preco.toStringAsFixed(2)}"),
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Desconto"),
-                          Text(
-                              "- R\$ ${model.getDesconto().toStringAsFixed(2)}"),
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Entrega"),
-                          Text(model.getEntregaGratuita() == false
-                              ? "R\$ " +
-                                  model.getFreteKarona().toStringAsFixed(2)
-                              : "R\$ 0.00"),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.brown,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "Total",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
-                          ),
-                          Text(
-                            "R\$ ${(preco + (model.getEntregaGratuita() == false ? model.getFreteKarona() : 0.0) - model.getDesconto()).toStringAsFixed(2)}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
-                          ),
-                        ],
-                      ),
-                      OutlineButton(
-                        hoverColor: Colors.white,
-                        highlightColor: Colors.white70,
-                        highlightElevation: 10,
-
-                        onPressed: () {
-                          {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => FinalizarPagamento(
-                                          buy,
-                                          nomeEmpresa,
-                                          cidadeEstado,
-                                          endereco,
-                                          latitude,
-                                          longitude,
-                                        )));
-                          }
-                        },
-
-                        child: Text(
-                          'Prosseguir com o pagamento',
-                        ),
-
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                            side: BorderSide(
-                                color: Colors
-                                    .white30)), // callback when button is clicked
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey, //Color of the border
-                          style: BorderStyle.solid, //Style of the border
-                          width: 0.8, //width of the border
-                        ),
-                      ),
-                    ],
-                  ));
-            },
-          )),
-        ),
-      ],
+          return SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: <Widget>[
+                            CreditCardWidget(
+                              cardNumber: cardNumber,
+                              expiryDate: expiryDate,
+                              cardHolderName: cardHolderName,
+                              cvvCode: cvvCode,
+                              showBackView: isCvvFocused,
+                              cardbgColor: Colors.green.shade300,
+                              height: 175,
+                              textStyle: TextStyle(color: Colors.black87),
+                              width: MediaQuery.of(context).size.width,
+                              animationDuration: Duration(milliseconds: 2000),
+                            ),
+                            Form(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    margin: const EdgeInsets.only(
+                                        left: 16, top: 1, right: 16),
+                                    child: TextFormField(
+                                      onChanged: (String text) {
+                                        setState(() {});
+                                        isCvvFocused = false;
+                                      },
+                                      controller: _cardNumberController,
+                                      cursorColor:
+                                          widget.cursorColor ?? themeColor,
+                                      style: TextStyle(
+                                        color: widget.textColor,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Número do Cartão',
+                                        hintText: 'xxxx xxxx xxxx xxxx',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    margin: const EdgeInsets.only(
+                                        left: 16, top: 1, right: 16),
+                                    child: TextFormField(
+                                      onChanged: (String text) {
+                                        setState(() {});
+                                        isCvvFocused = false;
+                                      },
+                                      controller: _expiryDateController,
+                                      cursorColor:
+                                          widget.cursorColor ?? themeColor,
+                                      style: TextStyle(
+                                        color: widget.textColor,
+                                      ),
+                                      decoration: InputDecoration(
+                                          labelText: 'Data de Validade',
+                                          hintText: 'MM/AAAA'),
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    margin: const EdgeInsets.only(
+                                        left: 16, top: 1, right: 16),
+                                    child: TextField(
+                                      focusNode: cvvFocusNode,
+                                      controller: _cvvCodeController,
+                                      cursorColor:
+                                          widget.cursorColor ?? themeColor,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Código de Segurança',
+                                        hintText: 'XXXX',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.done,
+                                      onChanged: (String text) {
+                                        setState(() {
+                                          cvvCode = text;
+                                          isCvvFocused = true;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    margin: const EdgeInsets.only(
+                                        left: 16, top: 1, right: 16),
+                                    child: TextFormField(
+                                      onChanged: (String text) {
+                                        setState(() {});
+                                        isCvvFocused = false;
+                                      },
+                                      controller: _cardHolderNameController,
+                                      cursorColor:
+                                          widget.cursorColor ?? themeColor,
+                                      style: TextStyle(
+                                        color: widget.textColor,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Nome do Titular',
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RaisedButton(
+                              child: Text("Comprar Sem Cartao"),
+                              onPressed: () {
+                                model.finalizarCompra(nomeEmpresa, endereco,
+                                    cidadeEstado, freteTipo);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            OrdemPedidoConfirmado("1")));
+                              },
+                            ),
+                          ],
+                        ))
+                  ],
+                )),
+          );
+        },
+      ),
     );
   }
 

@@ -4,386 +4,230 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
-import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OrderTileConcluido extends StatelessWidget {
-  String orderId, nomeEmpresa, uid;
-  String cidade, empresa, codigoPedido;
+  String orderId, nomeEmpresa;
+  FlutterToast flutterToast;
 
-  String motorista, placaCarroMotorista, imagemMotorista;
-
-  OrderTileConcluido(this.orderId, this.uid);
+  OrderTileConcluido(this.orderId, this.nomeEmpresa);
 
   @override
   Widget build(BuildContext context) {
-    print(orderId);
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: Card(
-              elevation: 20,
-              margin: EdgeInsets.all(50),
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: StreamBuilder(
-                        stream: Firestore.instance
-                            .collection("Entregadores")
-                            .document("PedidosRecebidos")
-                            .collection("Motoristas")
-                        .document(uid)
-                        .collection("PedidosConcluidos")
-                            .document(orderId)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData)
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          else {
-                            cidade =
-                            snapshot.data["cidade"].toString().length <= 0
-                                ? "Catalão - GO"
-                                : snapshot.data["cidade"];
-                            empresa = snapshot.data["empresa"];
-                            codigoPedido = snapshot.data["codigoPedido"];
-                            return Center(
-                              child: Stack(
-                                alignment: Alignment.center,
+    return SingleChildScrollView(
+      child: Card(
+          elevation: 20,
+          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: StreamBuilder<DocumentSnapshot>(
+                    stream: Firestore.instance
+                        .collection("Alagoinhas-Bahia")
+                        .document(nomeEmpresa)
+                        .collection("ordensSolicitadas")
+                        .document(orderId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      else {
+                        int status = snapshot.data["status"];
+
+                        DateTime now = DateTime.now();
+                        var currentTime = new DateTime(
+                            now.year, now.month, now.day, now.hour, now.minute);
+                        return Center(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+//                            Container(
+//                              decoration: new BoxDecoration(
+//                                image: new DecorationImage(
+//                                  image:
+//                                      new AssetImage("assets/fundocustom.png"),
+//                                  fit: BoxFit.fill,
+//                                ),
+//                              ),
+//                            ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                  Card(
+                                    elevation: 10,
+                                    child: QrImage(
+                                      data: "${snapshot.data.documentID}",
+                                      version: QrVersions.auto,
+                                      size: 100.0,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Descrição:",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Card(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        "Frete: R\$ ${snapshot.data["precoDoFrete"].toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                            fontFamily: "QuickSand",
+                                            fontSize: 10),
+                                      ),
+                                    ),
+                                    elevation: 10,
+//                                Text(
+//                                  "" + _buildProductsText(snapshot.data),
+//                                  style: TextStyle(fontSize: 20),
+//                                ),,
+                                  ),
+                                  Card(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Text(
+                                        "Total: R\$ ${snapshot.data["precoTotal"].toStringAsFixed(2)}",
+                                        style:
+                                            TextStyle(fontFamily: "QuickSand"),
+                                      ),
+                                    ),
+                                    elevation: 10,
+//                                Text(
+//                                  "" + _buildProductsText(snapshot.data),
+//                                  style: TextStyle(fontSize: 20),
+//                                ),,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Situação do Pedido:",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      StreamBuilder(
-                                        stream: Firestore.instance
-                                            .collection(snapshot.data["cidade"]
-                                            .toString())
-                                            .document(snapshot.data["empresa"]
-                                            .toString())
-                                            .snapshots(),
-                                        builder: (context, snapshot2) {
-                                          if (!snapshot2.hasData) {
-                                            return CircularProgressIndicator();
-                                          } else {
-                                            return Card(
-                                              elevation: 40,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  new BorderRadius.circular(
-                                                      100.0),
-                                                  side: BorderSide(
-                                                      color: Colors.white30)),
-                                              child: Container(
-                                                  width: 100.0,
-                                                  height: 100.0,
-                                                  decoration: new BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image:
-                                                      new DecorationImage(
-                                                        fit: BoxFit.fill,
-                                                        image: new NetworkImage(
-                                                            snapshot2
-                                                                .data["imagem"]
-                                                                .toString()),
-                                                      ))),
-                                            );
-                                          }
-                                        },
+                                      _buildCircle(
+                                          "1", "Em Separação", status, 1),
+                                      Container(
+                                        height: 1,
+                                        width: 20,
+                                        color: Colors.transparent,
                                       ),
-                                      SizedBox(height: 4),
-                                      Card(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            "Empresa: " +
-                                                snapshot.data["empresa"],
-                                            style: TextStyle(
-                                                fontFamily: "QuickSand"),
-                                          ),
-                                        ),
-                                        elevation: 10,
-//                                Text(
-//                                  "" + _buildProductsText(snapshot.data),
-//                                  style: TextStyle(fontSize: 20),
-//                                ),,
+                                      _buildCircle(
+                                          "2", "Em Transporte", status, 2),
+                                      Container(
+                                        height: 1,
+                                        width: 20,
+                                        color: Colors.transparent,
                                       ),
-                                      SizedBox(height: 4),
-
-                                      SizedBox(height: 2),
-                                      SizedBox(height: 3),
-                                      StreamBuilder(
-                                        stream: Firestore.instance
-                                            .collection(cidade.toString())
-                                            .document(empresa)
-                                            .collection("ordensSolicitadas")
-                                            .document(codigoPedido)
-                                            .snapshots(),
-                                        builder: (context, snapshot) {
-                                          if (!snapshot.hasData) {
-                                            return CircularProgressIndicator();
-                                          } else {
-                                            final enderecoController =
-                                            TextEditingController();
-                                            enderecoController.text = snapshot
-                                                .data["enderecoCliente"]
-                                                .toString();
-                                            return Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: [
-                                                    Card(
-                                                      child: Padding(
-                                                          padding:
-                                                          EdgeInsets.all(5),
-                                                          child: Row(
-                                                            children: [
-                                                              Text(
-                                                                "Preço do frete: ",
-                                                                textAlign:
-                                                                TextAlign
-                                                                    .center,
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                    "QuickSand",
-                                                                    fontSize:
-                                                                    12),
-                                                              ),
-                                                              Text(
-                                                                "R\$" +
-                                                                    snapshot
-                                                                        .data[
-                                                                    "precoDoFrete"]
-                                                                        .toStringAsFixed(
-                                                                        2),
-                                                                textAlign:
-                                                                TextAlign
-                                                                    .center,
-                                                                style:
-                                                                TextStyle(
-//            fontFamily: "QuickSand",
-                                                                    fontSize:
-                                                                    20),
-                                                              ),
-                                                            ],
-                                                          )),
-                                                      elevation: 10,
-//                                Text(
-//                                  "" + _buildProductsText(snapshot.data),
-//                                  style: TextStyle(fontSize: 20),
-//                                ),,
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                TextField(
-                                                  maxLines: 4,
-                                                  controller:
-                                                  enderecoController,
-                                                  enabled: false,
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                      "WorkSansSemiBold",
-                                                      fontSize: 16.0,
-                                                      color: Colors.black),
-                                                  decoration: InputDecoration(
-                                                    border:
-                                                    OutlineInputBorder(),
-                                                    hintText:
-                                                    "Endereço de Entrega",
-                                                    labelText:
-                                                    "Endereço de Entrega",
-                                                    hintStyle: TextStyle(
-                                                        fontFamily: "QuickSand",
-                                                        fontSize: 17.0,
-                                                        color: Colors.black87),
-                                                  ),
-                                                ),
-                                                StreamBuilder(
-                                                  stream: Firestore.instance
-                                                      .collection(
-                                                      "ConsumidorFinal")
-                                                      .document(snapshot
-                                                      .data["clienteId"])
-                                                      .snapshots(),
-                                                  builder: (context, snapshot) {
-                                                    if (!snapshot.hasData) {
-                                                      return CircularProgressIndicator();
-                                                    } else {
-                                                      final nomeCliente =
-                                                      TextEditingController();
-                                                      final emailController =
-                                                      TextEditingController();
-                                                      nomeCliente.text =
-                                                          snapshot.data["nome"]
-                                                              .toString();
-                                                      emailController.text =
-                                                          snapshot.data["email"]
-                                                              .toString();
-                                                      String telefone = snapshot
-                                                          .data["telefone"]
-                                                          .toString();
-                                                      return ExpansionTile(
-                                                        title: Text(
-                                                            "Informações do Cliente"),
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                            EdgeInsets.all(
-                                                                5),
-                                                            child: Column(
-                                                              children: [
-                                                                TextField(
-                                                                  controller:
-                                                                  nomeCliente,
-                                                                  enabled:
-                                                                  false,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                      "WorkSansSemiBold",
-                                                                      fontSize:
-                                                                      16.0,
-                                                                      color: Colors
-                                                                          .black),
-                                                                  decoration:
-                                                                  InputDecoration(
-                                                                    border:
-                                                                    OutlineInputBorder(),
-                                                                    hintText:
-                                                                    "Nome do Cliente",
-                                                                    labelText:
-                                                                    "Nome do Cliente",
-                                                                    hintStyle: TextStyle(
-                                                                        fontFamily:
-                                                                        "QuickSand",
-                                                                        fontSize:
-                                                                        17.0,
-                                                                        color: Colors
-                                                                            .black87),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                TextField(
-                                                                  controller:
-                                                                  emailController,
-                                                                  enabled:
-                                                                  false,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                      "WorkSansSemiBold",
-                                                                      fontSize:
-                                                                      16.0,
-                                                                      color: Colors
-                                                                          .black),
-                                                                  decoration:
-                                                                  InputDecoration(
-                                                                    border:
-                                                                    OutlineInputBorder(),
-                                                                    hintText:
-                                                                    "E-mail",
-                                                                    labelText:
-                                                                    "E-mail",
-                                                                    hintStyle: TextStyle(
-                                                                        fontFamily:
-                                                                        "QuickSand",
-                                                                        fontSize:
-                                                                        17.0,
-                                                                        color: Colors
-                                                                            .black87),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                                  children: [
-                                                                    FlatButton(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        var whatsappUrl =
-                                                                            "whatsapp://send?phone=+55${telefone}&text=${"Olá, sou motorista e vim através do App CompreAqui!"}";
-                                                                        await canLaunch(whatsappUrl)
-                                                                            ? launch(whatsappUrl)
-                                                                            : print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
-                                                                      },
-                                                                      child: Image
-                                                                          .asset(
-                                                                        "assets/icon_zap.png",
-                                                                        height:
-                                                                        50,
-                                                                        width:
-                                                                        50,
-                                                                      ),
-                                                                    ),
-                                                                    FlatButton(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        var mapsAppUrl =
-                                                                            "https://www.google.com/maps/place/@${snapshot.data["latitude"]},${snapshot.data["longitude"]},17z";
-                                                                        print(
-                                                                            mapsAppUrl);
-                                                                        await canLaunch(mapsAppUrl)
-                                                                            ? launch(mapsAppUrl)
-                                                                            : print("open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
-                                                                      },
-                                                                      child: Image
-                                                                          .asset(
-                                                                        "assets/maps_usuario.png",
-                                                                        height:
-                                                                        50,
-                                                                        width:
-                                                                        50,
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      );
-                                                    }
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          }
-                                        },
-                                      ),
-
+                                      _buildCircle("3", "Entregue", status, 3),
+                                      Container(
+                                          height: 1,
+                                          width: 20,
+                                          color: Colors.transparent),
                                     ],
-                                  )
+                                  ),
+                                  SizedBox(height: 3),
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CompradosTileEmpresa(
+                                                      orderId,
+                                                      nomeEmpresa,
+                                                      snapshot
+                                                          .data["clienteId"])));
+                                    },
+                                    child: Text(
+                                      "Vizualizar Itens",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  RaisedButton(
+                                    color: Colors.black54,
+                                    onPressed: snapshot.data[
+                                                    "solicitadoEntregador"] ==
+                                                null &&
+                                            snapshot.data["tipoFrete"] ==
+                                                "Entrega Expressa (App Karona)"
+                                        ? () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InformacoesMotoristas(
+                                                        snapshot.data[
+                                                                "imagemMotorista"]
+                                                            .toString(),
+                                                        snapshot.data[
+                                                                "nomeMotorista"]
+                                                            .toString(),
+                                                        snapshot.data[
+                                                                "placaCarroMotorista"]
+                                                            .toString())));
+                                          }
+                                        : null,
+                                    child: Text(
+                                      "Ver Entregador",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                  Text(_recuperarData(snapshot.data)),
                                 ],
-                              ),
-                            );
-                          }
-                        }),
-                  )
-                ],
-              )),
-        )
-      ],
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    }),
+              )
+            ],
+          )),
+    );
+  }
+
+  _showToastEntregador() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Solicitação enviada para os entregadores!"),
+        ],
+      ),
+    );
+
+    flutterToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 3),
     );
   }
 }
@@ -399,12 +243,6 @@ Text _buildProductsText(DocumentSnapshot snapshot) {
       "\nFrete: R\$ ${snapshot.data["precoDoFrete"].toStringAsFixed(2)}\n\nTotal: R\$ ${snapshot.data["precoTotal"].toStringAsFixed(2)}";
 
   return Text(text);
-}
-
-Column recuperarDados(String cidade, String codigoPedido, String empresa) {
-  return new Column(
-    children: [],
-  );
 }
 
 String _recuperarData(DocumentSnapshot snapshot) {
@@ -459,4 +297,57 @@ Widget _buildCircle(String title, String subtitle, int status, int thisStatus) {
       Text(subtitle)
     ],
   );
+}
+
+class InformacoesMotoristas extends StatelessWidget {
+  String fotoPerfil, nomeMotorista, placaCarro;
+
+  InformacoesMotoristas(this.fotoPerfil, this.nomeMotorista, this.placaCarro);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: new IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        title: Text("Entregador"),
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                elevation: 40,
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(100.0),
+                    side: BorderSide(color: Colors.white30)),
+                child: Container(
+                    width: 180.0,
+                    height: 180.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                          fit: BoxFit.fill,
+                          image: new NetworkImage(fotoPerfil),
+                        ))),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            nomeMotorista,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          ),
+          Text(
+            placaCarro,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          )
+        ],
+      ),
+    );
+  }
 }

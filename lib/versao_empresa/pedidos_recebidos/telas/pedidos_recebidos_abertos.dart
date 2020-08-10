@@ -30,7 +30,7 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
             .collection("Alagoinhas-Bahia")
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 3)
+            .where("status", isEqualTo: 1)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

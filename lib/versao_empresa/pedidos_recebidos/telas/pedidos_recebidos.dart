@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_abertos.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_concluido.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_entregues.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_transporte.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
@@ -63,7 +64,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                       InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => PedidosRecebidosEntregues(
+                                builder: (context) => PedidosRecebidosConcluido(
                                     nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
