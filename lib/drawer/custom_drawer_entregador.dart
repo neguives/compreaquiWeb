@@ -30,7 +30,6 @@ class _CustomDrawerEntregadorState extends State<CustomDrawerEntregador> {
 
   @override
   Widget build(BuildContext context) {
-    print(uid);
     return Drawer(
         child: Stack(
       children: <Widget>[

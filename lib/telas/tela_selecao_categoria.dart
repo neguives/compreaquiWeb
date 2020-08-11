@@ -29,6 +29,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    verificarCidadeCatalao();
     return Scaffold(
         drawer: CustomDrawer(uid),
         appBar: AppBar(
@@ -382,5 +383,21 @@ class TelaSelecaoCategoria extends StatelessWidget {
         );
       },
     );
+  }
+
+  verificarCidadeCatalao() {
+    if (cidadeEstado == "Catalão - Goias" ||
+        cidadeEstado == "Catalão - Goías" ||
+        cidadeEstado == "Catalão-Goias" ||
+        cidadeEstado == "Catalão-Goías" ||
+        cidadeEstado == "Catalão - Go" ||
+        cidadeEstado == "Catalão-Go" ||
+        cidadeEstado == "Catalao - Goias" ||
+        cidadeEstado == "Catalao - Go" ||
+        cidadeEstado == "Catalao-Go" ||
+        cidadeEstado == "Catalao-Goias" ||
+        cidadeEstado == "Alagoinhas-Bahia") {
+      cidadeEstado = "Catalão - GO";
+    }
   }
 }

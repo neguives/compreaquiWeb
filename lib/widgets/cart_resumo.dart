@@ -61,102 +61,9 @@ class _CardResumoState extends State<CardResumo> {
   final enderecoController = TextEditingController();
   final obsController = TextEditingController();
 
-  //WidgetCartao
-  String cardNumber = "0000 0000 0000 0000";
-  String expiryDate;
-  String cardHolderName;
-  String cvvCode;
-  bool isCvvFocused = false;
-  Color themeColor;
-
-  void Function(CreditCardModel) onCreditCardModelChange;
-  CreditCardModel creditCardModel;
-  final MaskedTextController _cardNumberController =
-      MaskedTextController(mask: '0000 0000 0000 0000');
-  final MaskedTextController _cardNumberControllerTrim =
-      MaskedTextController(mask: '0000000000000000');
-  final TextEditingController _expiryDateController =
-      MaskedTextController(mask: '00/0000');
-  final TextEditingController _cardHolderNameController =
-      TextEditingController();
-  final TextEditingController _cvvCodeController =
-      MaskedTextController(mask: '0000');
-
-  FocusNode cvvFocusNode = FocusNode();
-
-  void textFieldFocusDidChange() {
-    creditCardModel.isCvvFocused = cvvFocusNode.hasFocus;
-    onCreditCardModelChange(creditCardModel);
-  }
-
-  void createCreditCardModel() {
-    cardNumber = widget.cardNumber ?? '';
-    expiryDate = widget.expiryDate ?? '';
-    cardHolderName = widget.cardHolderName ?? '';
-    cvvCode = widget.cvvCode ?? '';
-
-    creditCardModel = CreditCardModel(
-        cardNumber, expiryDate, cardHolderName, cvvCode, isCvvFocused);
-  }
-
 //Api de Pagamento
-  final CieloEcommerce cielo = CieloEcommerce(
-      environment: Environment.PRODUCTION,
-      merchant: Merchant(
-        merchantId: "0ef47d5f-35f3-4fbd-ab34-54b683a09799",
-        merchantKey: "IhZ5hZIlWO7vxOHK927PbRJiKqwTa7CZ39rv7T6Q",
-      ));
 
 //Realizar Pagamento
-
-  @override
-  void initState() {
-    super.initState();
-
-    createCreditCardModel();
-
-    onCreditCardModelChange = widget.onCreditCardModelChange;
-
-    cvvFocusNode.addListener(textFieldFocusDidChange);
-
-    _cardNumberController.addListener(() {
-      setState(() {
-        cardNumber = _cardNumberController.text;
-        creditCardModel.cardNumber = cardNumber;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _expiryDateController.addListener(() {
-      setState(() {
-        expiryDate = _expiryDateController.text;
-        creditCardModel.expiryDate = expiryDate;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _cardHolderNameController.addListener(() {
-      setState(() {
-        cardHolderName = _cardHolderNameController.text;
-        creditCardModel.cardHolderName = cardHolderName;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _cvvCodeController.addListener(() {
-      setState(() {
-        cvvCode = _cvvCodeController.text;
-        creditCardModel.cvvCode = cvvCode;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    themeColor = widget.themeColor ?? Theme.of(context).primaryColor;
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,23 +72,21 @@ class _CardResumoState extends State<CardResumo> {
     obsController.text =
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
-    return Column(
-      children: [
-        Card(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: ScopedModelDescendant<CartModel>(
-                builder: (context, child, model) {
-                  double freteKarona = model.getFreteKarona();
+    return ScopedModelDescendant<CartModel>(
+      builder: (context, child, model) {
+        double freteKarona = model.getFreteKarona();
 
-                  double freteKaronaFixo = freteKarona;
-                  double preco = model.getProductPrice();
-                  double desconto = model.getDesconto();
-                  double frete = model.getFrete();
-                  enderecoController.text = endereco;
-//              model.loadCartItens();
-                  return Column(
+        double freteKaronaFixo = freteKarona;
+        double preco = model.getProductPrice();
+        double desconto = model.getDesconto();
+        double frete = model.getFrete();
+        return Column(
+          children: [
+            Card(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       ExpansionTile(
@@ -257,120 +162,122 @@ class _CardResumoState extends State<CardResumo> {
                       ),
 //
                     ],
-                  );
-                },
-              )),
-        ),
-        Card(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Container(child: ScopedModelDescendant<CartModel>(
-            builder: (context, child, model) {
-              double preco = model.getProductPrice();
-              double desconto = model.getDesconto();
-              double frete = model.getFreteKarona();
-//              model.loadCartItens();
-
-              return Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        "Resumo do Pedido",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Subtotal"),
-                          Text("R\$ ${preco.toStringAsFixed(2)}"),
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Desconto"),
-                          Text(
-                              "- R\$ ${model.getDesconto().toStringAsFixed(2)}"),
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text("Entrega"),
-                          Text(model.getEntregaGratuita() == false
-                              ? "R\$ " +
-                                  model.getFreteKarona().toStringAsFixed(2)
-                              : "R\$ 0.00"),
-                        ],
-                      ),
-                      Divider(
-                        color: Colors.brown,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  )),
+            ),
+            Card(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Container(
+                  child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            "Total",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
+                            "Resumo do Pedido",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          Text(
-                            "R\$ ${(preco + (model.getEntregaGratuita() == false ? model.getFreteKarona() : 0.0) - model.getDesconto()).toStringAsFixed(2)}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Subtotal"),
+                              Text("R\$ ${preco.toStringAsFixed(2)}"),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Desconto"),
+                              Text(
+                                  "- R\$ ${model.getDesconto().toStringAsFixed(2)}"),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text("Entrega"),
+                              Text(model.getEntregaGratuita() == false
+                                  ? "R\$ " +
+                                      model.getFreteKarona().toStringAsFixed(2)
+                                  : "R\$ 0.00"),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.brown,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Total",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
+                              ),
+                              Text(
+                                "R\$ ${(preco + (model.getEntregaGratuita() == false ? model.getFreteKarona() : 0.0) - model.getDesconto()).toStringAsFixed(2)}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          OutlineButton(
+                            hoverColor: Colors.white,
+                            highlightColor: Colors.white70,
+                            highlightElevation: 10,
+
+                            onPressed: freteTipo.length > 5
+                                ? () {
+                                    if (freteTipo ==
+                                            "Entrega do estabelecimento" &&
+                                        preco < 50) {
+                                      _pedidoInferior(context);
+                                    } else {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FinalizarPagamento(
+                                                    buy,
+                                                    nomeEmpresa,
+                                                    cidadeEstado,
+                                                    endereco,
+                                                    latitude,
+                                                    longitude,
+                                                  )));
+                                    }
+                                    {}
+                                  }
+                                : () {
+                                    _dialogSelecioneEntrega(context);
+                                  },
+
+                            child: Text(
+                              'Prosseguir com o pagamento',
+                            ),
+
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(18.0),
+                                side: BorderSide(
+                                    color: Colors
+                                        .white30)), // callback when button is clicked
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey, //Color of the border
+                              style: BorderStyle.solid, //Style of the border
+                              width: 0.8, //width of the border
+                            ),
                           ),
                         ],
-                      ),
-                      OutlineButton(
-                        hoverColor: Colors.white,
-                        highlightColor: Colors.white70,
-                        highlightElevation: 10,
-
-                        onPressed: () {
-                          {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => FinalizarPagamento(
-                                          buy,
-                                          nomeEmpresa,
-                                          cidadeEstado,
-                                          endereco,
-                                          latitude,
-                                          longitude,
-                                        )));
-                          }
-                        },
-
-                        child: Text(
-                          'Prosseguir com o pagamento',
-                        ),
-
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                            side: BorderSide(
-                                color: Colors
-                                    .white30)), // callback when button is clicked
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey, //Color of the border
-                          style: BorderStyle.solid, //Style of the border
-                          width: 0.8, //width of the border
-                        ),
-                      ),
-                    ],
-                  ));
-            },
-          )),
-        ),
-      ],
+                      ))),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -397,7 +304,7 @@ class _CardResumoState extends State<CardResumo> {
                       height: 20,
                     ),
                     Text(
-                      "Compra não processada!",
+                      "Ops!",
                       style: TextStyle(fontFamily: "QuickSand", fontSize: 15),
                     ),
                     SizedBox(
@@ -418,83 +325,6 @@ class _CardResumoState extends State<CardResumo> {
                 ),
               )),
             ));
-      },
-    );
-  }
-
-  void _pagamentoAprovado(BuildContext context) {
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Pagamento Aprovado"),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _pagamentoReprovado(BuildContext context) {
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 100,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Pagamento Reprovado"),
-                  ],
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Fechar"),
-              onPressed: () {},
-            ),
-          ],
-        );
       },
     );
   }

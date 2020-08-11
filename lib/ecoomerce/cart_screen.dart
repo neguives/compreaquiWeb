@@ -113,9 +113,8 @@ class CartScreen extends StatelessWidget {
                   }).toList(),
                 ),
                 CardDesconto(nomeEmpresa),
-                CardResumo(() async {
-                }, nomeEmpresa, cidadeEstado, endereco, latitude, longitude),
-
+                CardResumo(() async {}, nomeEmpresa, cidadeEstado, endereco,
+                    latitude, longitude),
               ],
             );
           }

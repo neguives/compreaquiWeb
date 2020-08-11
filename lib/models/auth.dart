@@ -44,7 +44,7 @@ class AuthService {
       if (result.uid == null)
         return false;
       else {
-        print(result.uid + "aew ");
+//        print(result.uid + "aew ");
 
         DocumentReference documentReference = Firestore.instance
             .collection("ConsumidorFinal")

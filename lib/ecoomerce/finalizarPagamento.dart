@@ -164,24 +164,6 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
     return Scaffold(
-      floatingActionButton: ScopedModelDescendant<CartModel>(
-        builder: (context, child, model) {
-          return StreamBuilder(
-            stream: Firestore.instance
-                .collection(cidadeEstado)
-                .document(nomeEmpresa)
-                .snapshots(),
-            builder: (context, snapshot) {
-              double preco = model.getProductPrice();
-              double desconto = model.getDesconto();
-              double frete = model.getFreteKarona();
-              return FloatingActionButton(
-                child: ,
-              );
-            },
-          );
-        },
-      ),
       appBar: AppBar(),
       body: ScopedModelDescendant<CartModel>(
         builder: (context, child, model) {
@@ -217,7 +199,7 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                 children: <Widget>[
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
+                                        vertical: 2.0),
                                     margin: const EdgeInsets.only(
                                         left: 16, top: 1, right: 16),
                                     child: TextFormField(
@@ -232,6 +214,7 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                         color: widget.textColor,
                                       ),
                                       decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
                                         labelText: 'Número do Cartão',
                                         hintText: 'xxxx xxxx xxxx xxxx',
                                       ),
@@ -315,17 +298,227 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                 ],
                               ),
                             ),
-                            RaisedButton(
-                              child: Text("Comprar Sem Cartao"),
-                              onPressed: () {
-                                model.finalizarCompra(nomeEmpresa, endereco,
-                                    cidadeEstado, freteTipo);
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            OrdemPedidoConfirmado("1")));
+//                            RaisedButton(
+//                              child: Text("Comprar Sem Cartao"),
+//                              onPressed: () {
+//                                model.finalizarCompra(nomeEmpresa, endereco,
+//                                    cidadeEstado, freteTipo);
+//                                Navigator.of(context).pushReplacement(
+//                                    MaterialPageRoute(
+//                                        builder: (context) =>
+//                                            OrdemPedidoConfirmado("1")));
+//                              },
+//                            ),
+                            StreamBuilder(
+                              stream: Firestore.instance
+                                  .collection(cidadeEstado)
+                                  .document(nomeEmpresa)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                return Column(
+                                  children: [
+                                    OutlineButton(
+                                      hoverColor: Colors.white,
+                                      highlightColor: Colors.white70,
+                                      highlightElevation: 10,
+                                      onPressed: snapshot
+                                                  .data["disponibilidade"] ==
+                                              "aberto"
+                                          ? () {
+                                              if (freteTipo.length == 1) {
+                                                _dialogSelecioneEntrega(
+                                                    context);
+                                              } else {
+                                                double total = preco +
+                                                    frete -
+                                                    model.getDesconto();
+                                                if (total <= 50 &&
+                                                    freteTipo ==
+                                                        "Entrega do estabelecimento") {
+                                                  _pedidoInferior(context);
+                                                } else {
+                                                  String valorTotal = (preco +
+                                                          (model.getEntregaGratuita() ==
+                                                                  false
+                                                              ? model
+                                                                  .getFreteKarona()
+                                                              : 0.0) -
+                                                          model.getDesconto())
+                                                      .toString()
+                                                      .replaceAll(".", "");
+                                                  String valorTotalCorrigido =
+                                                      valorTotal
+                                                              .replaceAll(
+                                                                  ",", "")
+                                                              .trim() +
+                                                          "00";
+                                                  int valorTotalFinal =
+                                                      int.parse(
+                                                          valorTotalCorrigido);
+                                                  _finalizarPagamento(
+                                                      String numeroCartao,
+                                                      validadeCartao,
+                                                      nomeCartao,
+                                                      codSeguranca) async {
+                                                    _cardNumberControllerTrim
+                                                        .text = numeroCartao;
+                                                    print(
+                                                        _cardNumberControllerTrim
+                                                            .text);
+                                                    bandeira = numeroCartao
+                                                                .startsWith(
+                                                                    "51") ||
+                                                            numeroCartao.startsWith(
+                                                                "55") ||
+                                                            numeroCartao.startsWith(
+                                                                "2221") ||
+                                                            numeroCartao.startsWith(
+                                                                "2229") ||
+                                                            numeroCartao.startsWith(
+                                                                "223") ||
+                                                            numeroCartao.startsWith(
+                                                                "229") ||
+                                                            numeroCartao.startsWith(
+                                                                "23") ||
+                                                            numeroCartao.startsWith(
+                                                                "26") ||
+                                                            numeroCartao.startsWith(
+                                                                "270") ||
+                                                            numeroCartao
+                                                                .startsWith("271") ||
+                                                            numeroCartao.startsWith("2720")
+                                                        ? "Master"
+                                                        : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
+                                                    Sale sale = Sale(
+                                                        merchantOrderId:
+                                                            "1233443",
+                                                        customer: Customer(
+                                                            name:
+                                                                "Comprador crédito simples"),
+                                                        payment: Payment(
+                                                            currency: "BRL",
+                                                            type: TypePayment
+                                                                .creditCard,
+                                                            amount:
+                                                                valorTotalFinal,
+                                                            returnMessage:
+                                                                "https://www.cielo.com.br",
+                                                            installments: 1,
+                                                            softDescriptor:
+                                                                "CompreAqui",
+                                                            creditCard:
+                                                                CreditCard(
+                                                              cardNumber:
+                                                                  _cardNumberControllerTrim
+                                                                      .text,
+                                                              holder: nomeCartao
+                                                                  .toString()
+                                                                  .toUpperCase(),
+                                                              expirationDate:
+                                                                  validadeCartao,
+                                                              securityCode:
+                                                                  codSeguranca,
+                                                              brand: numeroCartao.startsWith("51") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "55") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "2221") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "2229") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "223") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "229") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "23") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "26") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "270") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "271") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "2720")
+                                                                  ? "Master"
+                                                                  : numeroCartao.startsWith("4")
+                                                                      ? "Visa"
+                                                                      : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Master",
+                                                            )));
+
+                                                    try {
+                                                      var response = await cielo
+                                                          .createSale(sale);
+                                                      print(response
+                                                          .payment.status);
+                                                      print(bandeira);
+                                                      if (response
+                                                              .payment.status ==
+                                                          1) {
+                                                        model.finalizarCompra(
+                                                            nomeEmpresa,
+                                                            endereco,
+                                                            cidadeEstado,
+                                                            freteTipo);
+                                                        Navigator.of(context)
+                                                            .pushReplacement(
+                                                                MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        OrdemPedidoConfirmado(
+                                                                            "1")));
+                                                      } else {
+                                                        _pagamentoReprovado(
+                                                            context);
+                                                      }
+                                                    } on CieloException catch (e) {
+                                                      print(e.message);
+                                                      print(
+                                                          e.errors[0].message);
+                                                      print(e.errors[0].code);
+                                                    }
+                                                  }
+
+//      numeroCartao, bandeiraCartao, validadeCartao, nomeCartao , codSeguranca
+                                                  _finalizarPagamento(
+                                                      _cardNumberController
+                                                          .text,
+                                                      _expiryDateController
+                                                          .text,
+                                                      _cardHolderNameController
+                                                          .text,
+                                                      _cvvCodeController.text);
+                                                }
+                                              }
+                                            }
+                                          : null,
+                                      child: Text(
+                                        'Pagar',
+                                      ),
+
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors
+                                                  .white30)), // callback when button is clicked
+                                      borderSide: BorderSide(
+                                        color: Colors
+                                            .blueGrey, //Color of the border
+                                        style: BorderStyle
+                                            .solid, //Style of the border
+                                        width: 0.8, //width of the border
+                                      ),
+                                    ),
+                                    Text(
+                                      snapshot.data["disponibilidade"] !=
+                                              "aberto"
+                                          ? "(estabelecimento fechado)"
+                                          : "",
+                                      style: TextStyle(fontSize: 10),
+                                    )
+                                  ],
+                                );
                               },
-                            ),
+                            )
                           ],
                         ))
                   ],

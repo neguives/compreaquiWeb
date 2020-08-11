@@ -30,7 +30,7 @@ class UserFinalData {
       'updatedAt': FieldValue.serverTimestamp(),
       'platform': Platform.operatingSystem,
     });
-    print("token com Deus no comando $token");
+//    print("token com Deus no comando $token");
   }
 
   Map<String, dynamic> toResumedMap() {

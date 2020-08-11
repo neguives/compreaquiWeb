@@ -171,7 +171,7 @@ class CartModel extends Model {
 
   Future<String> finalizarCompra(String nomeEmpresa, String endereco,
       String cidade, String freteTipo) async {
-    print(endereco + " Deus no comando");
+//    print(endereco + " Deus no comando");
     if (products.length == 0) return null;
 
     isLoading = true;

@@ -116,7 +116,7 @@ class _CartTileState extends State<CartTile> {
                       ),
                       FlatButton(
                         onPressed: () {
-                          Future<Null> _atualizarQuantidade() async {
+                          Future<Null> _atualizarQuantidade() {
                             DocumentReference documentReference = Firestore
                                 .instance
                                 .collection(cidadeEstado)
