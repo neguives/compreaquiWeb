@@ -10,6 +10,7 @@ import 'package:compreaidelivery/versao_empresa/produtos.dart';
 import 'package:compreaidelivery/versao_empresa/versaoEmpresa_categorias.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +19,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
   String cidadeEstado, endereco, imagem, uid;
   double latitude, longitude;
   final enderecoController = TextEditingController();
-
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool enderecoConfirmado = false;
   TelaSelecaoCategoria(
       {this.cidadeEstado,
@@ -60,6 +61,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
               return LinearProgressIndicator();
             } else {
               if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
+                _firebaseMessaging.subscribeToTopic(snapshot.data["nome"]);
                 return Column(
                   children: [
                     Padding(
@@ -134,6 +136,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 );
               } else if (snapshot.data["tipoPerfil"].toString() ==
                   "Entregador") {
+                _firebaseMessaging.subscribeToTopic("Entregador");
                 return FutureBuilder<QuerySnapshot>(
                   future: Firestore.instance
                       .collection("Entregadores")
@@ -390,6 +393,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
         cidadeEstado == "Catalão - Goías" ||
         cidadeEstado == "Catalão-Goias" ||
         cidadeEstado == "Catalão-Goías" ||
+        cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalão-Goiás" ||
         cidadeEstado == "Catalão - Go" ||
         cidadeEstado == "Catalão-Go" ||
         cidadeEstado == "Catalao - Goias" ||

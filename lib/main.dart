@@ -1,5 +1,6 @@
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/splash_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -15,6 +16,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

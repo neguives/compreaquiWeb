@@ -180,8 +180,10 @@ class PaginaEmpresa extends StatelessWidget {
                           print(distanceInMeters);
                           double distancia = distanceInMeters / 1000;
                           double valorCorrida = (distancia + 1.5) * 2.50 + 2.50;
+                          double valorCorridaMinimo =
+                              valorCorrida < 7 ? 7.00 : valorCorrida;
                           String valorCorridaNumero =
-                              valorCorrida.toStringAsFixed(2);
+                              valorCorridaMinimo.toStringAsFixed(2);
                           double valorCorridaCorrigido =
                               double.parse(valorCorridaNumero);
                           print('The distance is: $distancia');

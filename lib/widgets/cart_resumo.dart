@@ -124,16 +124,16 @@ class _CardResumoState extends State<CardResumo> {
                               RadioButtonGroup(
                                   labels: <String>[
                                     "Retirar no estabelecimento",
-                                    "Entrega Expressa (App Karona)",
+                                    "Entrega Expressa (Karona)",
                                     "Entrega do estabelecimento"
                                   ],
                                   onSelected: (String selected) async {
                                     freteTipo = selected;
 
-                                    model.setEntregaGratuita(selected ==
-                                            "Entrega Expressa (App Karona)"
-                                        ? false
-                                        : true);
+                                    model.setEntregaGratuita(
+                                        selected == "Entrega Expressa (Karona)"
+                                            ? false
+                                            : true);
                                   }),
                               TextField(
                                 maxLines: 6,

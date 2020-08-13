@@ -1,28 +1,55 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 
 class CartTile extends StatefulWidget {
   final CartProduct cartProduct;
   ProductData productData;
-  String nomeEmpresa, cidadeEstado;
+  String nomeEmpresa, cidadeEstado, imagem, telefone, endereco;
+  double latitude, longitude;
   int quantidadeRemovida = 0;
   CartTile(
-      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
+      this.cartProduct,
+      this.nomeEmpresa,
+      this.productData,
+      this.cidadeEstado,
+      this.imagem,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.endereco);
   @override
   _CartTileState createState() => _CartTileState(
-      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
+      this.cartProduct,
+      this.nomeEmpresa,
+      this.productData,
+      this.cidadeEstado,
+      this.imagem,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.endereco);
 }
 
 class _CartTileState extends State<CartTile> {
   final CartProduct cartProduct;
   ProductData productData;
-  String nomeEmpresa, cidadeEstado;
+  String nomeEmpresa, cidadeEstado, imagem, telefone, endereco;
+  double latitude, longitude;
   int quantidadeRemovida = 0;
   _CartTileState(
-      this.cartProduct, this.nomeEmpresa, this.productData, this.cidadeEstado);
+      this.cartProduct,
+      this.nomeEmpresa,
+      this.productData,
+      this.cidadeEstado,
+      this.imagem,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.endereco);
   @override
   Widget build(BuildContext context) {
     Widget _buildContent() {
@@ -135,6 +162,17 @@ class _CartTileState extends State<CartTile> {
                           _atualizarQuantidade();
                           CartModel.of(context)
                               .removeCartItem(cartProduct, nomeEmpresa);
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => CartScreen(
+                                      cartProduct.productData,
+                                      nomeEmpresa,
+                                      imagem,
+                                      cidadeEstado,
+                                      endereco,
+                                      latitude,
+                                      longitude,
+                                      telefone)));
                         },
                         child: Text("Remover"),
                         textColor: Colors.red,

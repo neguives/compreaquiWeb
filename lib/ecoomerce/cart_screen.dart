@@ -109,7 +109,15 @@ class CartScreen extends StatelessWidget {
                 Column(
                   children: model.products.map((products) {
                     return CartTile(
-                        products, nomeEmpresa, product, cidadeEstado);
+                        products,
+                        nomeEmpresa,
+                        product,
+                        cidadeEstado,
+                        imagemEmpresa,
+                        longitude,
+                        longitude,
+                        telefone,
+                        endereco);
                   }).toList(),
                 ),
                 CardDesconto(nomeEmpresa),

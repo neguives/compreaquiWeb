@@ -298,17 +298,17 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                 ],
                               ),
                             ),
-//                            RaisedButton(
-//                              child: Text("Comprar Sem Cartao"),
-//                              onPressed: () {
-//                                model.finalizarCompra(nomeEmpresa, endereco,
-//                                    cidadeEstado, freteTipo);
-//                                Navigator.of(context).pushReplacement(
-//                                    MaterialPageRoute(
-//                                        builder: (context) =>
-//                                            OrdemPedidoConfirmado("1")));
-//                              },
-//                            ),
+                            RaisedButton(
+                              child: Text("Comprar Sem Cartao"),
+                              onPressed: () {
+                                model.finalizarCompra(nomeEmpresa, endereco,
+                                    cidadeEstado, freteTipo);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            OrdemPedidoConfirmado("1")));
+                              },
+                            ),
                             StreamBuilder(
                               stream: Firestore.instance
                                   .collection(cidadeEstado)
