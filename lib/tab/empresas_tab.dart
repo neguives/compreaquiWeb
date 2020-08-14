@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class EmpresasTab extends StatelessWidget {
-  final String cidade, endereco, categoria;
+  String cidade, endereco, categoria;
   double latitude, longitude;
+  String cidadeCollection;
 
   TextEditingController _senhaController = TextEditingController();
 
@@ -22,6 +23,8 @@ class EmpresasTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(cidade);
+    verificarCidadeCatalao();
     CollectionReference col =
         Firestore.instance.collection("EmpresasParceiras");
 
@@ -126,5 +129,25 @@ class EmpresasTab extends StatelessWidget {
         },
       ),
     );
+  }
+
+  verificarCidadeCatalao() {
+    if (cidade == "Catalão - Goias" ||
+        cidade == "Catalão - Goías" ||
+        cidade == "Catalão-Goias" ||
+        cidade == "Catalão-Goías" ||
+        cidade == "Catalão-Goiás" ||
+        cidade == "Catalão-Goiás" ||
+        cidade == "Catalão - Go" ||
+        cidade == "Catalão-Go" ||
+        cidade == "Catalao - Goias" ||
+        cidade == "Catalao - Go" ||
+        cidade == "Catalao-Go" ||
+        cidade == "Catalao-Goias" ||
+        cidade == "Alagoinhas - BA" ||
+        cidade == "Alagoinhas-Bahia") {
+      //Corrigir essa linha
+      cidade = "catalaoGoias";
+    }
   }
 }

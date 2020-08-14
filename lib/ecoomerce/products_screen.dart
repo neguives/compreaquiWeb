@@ -97,7 +97,7 @@ class _Products_ScreenState extends State<Products_Screen> {
                       future: Firestore.instance
                           .collection(cidadeEstado)
                           .document(nomeEmpresa)
-                          .collection("Produtos e Servicos")
+                          .collection("produtos")
                           .document(snapshot.data["title"])
                           .collection("itens")
                           .orderBy("title")

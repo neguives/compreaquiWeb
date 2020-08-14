@@ -26,6 +26,7 @@ class PaginaEmpresa extends StatelessWidget {
       endereco;
   double latitude, longitude, latitudeEmpresa, longitudeEmpresa;
   List galeriaPagina;
+  String cidadeCollection;
 
   UserModel user;
   PaginaEmpresa(
@@ -48,6 +49,7 @@ class PaginaEmpresa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    verificarCidadeCatalao();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Image.asset("assets/icon_zap.png"),
@@ -272,5 +274,25 @@ class PaginaEmpresa extends StatelessWidget {
             );
           },
         ));
+  }
+
+  verificarCidadeCatalao() {
+    if (cidadeEstado == "Catalão - Goias" ||
+        cidadeEstado == "Catalão - Goías" ||
+        cidadeEstado == "Catalão-Goias" ||
+        cidadeEstado == "Catalão-Goías" ||
+        cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalão - Go" ||
+        cidadeEstado == "Catalão-Go" ||
+        cidadeEstado == "Catalao - Goias" ||
+        cidadeEstado == "Catalao - Go" ||
+        cidadeEstado == "Catalao-Go" ||
+        cidadeEstado == "Catalao-Goias" ||
+        cidadeEstado == "Alagoinhas - BA" ||
+        cidadeEstado == "Alagoinhas-Bahia") {
+      //Corrigir essa linha
+      cidadeCollection = "catalaoGoias";
+    }
   }
 }

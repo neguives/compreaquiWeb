@@ -14,11 +14,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class OrderTile extends StatelessWidget {
   String orderId, nomeEmpresa, cidadeEstado;
+  String cidadeCollection;
 
   OrderTile(this.orderId, this.nomeEmpresa, this.cidadeEstado);
 
   @override
   Widget build(BuildContext context) {
+    verificarCidadeCatalao();
     return SingleChildScrollView(
       child: Card(
           elevation: 20,
@@ -29,7 +31,7 @@ class OrderTile extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection(cidadeEstado)
+                        .collection(cidadeCollection)
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
@@ -168,6 +170,26 @@ class OrderTile extends StatelessWidget {
             ],
           )),
     );
+  }
+
+  verificarCidadeCatalao() {
+    if (cidadeEstado == "Catalão - Goias" ||
+        cidadeEstado == "Catalão - Goías" ||
+        cidadeEstado == "Catalão-Goias" ||
+        cidadeEstado == "Catalão-Goías" ||
+        cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalão - Go" ||
+        cidadeEstado == "Catalão-Go" ||
+        cidadeEstado == "Catalao - Goias" ||
+        cidadeEstado == "Catalao - Go" ||
+        cidadeEstado == "Catalao-Go" ||
+        cidadeEstado == "Catalao-Goias" ||
+        cidadeEstado == "Alagoinhas - BA" ||
+        cidadeEstado == "Alagoinhas-Bahia") {
+      //Corrigir essa linha
+      cidadeCollection = "catalaoGoias";
+    }
   }
 }
 
