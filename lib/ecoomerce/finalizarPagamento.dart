@@ -164,7 +164,22 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: ScopedModelDescendant<CartModel>(
+          builder: (context, child, model){
+            double preco = model.getProductPrice();
+            String valorTotal = (preco +
+                (model.getEntregaGratuita() ==
+                    false
+                    ? model
+                    .getFreteKarona()
+                    : 0.0) -
+                model.getDesconto())
+                .toString();
+            return Text("Valor da compra: R\$ "+valorTotal);
+          },
+        ),
+      ),
       body: ScopedModelDescendant<CartModel>(
         builder: (context, child, model) {
           double preco = model.getProductPrice();

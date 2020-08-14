@@ -31,10 +31,10 @@ class OrderTile extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection(cidadeCollection)
+                        .collection(cidadeEstado)
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
-                        .document(orderId)
+                        .document("9MwaSUrPliA6a0i6TbZt")
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData)

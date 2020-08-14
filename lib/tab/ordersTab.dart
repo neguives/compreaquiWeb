@@ -10,7 +10,6 @@ class OrdersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     if (UserModel.of(context).isLoggedIn()) {
       String uid = UserModel.of(context).firebaseUser.uid;
-      print(uid);
 
       return FutureBuilder<QuerySnapshot>(
         future: Firestore.instance

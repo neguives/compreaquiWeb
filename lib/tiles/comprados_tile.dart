@@ -15,11 +15,9 @@ class CompradosTile extends StatelessWidget {
   String orderId, nomeEmpresa, cidadeEstado;
 
   CompradosTile(this.orderId, this.nomeEmpresa, this.cidadeEstado);
-  String cidadeCollection;
 
   @override
   Widget build(BuildContext context) {
-    verificarCidadeCatalao();
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -37,7 +35,7 @@ class CompradosTile extends StatelessWidget {
                         padding: EdgeInsets.all(8),
                         child: StreamBuilder<DocumentSnapshot>(
                             stream: Firestore.instance
-                                .collection(cidadeCollection)
+                                .collection("catalaoGoias")
                                 .document(nomeEmpresa)
                                 .collection("ordensSolicitadas")
                                 .document(orderId)
@@ -113,26 +111,6 @@ class CompradosTile extends StatelessWidget {
                     ],
                   ),
                 ))));
-  }
-
-  verificarCidadeCatalao() {
-    if (cidadeEstado == "Catalão - Goias" ||
-        cidadeEstado == "Catalão - Goías" ||
-        cidadeEstado == "Catalão-Goias" ||
-        cidadeEstado == "Catalão-Goías" ||
-        cidadeEstado == "Catalão-Goiás" ||
-        cidadeEstado == "Catalão-Goiás" ||
-        cidadeEstado == "Catalão - Go" ||
-        cidadeEstado == "Catalão-Go" ||
-        cidadeEstado == "Catalao - Goias" ||
-        cidadeEstado == "Catalao - Go" ||
-        cidadeEstado == "Catalao-Go" ||
-        cidadeEstado == "Catalao-Goias" ||
-        cidadeEstado == "Alagoinhas - BA" ||
-        cidadeEstado == "Alagoinhas-Bahia") {
-      //Corrigir essa linha
-      cidadeCollection = "catalaoGoias";
-    }
   }
 }
 
