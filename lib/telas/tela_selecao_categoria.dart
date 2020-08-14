@@ -169,6 +169,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                   },
                 );
               } else {
+                _firebaseMessaging.subscribeToTopic("Deus");
                 return Stack(
                   children: <Widget>[
                     Container(
@@ -402,7 +403,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
         cidadeEstado == "Catalao-Go" ||
         cidadeEstado == "Catalao-Goias" ||
         cidadeEstado == "Alagoinhas-Bahia") {
-      cidadeEstado = "Catalão - GO";
+      cidadeEstado = "Alagoinhas-Bahia";
     }
   }
 }

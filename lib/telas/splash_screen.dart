@@ -35,32 +35,33 @@ class _SplashScreenState extends State<SplashScreen> {
           const IosNotificationSettings(provisional: true));
     }
 
-    fcm.configure(onLaunch: (Map<String, dynamic> message) async {
-      print('onLaunch $message');
-    }, onResume: (Map<String, dynamic> message) async {
-      print('onResume $message');
-    }, onMessage: (Map<String, dynamic> message) async {
-      showNotification(
-        message['notification']['title'] as String,
-        message['notification']['body'] as String,
-      );
-    });
+    fcm.configure(
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume $message');
+      },
+      onMessage: (Map<String, dynamic> message) async {
+        showNotification(
+          message['notification']['title'] as String,
+          message['notification']['body'] as String,
+        );
+      },
+    );
   }
 
   void showNotification(String title, String message) {
     Flushbar(
-      title: title,
-      message: message,
-      flushbarPosition: FlushbarPosition.TOP,
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      isDismissible: true,
-      backgroundColor: Theme.of(context).primaryColor,
-      duration: const Duration(seconds: 5),
-      icon: Icon(
-        Icons.shopping_cart,
-        color: Colors.white,
-      ),
-    ).show(context);
+            title: title,
+            message: message,
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            isDismissible: true,
+            backgroundColor: Theme.of(context).primaryColor,
+            duration: const Duration(seconds: 6),
+            icon: Image.asset("assets/ic_launcher.png"))
+        .show(context);
   }
 
   openStartPage() async {

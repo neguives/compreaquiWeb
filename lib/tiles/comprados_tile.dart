@@ -114,15 +114,13 @@ class CompradosTile extends StatelessWidget {
   }
 }
 
-Text _buildProductsText(DocumentSnapshot snapshot) {
+Widget _buildProductsText(DocumentSnapshot snapshot) {
   String text = "\n";
   for (LinkedHashMap p in snapshot.data["produtos"]) {
     text += "\n${p["quantidade"]} x ${p["product"]["title"]} "
         "(R\$ ${p["product"]["preco"].toStringAsFixed(2)})\n"
         "Preferência: ${p["variacao"]}\n____________________________________\n";
   }
-
-  return Text(text);
 }
 
 String _recuperarData(DocumentSnapshot snapshot) {

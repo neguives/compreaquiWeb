@@ -247,7 +247,7 @@ class CompradosTileEmpresa extends StatelessWidget {
   }
 }
 
-Text _buildProductsText(DocumentSnapshot snapshot) {
+Widget _buildProductsText(DocumentSnapshot snapshot) {
   String text = "\n";
   for (LinkedHashMap p in snapshot.data["produtos"]) {
     text += "\n${p["quantidade"]} x ${p["product"]["title"]} "
