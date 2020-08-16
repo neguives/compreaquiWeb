@@ -4,12 +4,12 @@ class ProductData {
   String id;
   String category;
   String title;
-  String description;
+  String description, codigoBarras;
   double price, precoAnterior;
   bool promo;
   List images;
   List variacao;
-  int quantidade;
+  int quantidade, codBarras;
 
   ProductData.fromDocument(DocumentSnapshot snapshot) {
     id = snapshot.documentID;
@@ -20,6 +20,7 @@ class ProductData {
     images = snapshot.data["images"];
     quantidade = snapshot.data["quantidade"];
     promo = snapshot.data["promo"];
+    codigoBarras = snapshot.data["codigoBarras"].toString();
     precoAnterior = snapshot.data["precoAnterior"] + 0.0;
   }
 
@@ -29,6 +30,8 @@ class ProductData {
       "description": description,
       "preco": price,
       "quantidade": quantidade,
+      "imagem": images,
+      "codigoBarras": codigoBarras,
     };
   }
 }

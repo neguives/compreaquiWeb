@@ -70,8 +70,8 @@ class OrderTileTransporte extends StatelessWidget {
                                     children: <Widget>[
                                       StreamBuilder(
                                         stream: Firestore.instance
-                                            .collection(snapshot.data["cidade"]
-                                                .toString())
+                                            .collection(
+                                                "catalaoGoias".toString())
                                             .document(snapshot.data["empresa"]
                                                 .toString())
                                             .snapshots(),
@@ -126,7 +126,7 @@ class OrderTileTransporte extends StatelessWidget {
                                       SizedBox(height: 3),
                                       StreamBuilder(
                                         stream: Firestore.instance
-                                            .collection(cidade.toString())
+                                            .collection("catalaoGoias")
                                             .document(empresa)
                                             .collection("ordensSolicitadas")
                                             .document(codigoPedido)
@@ -424,7 +424,7 @@ class OrderTileTransporte extends StatelessWidget {
                                                   .document(codigoPedido);
 
                                           documentReference
-                                              .updateData({"status": 4});
+                                              .updateData({"status": 5});
 
                                           documentReference3.setData({
                                             "codigoPedido": codigoPedido,
@@ -435,7 +435,7 @@ class OrderTileTransporte extends StatelessWidget {
                                           documentReference2.delete();
                                           documentReference4.delete();
 
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       PedidosRecebidosConcluido(

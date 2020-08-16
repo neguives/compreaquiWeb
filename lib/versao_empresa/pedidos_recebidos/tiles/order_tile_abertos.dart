@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_transporte.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
@@ -32,7 +33,7 @@ class OrderTileAbertos extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection("Alagoinhas-Bahia")
+                        .collection("catalaoGoias")
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
@@ -122,20 +123,20 @@ class OrderTileAbertos extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       _buildCircle(
-                                          "1", "Em Separação", status, 1),
+                                          "1", "Em Separação", status, 3),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
                                       _buildCircle(
-                                          "2", "Em Transporte", status, 2),
+                                          "2", "Em Transporte", status, 4),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
-                                      _buildCircle("3", "Entregue", status, 3),
+                                      _buildCircle("3", "Entregue", status, 5),
                                       Container(
                                           height: 1,
                                           width: 20,
@@ -165,41 +166,56 @@ class OrderTileAbertos extends StatelessWidget {
                                   RaisedButton(
                                     color: Colors.black54,
                                     onPressed: snapshot.data[
-                                                    "solicitadoEntregador"] ==
-                                                false ||
-                                            snapshot.data[
                                                         "solicitadoEntregador"] ==
-                                                    null &&
+                                                    false &&
                                                 snapshot.data["tipoFrete"] ==
-                                                    "Entrega do estabelecimento"
+                                                    "Entrega do estabelecimento" ||
+                                            snapshot.data["tipoFrete"] ==
+                                                    "Retirar no estabelecimento" &&
+                                                snapshot.data["tipoFrete"] !=
+                                                    "Entrega Expressa (Karona)"
                                         ? () async {
                                             DocumentReference
                                                 documentReference =
                                                 await Firestore.instance
-                                                    .collection(
-                                                        "Alagoinhas-Bahia")
+                                                    .collection("catalaoGoias")
                                                     .document(nomeEmpresa)
                                                     .collection(
                                                         "ordensSolicitadas")
                                                     .document(orderId);
 
                                             documentReference
-                                                .updateData({"status": 2});
+                                                .updateData({"status": 4});
 
 //                                            _showToastEntregador();
 
                                             DocumentReference
                                                 documentReferenceDois =
                                                 Firestore.instance
-                                                    .collection(
-                                                        "Alagoinhas-Bahia")
+                                                    .collection("catalaoGoias")
                                                     .document(nomeEmpresa)
                                                     .collection(
                                                         "ordensSolicitadas")
                                                     .document(orderId);
 
-                                            documentReferenceDois.updateData(
-                                                {"solicitadoEntregador": true});
+                                            if (snapshot.data["tipoFrete"] ==
+                                                    "Entrega do estabelecimento" ||
+                                                snapshot.data["tipoFrete"] ==
+                                                    "Retirar no estabelecimento") {
+                                              documentReferenceDois.updateData({
+                                                "solicitadoEntregador": false
+                                              });
+                                            } else {
+                                              documentReferenceDois.updateData({
+                                                "solicitadoEntregador": true
+                                              });
+                                            }
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PedidosRecebidosTransporte(
+                                                            nomeEmpresa,
+                                                            "catalaoGoias")));
                                           }
                                         : null,
                                     child: Text(
@@ -211,14 +227,11 @@ class OrderTileAbertos extends StatelessWidget {
                                   ),
                                   RaisedButton(
                                     color: Colors.black54,
-                                    onPressed: snapshot.data[
-                                                    "solicitadoEntregador"] ==
-                                                false ||
+                                    onPressed: snapshot.data["tipoFrete"] ==
+                                                "Entrega Expressa (Karona)" &&
                                             snapshot.data[
-                                                        "solicitadoEntregador"] ==
-                                                    null &&
-                                                snapshot.data["tipoFrete"] ==
-                                                    "Entrega Expressa (App Karona)"
+                                                    "solicitadoEntregador"] ==
+                                                false
                                         ? () async {
                                             DocumentReference
                                                 documentReference =
@@ -242,7 +255,7 @@ class OrderTileAbertos extends StatelessWidget {
                                             DocumentReference
                                                 documentReferenceDois =
                                                 Firestore.instance
-                                                    .collection("Catalão - GO")
+                                                    .collection("catalaoGoias")
                                                     .document(nomeEmpresa)
                                                     .collection(
                                                         "ordensSolicitadas")

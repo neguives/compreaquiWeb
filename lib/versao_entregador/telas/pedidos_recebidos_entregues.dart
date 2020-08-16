@@ -4,7 +4,6 @@ import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_ti
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile_concluido.dart';
 import 'package:flutter/material.dart';
 
-
 class PedidosRecebidosEntregues extends StatefulWidget {
   String nomeEmpresa;
 
@@ -26,7 +25,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection("Catalão - GO")
+            .collection("catalaoGoias")
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 4)
@@ -37,7 +36,6 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
               child: CircularProgressIndicator(),
             );
           else {
-
             return Scaffold(
                 body: Stack(
               children: <Widget>[
@@ -73,7 +71,8 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: snapshot.data.documents
-                        .map((doc) => OrderTileConcluido(doc.documentID, nomeEmpresa))
+                        .map((doc) =>
+                            OrderTileConcluido(doc.documentID, nomeEmpresa))
                         .toList(),
                   ),
                 )

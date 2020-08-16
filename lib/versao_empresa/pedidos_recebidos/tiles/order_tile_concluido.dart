@@ -33,7 +33,7 @@ class OrderTileConcluido extends StatelessWidget {
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
                         .collection("catalaoGoias")
-                        .document("Supermecado Newton")
+                        .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
                         .snapshots(),
@@ -166,7 +166,7 @@ class OrderTileConcluido extends StatelessWidget {
                                     color: Colors.black54,
                                     onPressed: snapshot.data[
                                                     "solicitadoEntregador"] ==
-                                                null &&
+                                                true &&
                                             snapshot.data["tipoFrete"] ==
                                                 "Entrega Expressa (Karona)"
                                         ? () {

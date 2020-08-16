@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_concluido.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
@@ -32,7 +33,7 @@ class OrderTileTransporte extends StatelessWidget {
                 padding: EdgeInsets.all(8),
                 child: StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection("Alagoinhas-Bahia")
+                        .collection("catalaoGoias")
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
                         .document(orderId)
@@ -122,20 +123,20 @@ class OrderTileTransporte extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       _buildCircle(
-                                          "1", "Em Separação", status, 1),
+                                          "1", "Em Separação", status, 3),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
                                       _buildCircle(
-                                          "2", "Em Transporte", status, 2),
+                                          "2", "Em Transporte", status, 4),
                                       Container(
                                         height: 1,
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
-                                      _buildCircle("3", "Entregue", status, 3),
+                                      _buildCircle("3", "Entregue", status, 6),
                                       Container(
                                           height: 1,
                                           width: 20,
@@ -151,40 +152,47 @@ class OrderTileTransporte extends StatelessWidget {
                                             snapshot.data[
                                                         "solicitadoEntregador"] ==
                                                     null &&
-                                                snapshot.data["tipoFrete"] ==
-                                                    "Entrega do estabelecimento"
+                                                (snapshot.data["tipoFrete"] ==
+                                                        "Entrega do estabelecimento" ||
+                                                    snapshot.data[
+                                                            "tipoFrete"] ==
+                                                        "Retirar no estabelecimento")
                                         ? () async {
                                             DocumentReference
                                                 documentReference =
                                                 await Firestore.instance
-                                                    .collection(
-                                                        "Alagoinhas-Bahia")
+                                                    .collection("catalaoGoias")
                                                     .document(nomeEmpresa)
                                                     .collection(
                                                         "ordensSolicitadas")
                                                     .document(orderId);
 
                                             documentReference
-                                                .updateData({"status": 4});
+                                                .updateData({"status": 5});
 
 //                                            _showToastEntregador();
 
                                             DocumentReference
                                                 documentReferenceDois =
                                                 Firestore.instance
-                                                    .collection(
-                                                        "Alagoinhas-Bahia")
+                                                    .collection("catalaoGoias")
                                                     .document(nomeEmpresa)
                                                     .collection(
                                                         "ordensSolicitadas")
                                                     .document(orderId);
 
                                             if (snapshot.data["tipoFrete"] ==
-                                                "Entrega Expressa (App Karona)") {
+                                                "Entrega Expressa (Karona)") {
                                               documentReferenceDois.updateData({
                                                 "solicitadoEntregador": true
                                               });
                                             }
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PedidosRecebidosConcluido(
+                                                            nomeEmpresa,
+                                                            "catalaoGoias")));
                                           }
                                         : null,
                                     child: Text(
@@ -213,34 +221,44 @@ class OrderTileTransporte extends StatelessWidget {
                                           color: Colors.white),
                                     ),
                                   ),
-                                  RaisedButton(
-                                    color: Colors.black54,
-                                    onPressed: snapshot.data[
-                                                    "solicitadoEntregador"] ==
-                                                null &&
-                                            snapshot.data["tipoFrete"] ==
-                                                "Entrega Expressa (App Karona)"
-                                        ? () {
-                                            Navigator.of(context).push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    InformacoesMotoristas(
-                                                        snapshot.data[
-                                                                "imagemMotorista"]
-                                                            .toString(),
-                                                        snapshot.data[
-                                                                "nomeMotorista"]
-                                                            .toString(),
-                                                        snapshot.data[
-                                                                "placaCarroMotorista"]
-                                                            .toString())));
-                                          }
-                                        : null,
-                                    child: Text(
-                                      "Ver Entregador",
-                                      style: TextStyle(
-                                          fontFamily: "QuickSand",
-                                          color: Colors.white),
-                                    ),
+                                  StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection("ConsumidorFinal")
+                                        .document(snapshot.data["idEntregador"])
+                                        .snapshots(),
+                                    builder: (context, snap) {
+                                      if (!snap.hasData) {
+                                        return Text("");
+                                      } else {
+                                        return RaisedButton(
+                                          color: Colors.black54,
+                                          onPressed: snapshot.data[
+                                                          "solicitadoEntregador"] ==
+                                                      true &&
+                                                  snapshot.data["tipoFrete"] ==
+                                                      "Entrega Expressa (Karona)"
+                                              ? () {
+                                                  Navigator.of(context).push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          InformacoesMotoristas(
+                                                              snap.data["photo"]
+                                                                  .toString(),
+                                                              snap.data["nome"]
+                                                                  .toString(),
+                                                              snap.data[
+                                                                      "placaCarro"]
+                                                                  .toString())));
+                                                }
+                                              : null,
+                                          child: Text(
+                                            "Ver Entregador",
+                                            style: TextStyle(
+                                                fontFamily: "QuickSand",
+                                                color: Colors.white),
+                                          ),
+                                        );
+                                      }
+                                    },
                                   ),
                                   Text(_recuperarData(snapshot.data)),
                                 ],

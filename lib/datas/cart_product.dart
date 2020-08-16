@@ -6,7 +6,7 @@ class CartProduct {
   String categoria;
   String pid;
   int quantidade;
-  String variacao;
+  String variacao, codigoBarras, imagem1;
   String data;
 
   ProductData productData;
@@ -19,6 +19,8 @@ class CartProduct {
     pid = document.data["pid"];
     quantidade = document.data["quantidade"];
     variacao = document.data["variacao"];
+    codigoBarras = document.data["codigoBarras"];
+    imagem1 = productData.images[0];
   }
 
   Map<String, dynamic> toMap() {

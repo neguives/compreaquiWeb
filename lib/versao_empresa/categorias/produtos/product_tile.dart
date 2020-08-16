@@ -15,7 +15,8 @@ class ProductTile extends StatefulWidget {
   double latitude, longitude;
   final DocumentSnapshot snapshot;
 
-  ProductTile(this.type, @required this.nomeEmpresa, this.snapshot, this.idDocument, this.categoria);
+  ProductTile(this.type, @required this.nomeEmpresa, this.snapshot,
+      this.idDocument, this.categoria);
 
   @override
   _ProductTileState createState() =>
@@ -43,7 +44,8 @@ class _ProductTileState extends State<ProductTile> {
   FlutterToast flutterToast;
   var listImages;
   String urlImagem1 = "url", urlImagem2 = "url";
-  _ProductTileState(this.type, @required this.nomeEmpresa, this.snapshot, this.idDocument, this.categoria);
+  _ProductTileState(this.type, @required this.nomeEmpresa, this.snapshot,
+      this.idDocument, this.categoria);
   @override
   Widget build(BuildContext context) {
     List<dynamic> img = snapshot.data["images"];
@@ -83,24 +85,18 @@ class _ProductTileState extends State<ProductTile> {
             print(docUrl);
           });
 
-          DocumentReference documentReference =
-          await Firestore.instance
+          DocumentReference documentReference = await Firestore.instance
               .collection("Catalão - GO")
               .document(nomeEmpresa)
-              .collection(
-              "Produtos e Servicos")
-              .document(
-              categoria)
+              .collection("Produtos e Servicos")
+              .document(categoria)
               .collection("itens")
-              .document(
-              idDocument);
+              .document(idDocument);
 
           urlImagem1 = docUrl;
 
           listImages = [urlImagem1, urlImagem2];
           documentReference.updateData({"images": listImages});
-
-
         }
 
         _showImagemCarregada("imagem 1");
@@ -778,7 +774,7 @@ class _ProductTileState extends State<ProductTile> {
                                                 image: new DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: new NetworkImage(
-                                                     urlImagem1.length< 5 !=
+                                                      urlImagem1.length < 5 !=
                                                               null
                                                           ? urlImagem1
                                                           : img.first),
@@ -811,8 +807,8 @@ class _ProductTileState extends State<ProductTile> {
                                                 image: new DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: new NetworkImage(
-                                                      urlImagem2.length< 5 !=
-                                                          null
+                                                      urlImagem2.length < 5 !=
+                                                              null
                                                           ? urlImagem2
                                                           : img.last),
                                                 ))),
@@ -863,7 +859,6 @@ class _ProductTileState extends State<ProductTile> {
                                                 .length >
                                             1
                                     ? () async {
-
                                         var variacao = [
                                           _preferenciaProdutoController.text
                                         ];
@@ -887,15 +882,13 @@ class _ProductTileState extends State<ProductTile> {
 
                                         DocumentReference referenciaOrdem =
                                             await Firestore.instance
-                                                .collection("Catalão - GO")
-                                                .document("Supermecado Bretas")
+                                                .collection("catalaoGoias")
+                                                .document(nomeEmpresa)
                                                 .collection(
                                                     "Produtos e Servicos")
-                                                .document(
-                                                    categoria)
+                                                .document(categoria)
                                                 .collection("itens")
-                                                .document(
-                                                    idDocument);
+                                                .document(idDocument);
 
                                         await referenciaOrdem.updateData(({
                                           "title": _nomeProdutoController.text,
@@ -914,7 +907,6 @@ class _ProductTileState extends State<ProductTile> {
                                           "description":
                                               _descricaoProdutoController.text,
                                         }));
-
 
                                         _showToastProdutoCadastrado();
                                       }

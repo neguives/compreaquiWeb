@@ -566,9 +566,9 @@ class _CategoriaTileState extends State<CategoriaTile> {
 
                                       DocumentReference referenciaOrdem =
                                           await Firestore.instance
-                                              .collection("Catalão - GO")
-                                              .document("Supermecado Bretas")
-                                              .collection("Produtos e Servicos")
+                                              .collection("catalaoGoias")
+                                              .document(nomeEmpresa)
+                                              .collection("produtos")
                                               .document(snapshot.data["title"])
                                               .collection("itens")
                                               .document(

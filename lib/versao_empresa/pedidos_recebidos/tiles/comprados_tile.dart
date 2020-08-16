@@ -37,8 +37,8 @@ class CompradosTileEmpresa extends StatelessWidget {
                         padding: EdgeInsets.all(8),
                         child: StreamBuilder<DocumentSnapshot>(
                             stream: Firestore.instance
-                                .collection(cidadeEstado)
-                                .document(nomeEmpresa)
+                                .collection("catalaoGoias")
+                                .document("Supermecado Newton")
                                 .collection("ordensSolicitadas")
                                 .document(orderId)
                                 .snapshots(),
@@ -48,8 +48,6 @@ class CompradosTileEmpresa extends StatelessWidget {
                                   child: CircularProgressIndicator(),
                                 );
                               else {
-                                int status = snapshot.data["status"];
-
                                 DateTime now = DateTime.now();
                                 var currentTime = new DateTime(now.year,
                                     now.month, now.day, now.hour, now.minute);
@@ -252,9 +250,8 @@ Widget _buildProductsText(DocumentSnapshot snapshot) {
   for (LinkedHashMap p in snapshot.data["produtos"]) {
     text += "\n${p["quantidade"]} x ${p["product"]["title"]} "
         "(R\$ ${p["product"]["preco"].toStringAsFixed(2)})\n"
-        "Preferência: ${p["variacao"]}\n____________________________________\n";
+        "Preferência: ${p["variacao"]}\nCódigo de Barras: ${p["product"]["codigoBarras"]}\n ________________________________________________\n";
   }
-
   return Text(text);
 }
 

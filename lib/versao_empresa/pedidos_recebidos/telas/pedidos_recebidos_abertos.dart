@@ -27,10 +27,10 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection("Alagoinhas-Bahia")
+            .collection("catalaoGoias")
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 1)
+            .where("status", isEqualTo: 3)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

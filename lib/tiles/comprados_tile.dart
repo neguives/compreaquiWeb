@@ -119,8 +119,9 @@ Widget _buildProductsText(DocumentSnapshot snapshot) {
   for (LinkedHashMap p in snapshot.data["produtos"]) {
     text += "\n${p["quantidade"]} x ${p["product"]["title"]} "
         "(R\$ ${p["product"]["preco"].toStringAsFixed(2)})\n"
-        "Preferência: ${p["variacao"]}\n____________________________________\n";
+        "Preferência: ${p["variacao"]}\nCódigo de Barras: ${p["product"]["codigoBarras"]}\n ________________________________________________\n";
   }
+  return Text(text);
 }
 
 String _recuperarData(DocumentSnapshot snapshot) {

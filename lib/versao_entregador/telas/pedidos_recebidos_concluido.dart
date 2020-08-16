@@ -1,10 +1,9 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_concluido.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
-import 'package:compreaidelivery/versao_entregador/tiles/order_tile_concluido.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile_transporte.dart';
 import 'package:flutter/material.dart';
-
 
 class PedidosRecebidosConcluido extends StatefulWidget {
   String uid;
@@ -15,8 +14,7 @@ class PedidosRecebidosConcluido extends StatefulWidget {
       _PedidosRecebidosConcluidoState(uid);
 }
 
-class _PedidosRecebidosConcluidoState
-    extends State<PedidosRecebidosConcluido> {
+class _PedidosRecebidosConcluidoState extends State<PedidosRecebidosConcluido> {
   String uid;
   _PedidosRecebidosConcluidoState(this.uid);
   @override
@@ -40,7 +38,7 @@ class _PedidosRecebidosConcluidoState
               child: CircularProgressIndicator(),
             );
           else {
-                        return Scaffold(
+            return Scaffold(
                 body: Stack(
               children: <Widget>[
                 Container(
@@ -58,8 +56,7 @@ class _PedidosRecebidosConcluidoState
                     padding: EdgeInsets.only(top: 50),
                     child: ListView(
                       children: snapshot.data.documents
-                          .map(
-                              (doc) => OrderTileConcluido(doc.documentID, uid))
+                          .map((doc) => OrderTileConcluido(doc.documentID, uid))
                           .toList(),
                     ),
                   )),

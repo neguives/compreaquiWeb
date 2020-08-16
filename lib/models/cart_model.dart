@@ -194,6 +194,7 @@ class CartModel extends Model {
       "precoDoFrete": productsFrete,
       "tipoFrete": freteTipo,
       "precoDosProdutos": productsPrice,
+      "solicitadoEntregador": false,
       "desconto": productsDesconto,
       "data": formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +
           " às ${formatDate(DateTime.now(), [HH, ':', nn, ':', ss])}",

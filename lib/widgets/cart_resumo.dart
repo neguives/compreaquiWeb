@@ -67,10 +67,11 @@ class _CardResumoState extends State<CardResumo> {
 
   @override
   Widget build(BuildContext context) {
+    enderecoController.text = endereco;
     bool entregaGratuita = false;
 
     obsController.text =
-        "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
+        "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$50,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
     return ScopedModelDescendant<CartModel>(
       builder: (context, child, model) {
@@ -243,6 +244,7 @@ class _CardResumoState extends State<CardResumo> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   FinalizarPagamento(
+                                                    freteTipo,
                                                     buy,
                                                     nomeEmpresa,
                                                     cidadeEstado,

@@ -694,6 +694,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                               pass: _senhaController.text,
                                               onSucess: _onSucessRegister,
                                               onFail: _onFailRegister);
+
+                                          Navigator.pop(context);
                                         }
                                       },
                                     ),

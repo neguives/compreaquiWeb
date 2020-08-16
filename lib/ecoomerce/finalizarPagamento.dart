@@ -8,7 +8,7 @@ import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class FinalizarPagamento extends StatefulWidget {
-  String nomeEmpresa, cidadeEstado, endereco;
+  String nomeEmpresa, cidadeEstado, endereco, freteTipo;
   double latitude, longitude;
   final VoidCallback buy;
 
@@ -23,7 +23,7 @@ class FinalizarPagamento extends StatefulWidget {
   final Color textColor;
   final Color cursorColor;
 
-  FinalizarPagamento(this.buy, this.nomeEmpresa, this.cidadeEstado,
+  FinalizarPagamento(this.freteTipo,this.buy, this.nomeEmpresa, this.cidadeEstado,
       this.endereco, this.latitude, this.longitude,
       {this.cardNumber,
       this.expiryDate,
@@ -35,6 +35,7 @@ class FinalizarPagamento extends StatefulWidget {
       this.cursorColor});
   @override
   _FinalizarPagamentoState createState() => _FinalizarPagamentoState(
+    this.freteTipo,
       this.buy,
       this.nomeEmpresa,
       this.cidadeEstado,
@@ -44,13 +45,12 @@ class FinalizarPagamento extends StatefulWidget {
 }
 
 class _FinalizarPagamentoState extends State<FinalizarPagamento> {
-  String nomeEmpresa, cidadeEstado, endereco;
+  String nomeEmpresa, cidadeEstado, endereco, freteTipo;
   double latitude, longitude;
   final VoidCallback buy;
   String bandeira;
   String opcaoDeFrete;
-  String freteTipo = "a";
-  _FinalizarPagamentoState(this.buy, this.nomeEmpresa, this.cidadeEstado,
+  _FinalizarPagamentoState(this.freteTipo,this.buy, this.nomeEmpresa, this.cidadeEstado,
       this.endereco, this.latitude, this.longitude);
 
   final TextEditingController _startCoordinatesTextController =
@@ -175,8 +175,8 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                     .getFreteKarona()
                     : 0.0) -
                 model.getDesconto())
-                .toString();
-            return Text("Valor da compra: R\$ "+valorTotal);
+                .toStringAsFixed(2);
+            return Text("Valor da compra: R\$ "+valorTotal, style: TextStyle(fontSize: 14),);
           },
         ),
       ),
@@ -366,7 +366,7 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                                               .replaceAll(
                                                                   ",", "")
                                                               .trim() +
-                                                          "00";
+                                                          "";
                                                   int valorTotalFinal =
                                                       int.parse(
                                                           valorTotalCorrigido);
@@ -485,6 +485,8 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                                             context);
                                                       }
                                                     } on CieloException catch (e) {
+                                                      _pagamentoReprovado(
+                                                          context);
                                                       print(e.message);
                                                       print(
                                                           e.errors[0].message);
@@ -661,7 +663,9 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Fechar"),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         );

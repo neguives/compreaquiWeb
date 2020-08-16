@@ -11,9 +11,9 @@ class CategoriaTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
       future: Firestore.instance
-          .collection(cidadeEstado)
+          .collection("catalaoGoias")
           .document(nomeEmpresa)
-          .collection("Produtos e Servicos")
+          .collection("produtos")
           .orderBy("pos")
           .getDocuments(),
       builder: (context, snapshot) {
@@ -31,7 +31,7 @@ class CategoriaTab extends StatelessWidget {
               ),
               ListView(
                   children: snapshot.data.documents.map((doc) {
-                return CategoriaTile(doc, nomeEmpresa, "Alagoinhas-Bahia");
+                return CategoriaTile(doc, nomeEmpresa, "catalaoGoias");
               }).toList())
             ],
           );

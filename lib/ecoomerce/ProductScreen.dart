@@ -172,7 +172,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                       SizedBox(height: 16),
                       ScopedModelDescendant<CartModel>(
-                        builder: (context, child , model){
+                        builder: (context, child, model) {
                           String disponibilidade = model.getDisponibilidade();
                           return OutlineButton(
                             color: Colors.green,
@@ -187,57 +187,62 @@ class _ProductScreenState extends State<ProductScreen> {
                                   Text(
                                     product.quantidade > 0
                                         ? 'Adicionar ao Carrinho'
-                                        : "Produto Indisponível" ,
+                                        : "Produto Indisponível",
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
                             ),
-                            onPressed: preferencia != null && product.quantidade > 0
+                            onPressed: preferencia != null &&
+                                    product.quantidade > 0
                                 ? () async {
-                              DocumentReference documentReference = Firestore
-                                  .instance
-                                  .collection(cidadeEstado)
-                                  .document(nomeEmpresa)
-                                  .collection("Produtos e Servicos")
-                                  .document(product.category)
-                                  .collection("itens")
-                                  .document(product.id);
+                                    DocumentReference documentReference =
+                                        Firestore.instance
+                                            .collection(cidadeEstado)
+                                            .document(nomeEmpresa)
+                                            .collection("Produtos e Servicos")
+                                            .document(product.category)
+                                            .collection("itens")
+                                            .document(product.id);
 
-                              Firestore.instance
-                                  .runTransaction((transaction) async {
-                                await transaction.update(documentReference,
-                                    {"quantidade": product.quantidade - 1});
-                              });
+                                    Firestore.instance
+                                        .runTransaction((transaction) async {
+                                      await transaction.update(
+                                          documentReference, {
+                                        "quantidade": product.quantidade - 1
+                                      });
+                                    });
 
-                              if (UserModel.of(context).isLoggedIn()) {
-                                CartProduct cartProduct = CartProduct();
-                                cartProduct.variacao = preferencia;
-                                cartProduct.quantidade = 1;
-                                cartProduct.pid = product.id;
-                                cartProduct.categoria = product.category;
-                                cartProduct.productData = product;
-                                CartModel.of(context)
-                                    .addCartItem(cartProduct, nomeEmpresa);
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => CartScreen(
-                                        cartProduct.productData,
-                                        nomeEmpresa,
-                                        imagemEmpresa,
-                                        cidadeEstado,
-                                        endereco,
-                                        latitude,
-                                        longitude,
-                                        telefone)));
-                              } else {
-                                _scaffoldKey.currentState
-                                    .showSnackBar(SnackBar(
-                                  content: Text("Você não está conectado!"),
-                                  backgroundColor: Colors.blueGrey,
-                                  duration: Duration(seconds: 2),
-                                ));
-                              }
-                            }
+                                    if (UserModel.of(context).isLoggedIn()) {
+                                      CartProduct cartProduct = CartProduct();
+                                      cartProduct.variacao = preferencia;
+                                      cartProduct.quantidade = 1;
+                                      cartProduct.pid = product.id;
+                                      cartProduct.categoria = product.category;
+                                      cartProduct.productData = product;
+                                      CartModel.of(context).addCartItem(
+                                          cartProduct, nomeEmpresa);
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => CartScreen(
+                                                  cartProduct.productData,
+                                                  nomeEmpresa,
+                                                  imagemEmpresa,
+                                                  cidadeEstado,
+                                                  endereco,
+                                                  latitude,
+                                                  longitude,
+                                                  telefone)));
+                                    } else {
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                        content:
+                                            Text("Você não está conectado!"),
+                                        backgroundColor: Colors.blueGrey,
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                    }
+                                  }
                                 : null,
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(18.0),

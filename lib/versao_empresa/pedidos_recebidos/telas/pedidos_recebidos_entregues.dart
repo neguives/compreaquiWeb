@@ -31,7 +31,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
             .collection(cidadeEstado)
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 3)
+            .where("status", isEqualTo: 5)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

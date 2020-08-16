@@ -39,7 +39,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
             )),
         body: FutureBuilder<QuerySnapshot>(
           future: Firestore.instance
-              .collection(cidadeEstado)
+              .collection("catalaoGoias")
               .document(nomeEmpresa)
               .collection("ordensSolicitadas")
               .getDocuments(),
@@ -51,7 +51,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                 children: [
                   StreamBuilder(
                     stream: Firestore.instance
-                        .collection(cidadeEstado)
+                        .collection("catalaoGoias")
                         .document(nomeEmpresa)
                         .snapshots(),
                     builder: (context, snapshot2) {
@@ -138,7 +138,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                                     FutureBuilder(
                                                       future: Firestore.instance
                                                           .collection(
-                                                              cidadeEstado)
+                                                              "catalaoGoias")
                                                           .document(nomeEmpresa)
                                                           .collection(
                                                               "ordensSolicitadas")
@@ -254,14 +254,14 @@ class _DemonstrativosState extends State<Demonstrativos> {
                           ))),
                   StreamBuilder(
                     stream: Firestore.instance
-                        .collection(cidadeEstado)
+                        .collection("catalaoGoias")
                         .document(nomeEmpresa)
                         .snapshots(),
                     builder: (context, snapshot3) {
                       if (!snapshot3.hasData) {
                         return LinearProgressIndicator();
                       } else {
-                        var valorComissao =
+                        final double valorComissao =
                             (counterTotal / 100) * snapshot3.data["comissao"];
                         return Card(
                             child: Padding(
@@ -306,7 +306,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
 
   getTotalProdutos() async {
     Firestore.instance
-        .collection(cidadeEstado)
+        .collection("catalaoGoias")
         .document(nomeEmpresa)
         .collection("ordensSolicitadas")
         .snapshots()

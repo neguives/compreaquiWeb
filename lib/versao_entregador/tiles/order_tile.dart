@@ -2,8 +2,11 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tab/listagemItens.dart';
+import 'package:compreaidelivery/telas/perfil_usuario.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/comprados_tile.dart';
+import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
+import 'package:compreaidelivery/versao_entregador/tiles/pedidos_recebidos.dart';
 import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,8 +67,8 @@ class OrderTile extends StatelessWidget {
                                     children: <Widget>[
                                       StreamBuilder(
                                         stream: Firestore.instance
-                                            .collection(snapshot.data["cidade"]
-                                                .toString())
+                                            .collection(
+                                                "catalaoGoias".toString())
                                             .document(snapshot.data["empresa"]
                                                 .toString())
                                             .snapshots(),
@@ -120,7 +123,7 @@ class OrderTile extends StatelessWidget {
                                       SizedBox(height: 3),
                                       StreamBuilder(
                                         stream: Firestore.instance
-                                            .collection(cidade.toString())
+                                            .collection("catalaoGoias")
                                             .document(empresa)
                                             .collection("ordensSolicitadas")
                                             .document(codigoPedido)
@@ -370,7 +373,7 @@ class OrderTile extends StatelessWidget {
                                         onPressed: () async {
                                           DocumentReference documentReference =
                                               await Firestore.instance
-                                                  .collection(cidade)
+                                                  .collection("catalaoGoias")
                                                   .document(empresa)
                                                   .collection(
                                                       "ordensSolicitadas")
@@ -392,9 +395,10 @@ class OrderTile extends StatelessWidget {
                                                   .collection("PedidosAceitos")
                                                   .document(codigoPedido);
 
-                                          documentReference
-                                              .updateData({"status": 3});
-
+                                          documentReference.updateData({
+                                            "status": 4,
+                                            "idEntregador": uid,
+                                          });
 
                                           documentReference3.setData({
                                             "codigoPedido": codigoPedido,
@@ -402,6 +406,11 @@ class OrderTile extends StatelessWidget {
                                             "empresa": empresa,
                                           });
                                           documentReference2.delete();
+
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PedidosRecebidos(uid)));
                                         },
                                         child: Text(
                                           "Vou Entregar",

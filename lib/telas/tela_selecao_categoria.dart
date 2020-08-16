@@ -61,7 +61,9 @@ class TelaSelecaoCategoria extends StatelessWidget {
               return LinearProgressIndicator();
             } else {
               if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
-                _firebaseMessaging.subscribeToTopic(snapshot.data["nome"]);
+                if (snapshot.data["nome"] == "Supermecado Newton") {
+                  _firebaseMessaging.subscribeToTopic("supermecadonewton");
+                }
                 return Column(
                   children: [
                     Padding(
@@ -88,7 +90,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => PedidosRecebidos(
                                       snapshot.data["nome"].toString(),
-                                      snapshot.data["cidade"].toString())));
+                                      cidadeEstado)));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -102,7 +104,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => VersaoEmpresaCategorias(
                                       snapshot.data["nome"].toString(),
-                                      snapshot.data["cidade"].toString())));
+                                      cidadeEstado)));
                             },
                             child: FlatButton(
                               child: Image.asset(
@@ -169,7 +171,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                   },
                 );
               } else {
-                _firebaseMessaging.subscribeToTopic("Deus");
+                _firebaseMessaging.subscribeToTopic(uid);
                 return Stack(
                   children: <Widget>[
                     Container(
@@ -325,7 +327,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EmpresasTab(
-                        cidade: cidadeEstado,
+                        cidade: "catalaoGoias",
                         endereco: endereco,
                         latitude: latitude,
                         longitude: longitude,
@@ -376,7 +378,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EmpresasTab(
-                        cidade: cidadeEstado,
+                        cidade: "catalaoGoias",
                         endereco: endereco,
                         latitude: latitude,
                         longitude: longitude,
@@ -401,8 +403,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
         cidadeEstado == "Catalao - Goias" ||
         cidadeEstado == "Catalao - Go" ||
         cidadeEstado == "Catalao-Go" ||
-        cidadeEstado == "Catalao-Goias" ||
-        cidadeEstado == "Alagoinhas-Bahia") {
+        cidadeEstado == "Alagoinhas-Bahia" ||
+        cidadeEstado == "Catalao-Goias") {
       //Corrigir essa linha
       cidadeEstado = "Catalão-Goias";
     }

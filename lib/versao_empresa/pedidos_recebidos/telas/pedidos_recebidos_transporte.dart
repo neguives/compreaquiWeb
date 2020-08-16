@@ -29,10 +29,10 @@ class _PedidosRecebidosTransporteState
       )),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection(cidadeEstado)
+            .collection("catalaoGoias")
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
-            .where("status", isEqualTo: 2)
+            .where("status", isEqualTo: 4)
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

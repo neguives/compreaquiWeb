@@ -26,9 +26,9 @@ class _EditarProdutosState extends State<EditarProdutos> {
     print(codigoBarras);
     return FutureBuilder<QuerySnapshot>(
       future: Firestore.instance
-          .collection("Catalão - GO")
+          .collection("catalaoGoias")
           .document(nomeEmpresa)
-          .collection("Produtos e Servicos")
+          .collection("produtos")
           .document(categoria)
           .collection("itens")
           .where("codigoBarras", isEqualTo: codigoBarras)

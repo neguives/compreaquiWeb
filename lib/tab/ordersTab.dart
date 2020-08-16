@@ -90,7 +90,7 @@ class OrdersTab extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         children: snapshot.data.documents
                             .map((doc) => OrderTile(
-                                doc.documentID, nomeEmpresa, cidadeEstado))
+                                doc.documentID, nomeEmpresa, "catalaoGoias"))
                             .toList(),
                       ),
                     )

@@ -44,7 +44,7 @@ class EmpresasTab extends StatelessWidget {
 //          ),
       body: FutureBuilder<QuerySnapshot>(
         future: Firestore.instance
-            .collection(cidade)
+            .collection("catalaoGoias")
             .where("categoria", arrayContains: categoria)
             .getDocuments(),
         builder: (context, snapshot) {
@@ -143,9 +143,7 @@ class EmpresasTab extends StatelessWidget {
         cidade == "Catalao - Goias" ||
         cidade == "Catalao - Go" ||
         cidade == "Catalao-Go" ||
-        cidade == "Catalao-Goias" ||
-        cidade == "Alagoinhas - BA" ||
-        cidade == "Alagoinhas-Bahia") {
+        cidade == "Catalao-Goias") {
       //Corrigir essa linha
       cidade = "catalaoGoias";
     }

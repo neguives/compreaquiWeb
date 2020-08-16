@@ -34,7 +34,7 @@ class OrderTile extends StatelessWidget {
                         .collection(cidadeEstado)
                         .document(nomeEmpresa)
                         .collection("ordensSolicitadas")
-                        .document("9MwaSUrPliA6a0i6TbZt")
+                        .document(orderId)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData)
@@ -126,7 +126,14 @@ class OrderTile extends StatelessWidget {
                                         width: 20,
                                         color: Colors.transparent,
                                       ),
-                                      _buildCircle("2", "A caminho", status, 3),
+                                      _buildCircle(
+                                          "2",
+                                          snapshot.data["tipoFrete"] ==
+                                                  "Retirar no estabelecimento"
+                                              ? "A Retirar"
+                                              : "A caminho",
+                                          status,
+                                          3),
                                       Container(
                                         height: 1,
                                         width: 20,
@@ -157,6 +164,45 @@ class OrderTile extends StatelessWidget {
                                           fontFamily: "QuickSand",
                                           color: Colors.white),
                                     ),
+                                  ),
+                                  StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection("ConsumidorFinal")
+                                        .document(snapshot.data["idEntregador"])
+                                        .snapshots(),
+                                    builder: (context, snap) {
+                                      if (!snap.hasData) {
+                                        return Text("");
+                                      } else {
+                                        return RaisedButton(
+                                          color: Colors.black54,
+                                          onPressed: snapshot.data[
+                                                          "solicitadoEntregador"] ==
+                                                      true &&
+                                                  snapshot.data["tipoFrete"] ==
+                                                      "Entrega Expressa (Karona)"
+                                              ? () {
+                                                  Navigator.of(context).push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          InformacoesMotoristas(
+                                                              snap.data["photo"]
+                                                                  .toString(),
+                                                              snap.data["nome"]
+                                                                  .toString(),
+                                                              snap.data[
+                                                                      "placaCarro"]
+                                                                  .toString())));
+                                                }
+                                              : null,
+                                          child: Text(
+                                            "Ver Entregador",
+                                            style: TextStyle(
+                                                fontFamily: "QuickSand",
+                                                color: Colors.white),
+                                          ),
+                                        );
+                                      }
+                                    },
                                   ),
                                   Text(_recuperarData(snapshot.data)),
                                 ],
@@ -258,4 +304,57 @@ Widget _buildCircle(String title, String subtitle, int status, int thisStatus) {
       Text(subtitle)
     ],
   );
+}
+
+class InformacoesMotoristas extends StatelessWidget {
+  String fotoPerfil, nomeMotorista, placaCarro;
+
+  InformacoesMotoristas(this.fotoPerfil, this.nomeMotorista, this.placaCarro);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: new IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        title: Text("Entregador"),
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                elevation: 40,
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(100.0),
+                    side: BorderSide(color: Colors.white30)),
+                child: Container(
+                    width: 180.0,
+                    height: 180.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                          fit: BoxFit.fill,
+                          image: new NetworkImage(fotoPerfil),
+                        ))),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            nomeMotorista,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          ),
+          Text(
+            placaCarro,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+          )
+        ],
+      ),
+    );
+  }
 }
