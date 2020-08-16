@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
+import 'package:compreaidelivery/ecoomerce/services/components/credit_card_widget.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
+import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/CartTile.dart';
 import 'package:compreaidelivery/widgets/card_cartao_credito.dart';
@@ -14,6 +16,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'ordemPedidoConfirmado.dart';
 
 class CartScreen extends StatelessWidget {
+  final CreditCard creditCard = CreditCard();
   ProductData product;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
@@ -123,6 +126,7 @@ class CartScreen extends StatelessWidget {
                 CardDesconto(nomeEmpresa),
                 CardResumo(() async {}, nomeEmpresa, cidadeEstado, endereco,
                     latitude, longitude),
+                CreditCardWidget(creditCard)
               ],
             );
           }

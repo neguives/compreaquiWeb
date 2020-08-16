@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/datas/user_final_data.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cielo/flutter_cielo.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -23,8 +23,8 @@ class FinalizarPagamento extends StatefulWidget {
   final Color textColor;
   final Color cursorColor;
 
-  FinalizarPagamento(this.freteTipo,this.buy, this.nomeEmpresa, this.cidadeEstado,
-      this.endereco, this.latitude, this.longitude,
+  FinalizarPagamento(this.freteTipo, this.buy, this.nomeEmpresa,
+      this.cidadeEstado, this.endereco, this.latitude, this.longitude,
       {this.cardNumber,
       this.expiryDate,
       this.cardHolderName,
@@ -35,7 +35,7 @@ class FinalizarPagamento extends StatefulWidget {
       this.cursorColor});
   @override
   _FinalizarPagamentoState createState() => _FinalizarPagamentoState(
-    this.freteTipo,
+      this.freteTipo,
       this.buy,
       this.nomeEmpresa,
       this.cidadeEstado,
@@ -50,8 +50,8 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
   final VoidCallback buy;
   String bandeira;
   String opcaoDeFrete;
-  _FinalizarPagamentoState(this.freteTipo,this.buy, this.nomeEmpresa, this.cidadeEstado,
-      this.endereco, this.latitude, this.longitude);
+  _FinalizarPagamentoState(this.freteTipo, this.buy, this.nomeEmpresa,
+      this.cidadeEstado, this.endereco, this.latitude, this.longitude);
 
   final TextEditingController _startCoordinatesTextController =
       TextEditingController();
@@ -60,6 +60,7 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
   final enderecoController = TextEditingController();
   final obsController = TextEditingController();
 
+  UserFinalData userFinalData;
   //WidgetCartao
   String cardNumber = "0000 0000 0000 0000";
   String expiryDate;
@@ -97,14 +98,6 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
     creditCardModel = CreditCardModel(
         cardNumber, expiryDate, cardHolderName, cvvCode, isCvvFocused);
   }
-
-//Api de Pagamento
-  final CieloEcommerce cielo = CieloEcommerce(
-      environment: Environment.PRODUCTION,
-      merchant: Merchant(
-        merchantId: "0ef47d5f-35f3-4fbd-ab34-54b683a09799",
-        merchantKey: "IhZ5hZIlWO7vxOHK927PbRJiKqwTa7CZ39rv7T6Q",
-      ));
 
 //Realizar Pagamento
   @override
@@ -166,17 +159,18 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
     return Scaffold(
       appBar: AppBar(
         title: ScopedModelDescendant<CartModel>(
-          builder: (context, child, model){
+          builder: (context, child, model) {
             double preco = model.getProductPrice();
             String valorTotal = (preco +
-                (model.getEntregaGratuita() ==
-                    false
-                    ? model
-                    .getFreteKarona()
-                    : 0.0) -
-                model.getDesconto())
+                    (model.getEntregaGratuita() == false
+                        ? model.getFreteKarona()
+                        : 0.0) -
+                    model.getDesconto())
                 .toStringAsFixed(2);
-            return Text("Valor da compra: R\$ "+valorTotal, style: TextStyle(fontSize: 14),);
+            return Text(
+              "Valor da compra: R\$ " + valorTotal,
+              style: TextStyle(fontSize: 14),
+            );
           },
         ),
       ),
@@ -338,7 +332,7 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                       highlightElevation: 10,
                                       onPressed: snapshot
                                                   .data["disponibilidade"] ==
-                                              "aberto"
+                                              "fechado"
                                           ? () {
                                               if (freteTipo.length == 1) {
                                                 _dialogSelecioneEntrega(
@@ -370,139 +364,43 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
                                                   int valorTotalFinal =
                                                       int.parse(
                                                           valorTotalCorrigido);
-                                                  _finalizarPagamento(
-                                                      String numeroCartao,
-                                                      validadeCartao,
-                                                      nomeCartao,
-                                                      codSeguranca) async {
-                                                    _cardNumberControllerTrim
-                                                        .text = numeroCartao;
-                                                    print(
-                                                        _cardNumberControllerTrim
-                                                            .text);
-                                                    bandeira = numeroCartao
-                                                                .startsWith(
-                                                                    "51") ||
-                                                            numeroCartao.startsWith(
-                                                                "55") ||
-                                                            numeroCartao.startsWith(
-                                                                "2221") ||
-                                                            numeroCartao.startsWith(
-                                                                "2229") ||
-                                                            numeroCartao.startsWith(
-                                                                "223") ||
-                                                            numeroCartao.startsWith(
-                                                                "229") ||
-                                                            numeroCartao.startsWith(
-                                                                "23") ||
-                                                            numeroCartao.startsWith(
-                                                                "26") ||
-                                                            numeroCartao.startsWith(
-                                                                "270") ||
-                                                            numeroCartao
-                                                                .startsWith("271") ||
-                                                            numeroCartao.startsWith("2720")
-                                                        ? "Master"
-                                                        : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
-                                                    Sale sale = Sale(
-                                                        merchantOrderId:
-                                                            "1233443",
-                                                        customer: Customer(
-                                                            name:
-                                                                "Comprador crédito simples"),
-                                                        payment: Payment(
-                                                            currency: "BRL",
-                                                            type: TypePayment
-                                                                .creditCard,
-                                                            amount:
-                                                                valorTotalFinal,
-                                                            returnMessage:
-                                                                "https://www.cielo.com.br",
-                                                            installments: 1,
-                                                            softDescriptor:
-                                                                "CompreAqui",
-                                                            creditCard:
-                                                                CreditCard(
-                                                              cardNumber:
-                                                                  _cardNumberControllerTrim
-                                                                      .text,
-                                                              holder: nomeCartao
-                                                                  .toString()
-                                                                  .toUpperCase(),
-                                                              expirationDate:
-                                                                  validadeCartao,
-                                                              securityCode:
-                                                                  codSeguranca,
-                                                              brand: numeroCartao.startsWith("51") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "55") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "2221") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "2229") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "223") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "229") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "23") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "26") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "270") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "271") ||
-                                                                      numeroCartao.startsWith(
-                                                                          "2720")
-                                                                  ? "Master"
-                                                                  : numeroCartao.startsWith("4")
-                                                                      ? "Visa"
-                                                                      : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Master",
-                                                            )));
-
-                                                    try {
-                                                      var response = await cielo
-                                                          .createSale(sale);
-                                                      print(response
-                                                          .payment.status);
-                                                      print(bandeira);
-                                                      if (response
-                                                              .payment.status ==
-                                                          1) {
-                                                        model.finalizarCompra(
-                                                            nomeEmpresa,
-                                                            endereco,
-                                                            cidadeEstado,
-                                                            freteTipo);
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                                MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        OrdemPedidoConfirmado(
-                                                                            "1")));
-                                                      } else {
-                                                        _pagamentoReprovado(
-                                                            context);
-                                                      }
-                                                    } on CieloException catch (e) {
-                                                      _pagamentoReprovado(
-                                                          context);
-                                                      print(e.message);
-                                                      print(
-                                                          e.errors[0].message);
-                                                      print(e.errors[0].code);
-                                                    }
-                                                  }
+                                                  String numeroCartao;
+                                                  _cardNumberControllerTrim
+                                                      .text = numeroCartao;
+                                                  bandeira = numeroCartao
+                                                              .startsWith(
+                                                                  "51") ||
+                                                          numeroCartao.startsWith(
+                                                              "55") ||
+                                                          numeroCartao.startsWith(
+                                                              "2221") ||
+                                                          numeroCartao.startsWith(
+                                                              "2229") ||
+                                                          numeroCartao.startsWith(
+                                                              "223") ||
+                                                          numeroCartao.startsWith(
+                                                              "229") ||
+                                                          numeroCartao.startsWith(
+                                                              "23") ||
+                                                          numeroCartao.startsWith(
+                                                              "26") ||
+                                                          numeroCartao.startsWith(
+                                                              "270") ||
+                                                          numeroCartao
+                                                              .startsWith("271") ||
+                                                          numeroCartao.startsWith("2720")
+                                                      ? "Master"
+                                                      : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
 
 //      numeroCartao, bandeiraCartao, validadeCartao, nomeCartao , codSeguranca
-                                                  _finalizarPagamento(
-                                                      _cardNumberController
-                                                          .text,
-                                                      _expiryDateController
-                                                          .text,
-                                                      _cardHolderNameController
-                                                          .text,
-                                                      _cvvCodeController.text);
+                                                  // _finalizarPagamento(
+                                                  //     _cardNumberController
+                                                  //         .text,
+                                                  //     _expiryDateController
+                                                  //         .text,
+                                                  //     _cardHolderNameController
+                                                  //         .text,
+                                                  //     _cvvCodeController.text);
                                                 }
                                               }
                                             }

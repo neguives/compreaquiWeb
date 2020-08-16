@@ -1,158 +1,170 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-
+import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands} from 'cielo';
 admin.initializeApp(functions.config().firebase);
 
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
+const merchantId = functions.config().cielo.merchantId;
+const merchantKey = functions.config().cielo.merchantKey;
 
+const cieloParams: CieloConstructor = {
+    merchantId: merchantId,
+    merchantKey: merchantKey,
+    sandbox: true,
+    debug: true,
+}
+const cielo = new Cielo(cieloParams);
 
-export const getUserData = functions.https.onCall( async (data, context) => {
-    if(!context.auth){
+export const authorizeCreditCard = functions.https.onCall(async (data, context) => {
+    if(data === null){
         return {
-            "data": "Nenhum usuário logado"
-        };
-    }
-   
-    console.log(context.auth.uid);
-
-    const snapshot = await admin.firestore().collection("users").doc(context.auth.uid).get();
-
-    console.log(snapshot.data());
-
-    return {
-        "data": snapshot.data()
-    };
-});
-
-export const addMessage = functions.https.onCall( async (data, context) => {
-    console.log(data);
-
-    const snapshot = await admin.firestore().collection("messages").add(data);
-
-    return {"success": snapshot.id};
-});
-
-
-export const onNewUserAdm = functions.firestore.document("/ConsumidorFinal/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const nome = snapshot.get('nome');
-    
-    await sendPushFCM(
-        
-        "TtpINYnuWrhf0uacumAzLUtcAcC3",
-        'Novo Usuário Cadastrado',
-        'Nome: '+ nome
-    );
-});
-export const onNewUserAdm2 = functions.firestore.document("/ConsumidorFinal/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const nome = snapshot.get('nome');
-    
-    await sendPushFCM(
-        
-        "nSB0ERDJwQciO6lEZAUA4H9fA2f2",
-        'Novo Usuário Cadastrado',
-        'Nome: '+ nome
-    );
-});
-export const onNewUserAdm3 = functions.firestore.document("/ConsumidorFinal/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const nome = snapshot.get('nome');
-    
-    await sendPushFCM(
-        
-        "Njs1sVyfEUQbka0OGETfIJzRI8Q2",
-        'Novo Usuário Cadastrado',
-        'Nome: '+ nome
-    );
-});export const onNewUserAdm4 = functions.firestore.document("/ConsumidorFinal/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const nome = snapshot.get('nome');
-    
-    await sendPushFCM(
-        
-        "W6Akeyf1oLdJGCyVC5Tx6ZQhKzG3",
-        'Novo Usuário Cadastrado',
-        'Nome: '+ nome
-    );
-});
-export const onNewPedidoEntregador = functions.firestore.document("/Entregadores/PedidosRecebidos/TempoReal/{empresa}").onCreate(async (snapshot, context) => {
-    
-    const empresa = snapshot.get('empresa');
-    
-    await sendPushFCM(
-        
-        "Entregador",
-        'Nova solicitação de coleta e entrega.',
-        'Empresa: '+ empresa
-    );
-});
-export const novoPedido = functions.firestore.document("/catalaoGoias/Supermecado Newton/ordensSolicitadas/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const valor = snapshot.get('precoTotal');
-    const tipoFrete = snapshot.get('tipoFrete');
-    const enderecoCliente = snapshot.get('enderecoCliente');
-    
-    await sendPushFCM(
-        
-        "supermecadonewton",
-        'Você recebeu um novo pedido',
-        'Valor total: R$: '+ valor+"\nTipo de Frete: " + tipoFrete + "\nEndereço do Cliente: "+  enderecoCliente
-    );
-});
-export const novoPedidoAdm = functions.firestore.document("/catalaoGoias/Supermecado Newton/ordensSolicitadas/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const valor = snapshot.get('precoTotal');
-    const tipoFrete = snapshot.get('tipoFrete');
-    const enderecoCliente = snapshot.get('enderecoCliente');
-    
-    await sendPushFCM(
-        
-        "TtpINYnuWrhf0uacumAzLUtcAcC3",
-        'O Supermecado Newton recebeu um novo pedido',
-        'Valor total: R$: '+ valor+"\nTipo de Frete: " + tipoFrete + "\nEndereço do Cliente: "+  enderecoCliente
-    );
-});
-export const novoPedidoAdm1 = functions.firestore.document("/catalaoGoias/Supermecado Newton/ordensSolicitadas/{consumidor}").onCreate(async (snapshot, context) => {
-    
-    const valor = snapshot.get('precoTotal');
-    const tipoFrete = snapshot.get('tipoFrete');
-    const enderecoCliente = snapshot.get('enderecoCliente');
-    
-    await sendPushFCM(
-        
-        "W6Akeyf1oLdJGCyVC5Tx6ZQhKzG3",
-        'O Supermecado Newton recebeu um novo pedido',
-        'Valor total: R$: '+ valor+"\nTipo de Frete: " + tipoFrete + "\nEndereço do Cliente: "+  enderecoCliente
-    );
-});
-export const novoPedidoAtualizado = functions.firestore.document("/catalaoGoias/Supermecado Newton/ordensSolicitadas/{numeroPedido}").onCreate(async (snapshot, context) => {
-    
-    const status = snapshot.get('status');
-    
-    if(status == 5){
-        await sendPushFCM(
-        
-            "supermecadonewton",
-            'Atualização do pedido',
-            "O pedido foi entregue",
-        );
-    }
-   
-});
-async function sendPushFCM(topic: string, title: string, message: string){
-    if(1> 0){
-        const payload = {
-            notification: {
-                title: title,
-                body: message,
-                click_action: 'FLUTTER_NOTIFICATION_CLICK'
+            "success": false,
+            "error": {
+                "code": -1,
+                "message": "Dados não informados"
             }
         };
-        return admin.messaging().sendToTopic(topic, payload);
     }
-    return;
-}
+
+    if(!context.auth){
+        return {
+            "success": false,
+            "error": {
+                "code": -1,
+                "message": "Nenhum usuário logado"
+            }
+        };
+    }
+
+    const userId = context.auth.uid;
+
+    const snapshot = await admin.firestore().collection("ConsumidorFinal").doc(userId).get();
+    const userData = snapshot.data() || {};
+
+    console.log("Iniciando Autorização");
+
+    let brand: EnumBrands;
+    switch(data.creditCard.brand){
+        case "VISA":
+            brand = EnumBrands.VISA;
+            break;
+        case "MASTERCARD":
+            brand = EnumBrands.MASTER;
+            break;
+        case "AMEX":
+            brand = EnumBrands.AMEX;
+            break;
+        case "ELO":
+            brand = EnumBrands.ELO;
+            break;
+        case "JCB":
+            brand = EnumBrands.JCB;
+            break;
+        case "DINERSCLUB":
+            brand = EnumBrands.DINERS;
+            break;
+        case "DISCOVER":
+            brand = EnumBrands.DISCOVERY;
+            break;
+        case "HIPERCARD":
+            brand = EnumBrands.HIPERCARD;
+            break;
+        default:
+            return {
+                "success": false,
+                "error": {
+                    "code": -1,
+                    "message": "Cartão não suportado: " + data.creditCard.brand
+                }
+            };
+    }
+
+    const saleData: TransactionCreditCardRequestModel = {
+        merchantOrderId: data.merchantOrderId,
+        customer: {
+            name: userData.nome,
+            identity: data.cpf,
+            identityType: userData.telefone,
+            email: userData.email,
+            deliveryAddress: {
+                street: userData.endereco,
+                complement: userData.address.complement,
+                country: 'BRA',
+            }
+        },
+        payment: {
+            currency: 'BRL',
+            country: 'BRA',
+            amount: data.amount,
+            installments: data.installments,
+            softDescriptor: data.softDescriptor.substring(0, 13),
+            type: data.paymentType,
+            capture: false,
+            creditCard: {
+                cardNumber: data.creditCard.cardNumber,
+                holder: data.creditCard.holder,
+                expirationDate: data.creditCard.expirationDate,
+                securityCode: data.creditCard.securityCode,
+                brand: brand
+            }
+        }
+    }
+
+    try {
+        const transaction = await cielo.creditCard.transaction(saleData);
+
+        if(transaction.payment.status === 1){
+            return {
+                "success": true,
+                "paymentId": transaction.payment.paymentId
+            }
+        } else {
+            let message = '';
+            switch(transaction.payment.returnCode) {
+                case '5':
+                    message = 'Não Autorizada';
+                    break;
+                case '57':
+                    message = 'Cartão expirado';
+                    break;
+                case '78':
+                    message = 'Cartão bloqueado';
+                    break;
+                case '99':
+                    message = 'Timeout';
+                    break;
+                case '77':
+                    message = 'Cartão cancelado';
+                    break;
+                case '70':
+                    message = 'Problemas com o Cartão de Crédito';
+                    break;
+                default:
+                    message = transaction.payment.returnMessage;
+                    break;
+            }
+            return {
+                "success": false,
+                "status": transaction.payment.status,
+                "error": {
+                    "code": transaction.payment.returnCode,
+                    "message": message
+                }
+            }
+        }
+    } catch (error){
+        console.log("Error ", error);
+        return {
+            "success": false,
+            "error": {
+                "code": error.respose[0].Code,
+                "message": error.response[0].Message
+            }
+        };
+    }
+
+});
+
