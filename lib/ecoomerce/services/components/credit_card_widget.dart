@@ -52,7 +52,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
             onPressed: () {
               cardKey.currentState.toggleCard();
             },
-            textColor: Colors.white,
+            textColor: Colors.black,
             padding: EdgeInsets.zero,
             child: const Text('Virar cartão'),
           )

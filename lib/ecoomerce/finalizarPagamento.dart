@@ -3,6 +3,7 @@ import 'package:compreaidelivery/datas/user_final_data.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
+import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -84,63 +85,11 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
 
   FocusNode cvvFocusNode = FocusNode();
 
-  void textFieldFocusDidChange() {
-    creditCardModel.isCvvFocused = cvvFocusNode.hasFocus;
-    onCreditCardModelChange(creditCardModel);
-  }
-
-  void createCreditCardModel() {
-    cardNumber = widget.cardNumber ?? '';
-    expiryDate = widget.expiryDate ?? '';
-    cardHolderName = widget.cardHolderName ?? '';
-    cvvCode = widget.cvvCode ?? '';
-
-    creditCardModel = CreditCardModel(
-        cardNumber, expiryDate, cardHolderName, cvvCode, isCvvFocused);
-  }
-
+  final CreditCard creditCard = CreditCard();
 //Realizar Pagamento
   @override
   void initState() {
     super.initState();
-
-    createCreditCardModel();
-
-    onCreditCardModelChange = widget.onCreditCardModelChange;
-
-    cvvFocusNode.addListener(textFieldFocusDidChange);
-
-    _cardNumberController.addListener(() {
-      setState(() {
-        cardNumber = _cardNumberController.text;
-        creditCardModel.cardNumber = cardNumber;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _expiryDateController.addListener(() {
-      setState(() {
-        expiryDate = _expiryDateController.text;
-        creditCardModel.expiryDate = expiryDate;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _cardHolderNameController.addListener(() {
-      setState(() {
-        cardHolderName = _cardHolderNameController.text;
-        creditCardModel.cardHolderName = cardHolderName;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
-
-    _cvvCodeController.addListener(() {
-      setState(() {
-        cvvCode = _cvvCodeController.text;
-        creditCardModel.cvvCode = cvvCode;
-        onCreditCardModelChange(creditCardModel);
-      });
-    });
   }
 
   @override
@@ -180,133 +129,23 @@ class _FinalizarPagamentoState extends State<FinalizarPagamento> {
           double desconto = model.getDesconto();
           double frete = model.getFreteKarona();
 //              model.loadCartItens();
-
           return SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
+                    CreditCardWidget(
+                      cardHolderName: "LUCAS SANTOS REINALDO",
+                      cardNumber: "5553 3333 3333 3333",
+                      cvvCode: "144",
+                      expiryDate: "12/2024",
+                      showBackView: false,
+                    ),
                     Padding(
                         padding: EdgeInsets.all(8),
                         child: Column(
                           children: <Widget>[
-                            CreditCardWidget(
-                              cardNumber: cardNumber,
-                              expiryDate: expiryDate,
-                              cardHolderName: cardHolderName,
-                              cvvCode: cvvCode,
-                              showBackView: isCvvFocused,
-                              cardbgColor: Colors.green.shade300,
-                              height: 175,
-                              textStyle: TextStyle(color: Colors.black87),
-                              width: MediaQuery.of(context).size.width,
-                              animationDuration: Duration(milliseconds: 2000),
-                            ),
-                            Form(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 2.0),
-                                    margin: const EdgeInsets.only(
-                                        left: 16, top: 1, right: 16),
-                                    child: TextFormField(
-                                      onChanged: (String text) {
-                                        setState(() {});
-                                        isCvvFocused = false;
-                                      },
-                                      controller: _cardNumberController,
-                                      cursorColor:
-                                          widget.cursorColor ?? themeColor,
-                                      style: TextStyle(
-                                        color: widget.textColor,
-                                      ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Número do Cartão',
-                                        hintText: 'xxxx xxxx xxxx xxxx',
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.next,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    margin: const EdgeInsets.only(
-                                        left: 16, top: 1, right: 16),
-                                    child: TextFormField(
-                                      onChanged: (String text) {
-                                        setState(() {});
-                                        isCvvFocused = false;
-                                      },
-                                      controller: _expiryDateController,
-                                      cursorColor:
-                                          widget.cursorColor ?? themeColor,
-                                      style: TextStyle(
-                                        color: widget.textColor,
-                                      ),
-                                      decoration: InputDecoration(
-                                          labelText: 'Data de Validade',
-                                          hintText: 'MM/AAAA'),
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.next,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    margin: const EdgeInsets.only(
-                                        left: 16, top: 1, right: 16),
-                                    child: TextField(
-                                      focusNode: cvvFocusNode,
-                                      controller: _cvvCodeController,
-                                      cursorColor:
-                                          widget.cursorColor ?? themeColor,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                      decoration: InputDecoration(
-                                        labelText: 'Código de Segurança',
-                                        hintText: 'XXXX',
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.done,
-                                      onChanged: (String text) {
-                                        setState(() {
-                                          cvvCode = text;
-                                          isCvvFocused = true;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    margin: const EdgeInsets.only(
-                                        left: 16, top: 1, right: 16),
-                                    child: TextFormField(
-                                      onChanged: (String text) {
-                                        setState(() {});
-                                        isCvvFocused = false;
-                                      },
-                                      controller: _cardHolderNameController,
-                                      cursorColor:
-                                          widget.cursorColor ?? themeColor,
-                                      style: TextStyle(
-                                        color: widget.textColor,
-                                      ),
-                                      decoration: InputDecoration(
-                                        labelText: 'Nome do Titular',
-                                      ),
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.next,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                             RaisedButton(
                               child: Text("Comprar Sem Cartao"),
                               onPressed: () {

@@ -7,8 +7,8 @@ admin.initializeApp(functions.config().firebase);
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
-const merchantId = functions.config().cielo.merchantId;
-const merchantKey = functions.config().cielo.merchantKey;
+const merchantId = functions.config().cielo.merchantid;
+const merchantKey = functions.config().cielo.merchantkey;
 
 const cieloParams: CieloConstructor = {
     merchantId: merchantId,
@@ -86,7 +86,6 @@ export const authorizeCreditCard = functions.https.onCall(async (data, context) 
         merchantOrderId: data.merchantOrderId,
         customer: {
             name: userData.nome,
-            identity: data.cpf,
             identityType: userData.telefone,
             email: userData.email,
             deliveryAddress: {

@@ -1,3 +1,5 @@
+import 'package:compreaidelivery/ecoomerce/checkout_screen.dart';
+import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,6 +40,16 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                   primarySwatch: Colors.blue,
                   primaryColor: Color.fromARGB(255, 20, 125, 141)),
+              onGenerateRoute: (settings) {
+                switch (settings.name) {
+                  case '/finalizarPagamento':
+                    return MaterialPageRoute(builder: (_) => CheckoutScreen());
+
+                  default:
+                    return MaterialPageRoute(
+                        builder: (_) => Login(), settings: settings);
+                }
+              },
             ),
           );
         },

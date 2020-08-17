@@ -107,28 +107,17 @@ class CartScreen extends StatelessWidget {
               ),
             );
           } else {
-            return ListView(
-              children: <Widget>[
-                Column(
-                  children: model.products.map((products) {
-                    return CartTile(
-                        products,
-                        nomeEmpresa,
-                        product,
-                        cidadeEstado,
-                        imagemEmpresa,
-                        longitude,
-                        longitude,
-                        telefone,
-                        endereco);
-                  }).toList(),
-                ),
-                CardDesconto(nomeEmpresa),
-                CardResumo(() async {}, nomeEmpresa, cidadeEstado, endereco,
-                    latitude, longitude),
-                CreditCardWidget(creditCard)
-              ],
-            );
+            return ListView(children: <Widget>[
+              Column(
+                children: model.products.map((products) {
+                  return CartTile(products, nomeEmpresa, product, cidadeEstado,
+                      imagemEmpresa, longitude, longitude, telefone, endereco);
+                }).toList(),
+              ),
+              CardDesconto(nomeEmpresa),
+              CardResumo(() async {}, nomeEmpresa, cidadeEstado, endereco,
+                  latitude, longitude),
+            ]);
           }
         },
       ),

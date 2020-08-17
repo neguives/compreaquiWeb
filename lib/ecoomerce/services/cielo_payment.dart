@@ -2,23 +2,17 @@ import 'dart:collection';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:compreaidelivery/datas/user_final_data.dart';
+import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:flutter/cupertino.dart';
 
 class CieloPayment {
   final CloudFunctions functions = CloudFunctions.instance;
 
   Future<String> authorize(
-      {num price, String orderId, UserFinalData user}) async {
-    Map<String, dynamic> toJson() {
-      return {
-        'cardNumber': "11111111111111",
-        'holder': "LUCAS SANTOS REINALDO",
-        'expirationDate': "22/2024",
-        'securityCode': "333",
-        'brand': "VISA",
-      };
-    }
-
+      {CreditCard creditCard,
+      num price,
+      String orderId,
+      UserFinalData user}) async {
     try {
       final Map<String, dynamic> dataSale = {
         'merchantOrderId': orderId,
@@ -26,7 +20,7 @@ class CieloPayment {
         //'amount': 10 * 100,
         'softDescriptor': 'App CompreAqui',
         'installments': 1,
-        'creditCard': toJson(),
+        'creditCard': creditCard.toJson(),
         'cpf': user.email,
         'paymentType': 'CreditCard',
       };

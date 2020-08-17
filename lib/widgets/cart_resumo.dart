@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/ecoomerce/checkout_screen.dart';
 import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
@@ -239,18 +240,9 @@ class _CardResumoState extends State<CardResumo> {
                                         preco < 50) {
                                       _pedidoInferior(context);
                                     } else {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FinalizarPagamento(
-                                                    freteTipo,
-                                                    buy,
-                                                    nomeEmpresa,
-                                                    cidadeEstado,
-                                                    endereco,
-                                                    latitude,
-                                                    longitude,
-                                                  )));
+                                      Navigator.of(context).pushNamed(
+                                        '/finalizarPagamento',
+                                      );
                                     }
                                     {}
                                   }

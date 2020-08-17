@@ -201,12 +201,10 @@ class _CartTileState extends State<CartTile> {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    print(cartProduct.cid);
                     cartProduct.productData =
                         ProductData.fromDocument(snapshot.data);
                     return _buildContent();
                   } else {
-                    print(cartProduct.pid);
                     return Container(
                       height: 70,
                       child: CircularProgressIndicator(),
