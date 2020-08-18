@@ -251,7 +251,46 @@ class _CardResumoState extends State<CardResumo> {
                                   },
 
                             child: Text(
-                              'Prosseguir com o pagamento',
+                              'Pagamento com Cartão',
+                            ),
+
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(18.0),
+                                side: BorderSide(
+                                    color: Colors
+                                        .white30)), // callback when button is clicked
+                            borderSide: BorderSide(
+                              color: Colors.blueGrey, //Color of the border
+                              style: BorderStyle.solid, //Style of the border
+                              width: 0.8, //width of the border
+                            ),
+                          ),
+                          OutlineButton(
+                            hoverColor: Colors.white,
+                            highlightColor: Colors.white70,
+                            highlightElevation: 10,
+
+                            onPressed: freteTipo.length > 5
+                                ? () {
+                                    if ((freteTipo ==
+                                                "Entrega do estabelecimento" ||
+                                            freteTipo ==
+                                                "Retirar no estabelecimento") &&
+                                        preco < 50) {
+                                      _pedidoInferior(context);
+                                    } else {
+                                      Navigator.of(context).pushNamed(
+                                        '/finalizarPagamento',
+                                      );
+                                    }
+                                    {}
+                                  }
+                                : () {
+                                    _dialogSelecioneEntrega(context);
+                                  },
+
+                            child: Text(
+                              'Pagar Pessoalmente',
                             ),
 
                             shape: RoundedRectangleBorder(

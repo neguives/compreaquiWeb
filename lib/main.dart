@@ -1,5 +1,6 @@
 import 'package:compreaidelivery/ecoomerce/checkout_screen.dart';
 import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
+import 'package:compreaidelivery/ecoomerce/finalizarPagamentoPresencial.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

@@ -94,16 +94,16 @@ class _CartTileState extends State<CartTile> {
                                 Future<Null> _atualizarQuantidade() async {
                                   DocumentReference documentReference =
                                       Firestore.instance
-                                          .collection(cidadeEstado)
+                                          .collection("catalaoGoias")
                                           .document(nomeEmpresa)
-                                          .collection("Produtos e Servicos")
+                                          .collection("produtos")
                                           .document(productData.category)
                                           .collection("itens")
                                           .document(productData.id);
 
                                   documentReference.updateData({
                                     "quantidade":
-                                        cartProduct.productData.quantidade--
+                                        cartProduct.productData.quantidade++
                                   });
                                 }
 
@@ -122,9 +122,9 @@ class _CartTileState extends State<CartTile> {
                                 Future<Null> _atualizarQuantidade() async {
                                   DocumentReference documentReference =
                                       Firestore.instance
-                                          .collection(cidadeEstado)
+                                          .collection("catalaoGoias")
                                           .document(nomeEmpresa)
-                                          .collection("Produtos e Servicos")
+                                          .collection("produtos")
                                           .document(productData.category)
                                           .collection("itens")
                                           .document(productData.id);
@@ -146,9 +146,9 @@ class _CartTileState extends State<CartTile> {
                           Future<Null> _atualizarQuantidade() {
                             DocumentReference documentReference = Firestore
                                 .instance
-                                .collection(cidadeEstado)
+                                .collection("catalaoGoias")
                                 .document(nomeEmpresa)
-                                .collection("Produtos e Servicos")
+                                .collection("produtos")
                                 .document(productData.category)
                                 .collection("itens")
                                 .document(productData.id);
@@ -192,9 +192,9 @@ class _CartTileState extends State<CartTile> {
         child: cartProduct.productData == null
             ? FutureBuilder<DocumentSnapshot>(
                 future: Firestore.instance
-                    .collection("EmpresasParceiras")
+                    .collection("catalaoGoias")
                     .document(nomeEmpresa)
-                    .collection("Produtos e Servicos")
+                    .collection("produtos")
                     .document(cartProduct.categoria)
                     .collection("itens")
                     .document(cartProduct.pid)

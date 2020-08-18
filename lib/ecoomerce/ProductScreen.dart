@@ -196,23 +196,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             onPressed: preferencia != null &&
                                     product.quantidade > 0
                                 ? () async {
-                                    DocumentReference documentReference =
-                                        Firestore.instance
-                                            .collection(cidadeEstado)
-                                            .document(nomeEmpresa)
-                                            .collection("Produtos e Servicos")
-                                            .document(product.category)
-                                            .collection("itens")
-                                            .document(product.id);
-
-                                    Firestore.instance
-                                        .runTransaction((transaction) async {
-                                      await transaction.update(
-                                          documentReference, {
-                                        "quantidade": product.quantidade - 1
-                                      });
-                                    });
-
                                     if (UserModel.of(context).isLoggedIn()) {
                                       CartProduct cartProduct = CartProduct();
                                       cartProduct.variacao = preferencia;
@@ -222,6 +205,25 @@ class _ProductScreenState extends State<ProductScreen> {
                                       cartProduct.productData = product;
                                       CartModel.of(context).addCartItem(
                                           cartProduct, nomeEmpresa);
+
+                                      DocumentReference documentReference =
+                                          Firestore.instance
+                                              .collection("catalaoGoias")
+                                              .document(nomeEmpresa)
+                                              .collection("produtos")
+                                              .document(product.category)
+                                              .collection("itens")
+                                              .document(
+                                                  cartProduct.productData.id);
+
+                                      Firestore.instance
+                                          .runTransaction((transaction) async {
+                                        await transaction.update(
+                                            documentReference, {
+                                          "quantidade": cartProduct
+                                              .productData.quantidade--
+                                        });
+                                      });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) => CartScreen(
