@@ -59,7 +59,9 @@ class _CardResumoState extends State<CardResumo> {
   final TextEditingController _endCoordinatesTextController =
       TextEditingController();
   final enderecoController = TextEditingController();
+  final textDialogController = TextEditingController();
   final obsController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 //Api de Pagamento
 
@@ -68,6 +70,8 @@ class _CardResumoState extends State<CardResumo> {
   @override
   Widget build(BuildContext context) {
     enderecoController.text = endereco;
+    textDialogController.text =
+        "Modalidade de pagamento não disponível para entrega expressa.";
     bool entregaGratuita = false;
 
     obsController.text =
@@ -82,6 +86,7 @@ class _CardResumoState extends State<CardResumo> {
         double desconto = model.getDesconto();
         double frete = model.getFrete();
         return Column(
+          key: _scaffoldKey,
           children: [
             Card(
               margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -272,16 +277,16 @@ class _CardResumoState extends State<CardResumo> {
 
                             onPressed: freteTipo.length > 5
                                 ? () {
+                                    if (freteTipo ==
+                                        "Entrega Expressa (Karona)") {
+                                      _dialogPagamentoPresencial(context);
+                                    }
                                     if ((freteTipo ==
                                                 "Entrega do estabelecimento" ||
                                             freteTipo ==
                                                 "Retirar no estabelecimento") &&
                                         preco < 50) {
                                       _pedidoInferior(context);
-                                    } else {
-                                      Navigator.of(context).pushNamed(
-                                        '/finalizarPagamento',
-                                      );
                                     }
                                     {}
                                   }
@@ -389,6 +394,68 @@ class _CardResumoState extends State<CardResumo> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("Frete não escolhido"),
+                  ],
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _dialogPagamentoPresencial(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Center(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.red,
+                      size: 100,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextField(
+                      maxLines: 4,
+                      controller: enderecoController,
+                      enabled: false,
+                      style: TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: 16.0,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintStyle: TextStyle(
+                            fontFamily: "QuickSand",
+                            fontSize: 17.0,
+                            color: Colors.black87),
+                      ),
+                    ),
                   ],
                 )
               ],
