@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class CardEntrega extends StatelessWidget {
   String nomeEmpresa;
 
@@ -26,25 +26,19 @@ class CardEntrega extends StatelessWidget {
               children: [
                 MaterialButton(
                   child: Text("Entrega Expressa  --------   R\$ 6,90"),
-                  onPressed: (){
-                    CartModel.of(context)
-                        .setCupon("text", 50);
+                  onPressed: () {
+                    CartModel.of(context).setCupon("text", 50);
                   },
-
                 ),
                 MaterialButton(
                   child: Text("Entrega Expressa  --------   R\$ 6,90"),
-                  onPressed: (){
-                    CartModel.of(context)
-                        .setCupon("text", 50);
+                  onPressed: () {
+                    CartModel.of(context).setCupon("text", 50);
                   },
-
                 )
               ],
-            )
-            ,
+            ),
           ),
-
         ],
       ),
     );

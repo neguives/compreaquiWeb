@@ -5,12 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
+// ignore: must_be_immutable
 class EmpresasTab extends StatelessWidget {
   String cidade, endereco, categoria;
   double latitude, longitude;
   String cidadeCollection;
-
-  TextEditingController _senhaController = TextEditingController();
 
   EmpresasTab(
       {Key key,
@@ -25,12 +24,6 @@ class EmpresasTab extends StatelessWidget {
   Widget build(BuildContext context) {
     print(cidade);
     verificarCidadeCatalao();
-    CollectionReference col =
-        Firestore.instance.collection("EmpresasParceiras");
-
-    Query cidadeQuery = col.where('cidade', arrayContains: cidade);
-    Query categoriaQuery =
-        cidadeQuery.where('categoria', arrayContains: categoria);
 
     return Scaffold(
 //      floatingActionButton: FloatingActionButton(

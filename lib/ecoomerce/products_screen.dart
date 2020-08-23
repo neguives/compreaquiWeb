@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/Bottom/bottom_principal.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
-import 'package:compreaidelivery/ecoomerce/produtosTwo.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/tiles/product_tile.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+// ignore: must_be_immutable
+
+// ignore: camel_case_types
+// ignore: must_be_immutable
 class Products_Screen extends StatefulWidget {
   final DocumentSnapshot snapshot;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
@@ -34,6 +36,7 @@ class Products_Screen extends StatefulWidget {
       this.telefone);
 }
 
+// ignore: camel_case_types
 class _Products_ScreenState extends State<Products_Screen> {
   final DocumentSnapshot snapshot;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
@@ -56,6 +59,7 @@ class _Products_ScreenState extends State<Products_Screen> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
 
     super.initState();
@@ -98,6 +102,7 @@ class _Products_ScreenState extends State<Products_Screen> {
                           .collection(cidadeEstado)
                           .document(nomeEmpresa)
                           .collection("produtos")
+                          .where("cat")
                           .document(snapshot.data["title"])
                           .collection("itens")
                           .orderBy("title")
@@ -156,6 +161,7 @@ class _Products_ScreenState extends State<Products_Screen> {
                                     pequisarController.text.toUpperCase();
                                 model.setProdutoPesquisado(
                                     pequisarController.text);
+                                // ignore: invalid_use_of_protected_member
                                 model.notifyListeners();
                                 initState();
                               },

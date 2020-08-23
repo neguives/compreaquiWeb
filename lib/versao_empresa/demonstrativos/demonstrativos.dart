@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/versao_empresa/categorias/tiles/categoria_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+// ignore: must_be_immutable
 class Demonstrativos extends StatefulWidget {
   String nomeEmpresa, cidadeEstado;
 
@@ -22,6 +22,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     getTotalProdutos();
     super.initState();

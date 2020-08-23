@@ -4,6 +4,7 @@ import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+// ignore: must_be_immutable
 class CartButton extends StatelessWidget {
   ProductData product;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;

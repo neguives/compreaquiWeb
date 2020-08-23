@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 
 import 'categoriesTwo.dart';
 
+// ignore: must_be_immutable
 class ProductTab extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   ProductTab(
-    @required this.nomeEmpresa,
-    @required this.imagemEmpresa,
-    @required this.cidadeEstado,
-    @required this.endereco,
-    @required this.latitude,
-    @required this.longitude,
-    @required this.telefone,
+    this.nomeEmpresa,
+    this.imagemEmpresa,
+    this.cidadeEstado,
+    this.endereco,
+    this.latitude,
+    this.longitude,
+    this.telefone,
   );
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ProductTab extends StatelessWidget {
       future: Firestore.instance
           .collection(cidadeEstado)
           .document(nomeEmpresa)
-          .collection("produtos")
+          .collection("categorias")
           .orderBy("pos")
           .getDocuments(),
       builder: (context, snapshot) {

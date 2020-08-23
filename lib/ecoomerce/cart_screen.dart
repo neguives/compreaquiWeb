@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
-import 'package:compreaidelivery/ecoomerce/services/components/credit_card_widget.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/CartTile.dart';
 import 'package:compreaidelivery/widgets/card_desconto.dart';
-import 'package:compreaidelivery/widgets/card_entrega.dart';
 import 'package:compreaidelivery/widgets/cart_resumo.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+// ignore: must_be_immutable
 class CartScreen extends StatelessWidget {
   final CreditCard creditCard = CreditCard();
   ProductData product;

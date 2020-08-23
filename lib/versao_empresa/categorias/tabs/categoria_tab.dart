@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/categorias/tiles/categoria_tile.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CategoriaTab extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;

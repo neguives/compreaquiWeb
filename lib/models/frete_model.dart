@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/models/user_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class FreteModel extends Model {

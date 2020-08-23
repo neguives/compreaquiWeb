@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/user_model.dart';
-import 'package:compreaidelivery/tiles/userTile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class PerfilUsuario extends StatefulWidget {
   String uid;
 
@@ -19,7 +19,6 @@ class PerfilUsuario extends StatefulWidget {
 
 class _PerfilUsuarioState extends State<PerfilUsuario> {
   File _image;
-  String _uploadedFileURL;
   String uid;
   _PerfilUsuarioState(this.uid);
   final controllerNome = TextEditingController();
@@ -29,6 +28,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   @override
   Widget build(BuildContext context) {
     Future getImage() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -39,7 +39,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
@@ -292,9 +291,10 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   }
 
   Future chooseFile() async {
+    // ignore: deprecated_member_use
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
-        _image = image as File;
+        _image = image;
       });
     });
   }

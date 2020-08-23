@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -253,9 +251,7 @@ class _CardCartaoCreditoState extends State<CardCartaoCredito> {
                     highlightColor: Colors.white70,
                     highlightElevation: 10,
 
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     child: Text(
                       'Pagar',
                     ),

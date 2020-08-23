@@ -1,10 +1,8 @@
-import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/versao_entregador/tiles/order_tile.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/order_tile_transporte.dart';
 import 'package:flutter/material.dart';
 
-
+// ignore: must_be_immutable
 class PedidosRecebidosTransporte extends StatefulWidget {
   String uid;
 
@@ -39,7 +37,7 @@ class _PedidosRecebidosTransporteState
               child: CircularProgressIndicator(),
             );
           else {
-                        return Scaffold(
+            return Scaffold(
                 body: Stack(
               children: <Widget>[
                 Container(

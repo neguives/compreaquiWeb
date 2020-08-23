@@ -1,17 +1,12 @@
 import 'package:compreaidelivery/tab/products_tabTwo.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SelecaoCategoria extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  SelecaoCategoria(
-      @required this.nomeEmpresa,
-      @required this.imagemEmpresa,
-      this.cidadeEstado,
-      this.endereco,
-      this.latitude,
-      this.longitude,
-      this.telefone);
+  SelecaoCategoria(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
+      this.endereco, this.latitude, this.longitude, this.telefone);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

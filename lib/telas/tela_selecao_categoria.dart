@@ -272,7 +272,9 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                   alignment: Alignment.center,
                                   child: ListTile(
                                     title: Text(
-                                      cidadeEstado,
+                                      cidadeEstado == "catalaoGoias"
+                                          ? "Catalão - Goiás"
+                                          : cidadeEstado,
                                       style: TextStyle(fontFamily: "QuickSand"),
                                       textAlign: TextAlign.center,
                                     ),
@@ -327,7 +329,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EmpresasTab(
-                        cidade: "catalaoGoias",
+                        cidade: cidadeEstado,
                         endereco: endereco,
                         latitude: latitude,
                         longitude: longitude,
@@ -378,7 +380,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EmpresasTab(
-                        cidade: "catalaoGoias",
+                        cidade: cidadeEstado,
                         endereco: endereco,
                         latitude: latitude,
                         longitude: longitude,
@@ -398,6 +400,8 @@ class TelaSelecaoCategoria extends StatelessWidget {
         cidadeEstado == "Catalão-Goías" ||
         cidadeEstado == "Catalão-Goiás" ||
         cidadeEstado == "Catalão-Goiás" ||
+        cidadeEstado == "Catalao - Goiás" ||
+        cidadeEstado == "Catalao -Goiás" ||
         cidadeEstado == "Catalão - Go" ||
         cidadeEstado == "Catalão-Go" ||
         cidadeEstado == "Catalao - Goias" ||
@@ -406,7 +410,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
         cidadeEstado == "Alagoinhas-Bahia" ||
         cidadeEstado == "Catalao-Goias") {
       //Corrigir essa linha
-      cidadeEstado = "Catalão-Goias";
+      cidadeEstado = "catalaoGoias";
     }
   }
 }

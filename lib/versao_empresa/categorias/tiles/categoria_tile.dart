@@ -4,14 +4,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/ecoomerce/products_screen.dart';
-import 'package:compreaidelivery/versao_empresa/categorias/produtos/produto_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class CategoriaTile extends StatefulWidget {
-  final _nomeCategoria = TextEditingController();
+  // ignore: unused_field
   final _posCategoria = TextEditingController();
 
   final DocumentSnapshot snapshot;
@@ -56,6 +55,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
     _nomeCategoria.text = snapshot.data["title"];
     _posCategoria.text = snapshot.data["pos"];
     Future getImage() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -66,7 +66,6 @@ class _CategoriaTileState extends State<CategoriaTile> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
@@ -81,6 +80,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
     }
 
     Future getImageProduto1() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -91,7 +91,6 @@ class _CategoriaTileState extends State<CategoriaTile> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
@@ -107,6 +106,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
     }
 
     Future getImageProduto2() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -117,7 +117,6 @@ class _CategoriaTileState extends State<CategoriaTile> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
@@ -565,7 +564,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
                                               .text);
 
                                       DocumentReference referenciaOrdem =
-                                          await Firestore.instance
+                                          Firestore.instance
                                               .collection("catalaoGoias")
                                               .document(nomeEmpresa)
                                               .collection("produtos")
@@ -593,7 +592,7 @@ class _CategoriaTileState extends State<CategoriaTile> {
                                       }));
 
                                       DocumentReference referenciaOrdemBase =
-                                          await Firestore.instance
+                                          Firestore.instance
                                               .collection("BaseGlobal")
                                               .document("Produtos")
                                               .collection("itens")
@@ -856,9 +855,10 @@ class _CategoriaTileState extends State<CategoriaTile> {
   }
 
   Future chooseFile() async {
+    // ignore: deprecated_member_use
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
-        _image = image as File;
+        _image = image;
       });
     });
   }

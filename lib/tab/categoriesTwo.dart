@@ -2,19 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/ecoomerce/products_screen.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CategoryTile extends StatelessWidget {
   final DocumentSnapshot snapshot;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   CategoryTile(
     this.snapshot,
-    @required this.nomeEmpresa,
-    @required this.imagemEmpresa,
-    @required this.cidadeEstado,
-    @required this.endereco,
-    @required this.latitude,
-    @required this.longitude,
-    @required this.telefone,
+    this.nomeEmpresa,
+    this.imagemEmpresa,
+    this.cidadeEstado,
+    this.endereco,
+    this.latitude,
+    this.longitude,
+    this.telefone,
   );
 
   @override

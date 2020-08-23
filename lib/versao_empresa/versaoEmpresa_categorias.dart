@@ -1,6 +1,7 @@
 import 'package:compreaidelivery/versao_empresa/categorias/tabs/categoria_tab.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class VersaoEmpresaCategorias extends StatefulWidget {
   String nome, cidadeEstado;
   VersaoEmpresaCategorias(this.nome, this.cidadeEstado);

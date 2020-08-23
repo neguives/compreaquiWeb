@@ -3,6 +3,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class OrdersTab extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado;
   OrdersTab(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado);

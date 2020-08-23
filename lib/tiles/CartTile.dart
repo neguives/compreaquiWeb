@@ -5,6 +5,7 @@ import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CartTile extends StatefulWidget {
   final CartProduct cartProduct;
   ProductData productData;
@@ -143,6 +144,7 @@ class _CartTileState extends State<CartTile> {
                       ),
                       FlatButton(
                         onPressed: () {
+                          // ignore: missing_return
                           Future<Null> _atualizarQuantidade() {
                             DocumentReference documentReference = Firestore
                                 .instance

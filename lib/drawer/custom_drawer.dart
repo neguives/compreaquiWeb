@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/models/user_model.dart';
-import 'package:compreaidelivery/routes/routes.dart';
 import 'package:compreaidelivery/telas/Login.dart';
-import 'package:compreaidelivery/telas/Sobre.dart';
 import 'package:compreaidelivery/telas/perfil_usuario.dart';
-import 'package:compreaidelivery/telas/recomendar.dart';
-import 'package:compreaidelivery/tiles/drawer_tile.dart';
 import 'package:compreaidelivery/versao_entregador/tiles/pedidos_recebidos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +11,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class CustomDrawer extends StatefulWidget {
   String uid;
 
@@ -145,11 +141,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Widget _createHeader() {
-    teste() async {
-      final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-      FirebaseUser user = await _firebaseAuth.currentUser();
-    }
+    teste() async {}
 
     teste();
     return StreamBuilder(
@@ -157,6 +149,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             .collection("ConsumidorFinal")
             .document(uid)
             .snapshots(),
+        // ignore: missing_return
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
           } else {
@@ -217,11 +210,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
 }
 
 _showDialogTermos(BuildContext context) {
-  String textTermo =
-      "Os presentes termos de uso (\“Termos\”) representam os termos e condições que regem a prestação dos Serviços pelo CompreAqui Delivery - Alves do Vale e Almeida LTDA., inscrita no CNPJ sob o nº 37.314.012/0001-09, com sede na Cidade de Catalão, Estado de Goiás (\ “CompreAqui Delivery\”) por meio do aplicativo CompreAqui Delivery disponível na App Store e na Google Play (\ “Plataforma\”) para você (\“Usuário\”). \nAo se cadastrar em nossa Plataforma e utilizar os nossos Serviços, você declara estar de acordo com os termos e condições dispostos neste instrumento e declara que aceitou todas as regras, condições e obrigações dispostas neste instrumento e compromete-se a cumpri-las. Portanto, leia estes Termos com atenção. \n  Ressaltamos que poderemos oferecer recursos, serviços e/ou condições especiais que possuirão seus próprios termos e condições que se aplicam concomitantemente a estes Termos, sendo certo que caso haja conflito entre o disposto nos termos específicos e nestes Termos, os primeiros prevalecerão no que forem diferentes do aqui disposto."
-      "\n O COMPREAQUI DELIVERY É UMA PLATAFORMA ONLINE QUE FUNCIONA COMO INTERMEDIÁRIA COMERCIAL CONECTANDO FORNECEDORES E CLIENTES. O COMPREAQUI DELIVERY  NÃO É PARTE DE NENHUM ACORDO CELEBRADO ENTRE OS SUPERMERCADOS E CLIENTES, BEM COMO NÃO ATUA COMO SEGURADORA, NÃO PRESTA SERVIÇOS DE ENTREGA DE PRODUTOS E NÃO POSSUI NENHUMA RESPONSABILIDADE SOBRE A CONDUTA DOS SUPERMERCADOS, CLIENTES E TRANSPORTADORES."
-      "1.	DEFINIÇÕES \nJanelas emergentes (Pop-Ups): Janela ou aviso da internet que emerge automaticamente em qualquer momento quando a Plataforma é utilizada, especialmente utilizado para a formalização do contrato de compra e venda entre Consumidores e Fornecedores. \nCookies: Arquivos enviados pelo servidor do site para o computador do USUÁRIO, com a finalidade de identificar o computador e obter dados de acesso, como páginas navegadas ou links clicados, permitindo, desta forma, personalizar a utilização do site, de acordo com o seu perfil. Também podem ser utilizados para garantir uma maior segurança dos USUÁRIOS da PLATAFORMA."
-      "Comércio Eletrônico: Abrange o envio, a transmissão, a recepção, o armazenamento de mensagens de dados pela via eletrônica.\nConsumidores (usuários):  são as pessoas físicas cadastradas no Aplicativo denominado COMPREAQUI DELIVERY que acessem este para solicitar contrato de compra ou qualquer outro tipo de contrato lícito, com o fim de adquirir bens ou serviços.";
   // flutter defined function
   showDialog(
     barrierDismissible: true,
@@ -547,9 +535,6 @@ Future<Login> _desconectar(BuildContext context) async {
   return Login();
 }
 
-drawerComImagem() async {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FirebaseUser user = await _firebaseAuth.currentUser();
-}
+drawerComImagem() async {}
 
 void signOut() {}

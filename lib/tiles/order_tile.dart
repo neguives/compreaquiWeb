@@ -1,17 +1,11 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/tab/listagemItens.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
-import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
 
+// ignore: must_be_immutable
 class OrderTile extends StatelessWidget {
   String orderId, nomeEmpresa, cidadeEstado;
   String cidadeCollection;
@@ -44,9 +38,6 @@ class OrderTile extends StatelessWidget {
                       else {
                         int status = snapshot.data["status"];
 
-                        DateTime now = DateTime.now();
-                        var currentTime = new DateTime(
-                            now.year, now.month, now.day, now.hour, now.minute);
                         return Center(
                           child: Stack(
                             alignment: Alignment.center,
@@ -70,6 +61,20 @@ class OrderTile extends StatelessWidget {
                                       version: QrVersions.auto,
                                       size: 100.0,
                                     ),
+                                  ),
+                                  Text(
+                                    snapshot.data["tipoFrete"],
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    snapshot.data["formaPagamento"] != null
+                                        ? snapshot.data["formaPagamento"]
+                                        : "",
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 4),
                                   Text(
@@ -239,29 +244,9 @@ class OrderTile extends StatelessWidget {
   }
 }
 
-Text _buildProductsText(DocumentSnapshot snapshot) {
-  String text = "\n";
-  for (LinkedHashMap p in snapshot.data["produtos"]) {
-    text += "${p["quantidade"]} x ${p["product"]["title"]} "
-        "(R\$ ${p["product"]["preco"].toStringAsFixed(2)})\n"
-        "Preferência: ${p["variacao"]}\n";
-  }
-  text +=
-      "\nFrete: R\$ ${snapshot.data["precoDoFrete"].toStringAsFixed(2)}\n\nTotal: R\$ ${snapshot.data["precoTotal"].toStringAsFixed(2)}";
-
-  return Text(text);
-}
-
 String _recuperarData(DocumentSnapshot snapshot) {
   String text = "\n";
   text += "\nSolicitação do dia ${snapshot.data["data"]}";
-
-  return text;
-}
-
-String _PrecoTotal(DocumentSnapshot snapshot) {
-  String text = "\n";
-  text += "\nTotal: ${snapshot.data["precoTotal"]}";
 
   return text;
 }
@@ -306,6 +291,7 @@ Widget _buildCircle(String title, String subtitle, int status, int thisStatus) {
   );
 }
 
+// ignore: must_be_immutable
 class InformacoesMotoristas extends StatelessWidget {
   String fotoPerfil, nomeMotorista, placaCarro;
 

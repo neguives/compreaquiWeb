@@ -3,6 +3,7 @@ import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ListagemItens extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado;
   ListagemItens(this.nomeEmpresa, this.cidadeEstado);

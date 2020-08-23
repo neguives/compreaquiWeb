@@ -1,22 +1,16 @@
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/ecoomerce/produtosTwo.dart';
-import 'package:compreaidelivery/tab/ordersTab.dart';
 import 'package:compreaidelivery/widgets/AnimatedBottomBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// ignore: must_be_immutable
 class BottomPrincipal extends StatefulWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  BottomPrincipal(
-      @required this.nomeEmpresa,
-      @required this.imagemEmpresa,
-      this.cidadeEstado,
-      this.endereco,
-      this.latitude,
-      this.longitude,
-      this.telefone);
+  BottomPrincipal(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
+      this.endereco, this.latitude, this.longitude, this.telefone);
   final List<BarItem> barItems = [
     BarItem(
       text: "Meu carrinho",
@@ -53,19 +47,12 @@ class _BottomPrincipal extends State<BottomPrincipal> {
   int selectedBarIndex = 1;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  _BottomPrincipal(
-      @required this.nomeEmpresa,
-      @required this.imagemEmpresa,
-      this.cidadeEstado,
-      this.endereco,
-      this.latitude,
-      this.longitude,
-      this.telefone);
+  _BottomPrincipal(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
+      this.endereco, this.latitude, this.longitude, this.telefone);
   @override
   Widget build(BuildContext context) {
     print(nomeEmpresa);
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         //systemNavigationBarColor: Colors.lightBlue[700], // navigation bar color

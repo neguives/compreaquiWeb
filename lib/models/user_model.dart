@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
@@ -19,6 +20,7 @@ class UserModel extends Model {
 
   @override
   void addListener(listener) {
+    // ignore: todo
     // TODO: implement addListener
     super.addListener(listener);
     _loadCurrentUser();
@@ -56,6 +58,27 @@ class UserModel extends Model {
     });
   }
 
+  Future<bool> verificarCadastro(String id, String nome, String apelido,
+      String email, String photo) async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('ConsumidorFinal')
+        .where('uid', isEqualTo: id)
+        .limit(1)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+
+    if (documents.length <= 0) {
+      Firestore.instance.collection('ConsumidorFinal').document(id).setData({
+        'nome': nome,
+        'apelido': apelido,
+        'email': email,
+        'uid': id,
+        'telefone': "+55",
+        'photo': photo,
+      });
+    } else {}
+  }
+
   void signOut() async {
     await _auth.signOut();
 
@@ -87,6 +110,42 @@ class UserModel extends Model {
       isLoading = false;
       notifyListeners();
     });
+  }
+
+  googleSignIn() async {
+    try {
+      GoogleSignIn googleSignIn = GoogleSignIn();
+      GoogleSignInAccount account = await googleSignIn.signIn();
+      if (account == null) return false;
+
+      FirebaseUser result =
+          await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
+        idToken: (await account.authentication).idToken,
+        accessToken: (await account.authentication).accessToken,
+      ));
+
+      if (result.uid == null)
+        return false;
+      else {
+//        print(result.uid + "aew ");
+
+        verificarCadastro(result.uid, result.displayName, result.displayName,
+            result.email, result.photoUrl);
+        return true;
+      }
+    } catch (e) {
+      print("Erro Login");
+      return false;
+    }
+  }
+
+  void refresh({@required VoidCallback onSucess}) async {
+    isLoading = true;
+    notifyListeners();
+    await _loadCurrentUser();
+    onSucess();
+    isLoading = false;
+    notifyListeners();
   }
 
   bool isLoggedIn() {

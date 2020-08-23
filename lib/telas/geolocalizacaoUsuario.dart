@@ -1,18 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/tab/empresas_tab.dart';
-import 'package:compreaidelivery/telas/paginaEmpresa.dart';
 import 'package:compreaidelivery/telas/tela_selecao_categoria.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:location/location.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 class GeolocalizacaoUsuario extends StatelessWidget {
   @override
@@ -27,8 +22,6 @@ class GeolocalizacaoUsuario extends StatelessWidget {
 }
 
 class MyMapPage extends StatefulWidget {
-  final _formKeyGeolocalizacao = GlobalKey<FormState>();
-
   MyMapPage({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -37,9 +30,6 @@ class MyMapPage extends StatefulWidget {
 }
 
 class _MyMapPageState extends State<MyMapPage> {
-  final _formKeyGeolocalizacao = GlobalKey<FormState>();
-
-  final _formKey = GlobalKey<FormState>();
   double latitudeAtualizada, logintudeAtualizada;
 
   StreamSubscription _locationSubscription;
@@ -107,9 +97,6 @@ class _MyMapPageState extends State<MyMapPage> {
                   zoom: 18.00)));
           updateMarkerAndCircle(newLocalData, imageData);
 
-          LocationData myLocation;
-          String error;
-          Location location = new Location();
           final coordinates =
               new Coordinates(newLocalData.latitude, newLocalData.longitude);
           var addresses =
@@ -119,7 +106,6 @@ class _MyMapPageState extends State<MyMapPage> {
           logintudeAtualizada = newLocalData.longitude;
           endereco = first.addressLine;
           String cidade = first.subAdminArea;
-          String estado = first.adminArea;
           cidadeEstado = cidade + "-" + first.adminArea;
 
           double latitude = newLocalData.latitude;
@@ -211,20 +197,6 @@ class _MyMapPageState extends State<MyMapPage> {
                           ? () async {
                               if (marker != null && endereco != null) {
                                 print(cidadeEstado);
-                                final FirebaseAuth _auth =
-                                    FirebaseAuth.instance;
-                                GoogleSignIn googleSignIn = GoogleSignIn();
-                                GoogleSignInAccount account =
-                                    await googleSignIn.signIn();
-
-                                FirebaseUser result =
-                                    await _auth.signInWithCredential(
-                                        GoogleAuthProvider.getCredential(
-                                  idToken:
-                                      (await account.authentication).idToken,
-                                  accessToken: (await account.authentication)
-                                      .accessToken,
-                                ));
                               } else {
                                 snackBar();
                                 getCurrentLocation();

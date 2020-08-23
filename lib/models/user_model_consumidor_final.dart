@@ -16,6 +16,7 @@ class UserModelConsumidorFinal extends Model {
 
   @override
   void addListener(listener) {
+    // ignore: todo
     // TODO: implement addListener
     super.addListener(listener);
     _loadCurrentUser();

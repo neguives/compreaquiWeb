@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/telas/paginaEmpresa.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+// ignore: must_be_immutable
 class InformacoesEmpresaTile extends StatelessWidget {
   final DocumentSnapshot snapshot;
   String cidadeEstado, endereco;
@@ -183,10 +183,12 @@ class InformacoesEmpresaTile extends StatelessWidget {
                             ),
                             Text(
                               "Estabelecimento " +
-                                  snapshot.data["disponibilidade"],
+                                  snapshot
+                                      .data["disponibilidadeEstabelecimento"],
                               style: TextStyle(
                                   fontSize: 8,
-                                  color: snapshot.data["disponibilidade"] ==
+                                  color: snapshot.data[
+                                              "disponibilidadeEstabelecimento"] ==
                                           "aberto"
                                       ? Colors.green
                                       : Colors.grey),

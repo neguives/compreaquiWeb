@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/versao_empresa/categorias/produtos/product_tile.dart';
-import 'package:compreaidelivery/versao_empresa/produtos.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class EditarProdutos extends StatefulWidget {
   String nomeEmpresa, categoria;
   double codigoBarras;
@@ -43,12 +42,11 @@ class _EditarProdutosState extends State<EditarProdutos> {
               appBar: AppBar(),
               body: ListView(
                   children: snapshot1.data.documents.map((doc) {
-
-                return ProductTile("list", nomeEmpresa, doc, doc.documentID.toString(), categoria);
+                return ProductTile("list", nomeEmpresa, doc,
+                    doc.documentID.toString(), categoria);
               }).toList()));
         }
       },
     );
-    ;
   }
 }

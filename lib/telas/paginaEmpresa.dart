@@ -1,19 +1,16 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/Bottom/bottom_principal.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tab/ordersTab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class PaginaEmpresa extends StatelessWidget {
   List<String> galeriaImages = new List();
   CarouselSlider instance;
@@ -30,9 +27,9 @@ class PaginaEmpresa extends StatelessWidget {
 
   UserModel user;
   PaginaEmpresa(
-      @required this.nomeEmpresa,
-      @required this.imagemEmpresa,
-      @required this.descricaoEmpresa,
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.descricaoEmpresa,
       this.galeriaPagina,
       this.whatsapp,
       this.cidadeEstado,
@@ -42,7 +39,6 @@ class PaginaEmpresa extends StatelessWidget {
       this.latitudeEmpresa,
       this.longitudeEmpresa);
 
-  @override
   void initState() {
     print(galeriaPagina);
   }
@@ -59,7 +55,7 @@ class PaginaEmpresa extends StatelessWidget {
           hoverElevation: 20,
           onPressed: () async {
             var whatsappUrl =
-                "whatsapp://send?phone=${whatsapp}&text=${"Olá, vim através do App CompreAqui!"}";
+                "whatsapp://send?phone=$whatsapp&text=${"Olá, vim através do App CompreAqui!"}";
             await canLaunch(whatsappUrl)
                 ? launch(whatsappUrl)
                 : print(
@@ -198,7 +194,7 @@ class PaginaEmpresa extends StatelessWidget {
                               builder: (context) => BottomPrincipal(
                                   nomeEmpresa,
                                   imagemEmpresa,
-                                  cidadeEstado,
+                                  "catalaoGoias",
                                   endereco,
                                   latitude,
                                   longitude,
@@ -250,7 +246,7 @@ class PaginaEmpresa extends StatelessWidget {
                         ),
                         onPressed: () async {
                           var mapsAppUrl =
-                              "https://www.google.com/maps/place/@${latitudeEmpresa},${longitudeEmpresa},17z";
+                              "https://www.google.com/maps/place/@$latitudeEmpresa,$longitudeEmpresa,17z";
                           print(mapsAppUrl);
                           await canLaunch(mapsAppUrl)
                               ? launch(mapsAppUrl)

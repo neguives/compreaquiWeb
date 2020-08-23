@@ -1,13 +1,11 @@
 import 'package:compreaidelivery/ecoomerce/checkout_screen.dart';
-import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
-import 'package:compreaidelivery/ecoomerce/finalizarPagamentoPresencial.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/splash_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'ecoomerce/formaPagamento.dart';
 import 'models/cart_model.dart';
 import 'models/user_model.dart';
 
@@ -19,8 +17,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -1,17 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:compreaidelivery/introducao.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:compreaidelivery/style/theme.dart' as Theme;
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -24,15 +20,10 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> with SingleTickerProviderStateMixin {
-  bool _isLoggedIn = false;
-
-  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final _nameController = TextEditingController();
   final _apelidoController = TextEditingController();
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
-  final _senhaRepetidaController = TextEditingController();
-  final _telefoneController = TextEditingController();
   final _cidadeController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -50,7 +41,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 
   bool _obscureTextLogin = true;
   bool _obscureTextSignup = true;
-  bool _obscureTextSignupConfirm = true;
 
   TextEditingController signupEmailController = new TextEditingController();
   TextEditingController signupNameController = new TextEditingController();
@@ -62,12 +52,14 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   final telefoneController = TextEditingController();
   Color left = Colors.black;
   Color right = Colors.white;
+  String uid;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
       body: NotificationListener<OverscrollIndicatorNotification>(
+        // ignore: missing_return
         onNotification: (overscroll) {
           overscroll.disallowGlow();
         },
@@ -168,6 +160,15 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     ]);
 
     _pageController = PageController();
+  }
+
+  Future<Login> _desconectar(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    await googleSignIn.signOut();
+
+    return Login();
   }
 
   void showInSnackBar(String value) {
@@ -706,8 +707,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           }
 
                           _showDialogTelefone(context);
-
-                          ;
                         },
                       ),
                     ),
@@ -734,7 +733,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   _onSucess() async {
-    UserModel user;
     Future.delayed(Duration(seconds: 1)).then((_) async {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
@@ -757,16 +755,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     ));
   }
 
-  void _onSignInButtonPress() {
-    _pageController.animateToPage(0,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
-  }
-
-  void _onSignUpButtonPress() {
-    _pageController?.animateToPage(1,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
-  }
-
   void _toggleLogin() {
     setState(() {
       _obscureTextLogin = !_obscureTextLogin;
@@ -779,61 +767,137 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     });
   }
 
-  void _toggleSignupConfirm() {
-    setState(() {
-      _obscureTextSignupConfirm = !_obscureTextSignupConfirm;
-    });
-  }
-
   _loginGoogle() async {
     AuthService authService = AuthService();
     bool res = await authService.googleSignIn();
     if (!res) {
       print("Erro ao fazer o login com o Google");
     } else {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
-    }
-  }
+      telefoneController.text = "";
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseUser firebaseUser;
 
-  _showDialogTermos(BuildContext context) {
-    String textTermo =
-        "Os presentes termos de uso (\“Termos\”) representam os termos e condições que regem a prestação dos Serviços pelo CompreAqui Delivery - Alves do Vale e Almeida LTDA., inscrita no CNPJ sob o nº 37.314.012/0001-09, com sede na Cidade de Catalão, Estado de Goiás (\ “CompreAqui Delivery\”) por meio do aplicativo CompreAqui Delivery disponível na App Store e na Google Play (\ “Plataforma\”) para você (\“Usuário\”). \nAo se cadastrar em nossa Plataforma e utilizar os nossos Serviços, você declara estar de acordo com os termos e condições dispostos neste instrumento e declara que aceitou todas as regras, condições e obrigações dispostas neste instrumento e compromete-se a cumpri-las. Portanto, leia estes Termos com atenção. \n  Ressaltamos que poderemos oferecer recursos, serviços e/ou condições especiais que possuirão seus próprios termos e condições que se aplicam concomitantemente a estes Termos, sendo certo que caso haja conflito entre o disposto nos termos específicos e nestes Termos, os primeiros prevalecerão no que forem diferentes do aqui disposto."
-        "\n O COMPREAQUI DELIVERY É UMA PLATAFORMA ONLINE QUE FUNCIONA COMO INTERMEDIÁRIA COMERCIAL CONECTANDO FORNECEDORES E CLIENTES. O COMPREAQUI DELIVERY  NÃO É PARTE DE NENHUM ACORDO CELEBRADO ENTRE OS SUPERMERCADOS E CLIENTES, BEM COMO NÃO ATUA COMO SEGURADORA, NÃO PRESTA SERVIÇOS DE ENTREGA DE PRODUTOS E NÃO POSSUI NENHUMA RESPONSABILIDADE SOBRE A CONDUTA DOS SUPERMERCADOS, CLIENTES E TRANSPORTADORES."
-        "1.	DEFINIÇÕES \nJanelas emergentes (Pop-Ups): Janela ou aviso da internet que emerge automaticamente em qualquer momento quando a Plataforma é utilizada, especialmente utilizado para a formalização do contrato de compra e venda entre Consumidores e Fornecedores. \nCookies: Arquivos enviados pelo servidor do site para o computador do USUÁRIO, com a finalidade de identificar o computador e obter dados de acesso, como páginas navegadas ou links clicados, permitindo, desta forma, personalizar a utilização do site, de acordo com o seu perfil. Também podem ser utilizados para garantir uma maior segurança dos USUÁRIOS da PLATAFORMA."
-        "Comércio Eletrônico: Abrange o envio, a transmissão, a recepção, o armazenamento de mensagens de dados pela via eletrônica.\nConsumidores (usuários):  são as pessoas físicas cadastradas no Aplicativo denominado COMPREAQUI DELIVERY que acessem este para solicitar contrato de compra ou qualquer outro tipo de contrato lícito, com o fim de adquirir bens ou serviços.";
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.description)],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      if (firebaseUser == null) firebaseUser = await _auth.currentUser();
+      if (firebaseUser != null) {
+        uid = firebaseUser.uid;
+        showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Center(
+                child: Column(
                   children: [
-                    Text("Termos de Utilização"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/icon_zap.png",
+                          height: 50,
+                          width: 50,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text("Qual é o seu whatsapp?"),
+                      ],
+                    )
                   ],
+                ),
+              ),
+              content: new TextField(
+                maxLines: 1,
+                controller: telefoneController,
+                enabled: true,
+                keyboardType: TextInputType.number,
+                style: TextStyle(
+                    fontFamily: "WorkSansSemiBold",
+                    fontSize: 16.0,
+                    color: Colors.black),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Telefone com DDD",
+                  labelText: "Telefone com DDD",
+                  hintStyle: TextStyle(
+                      fontFamily: "QuickSand",
+                      fontSize: 17.0,
+                      color: Colors.black87),
+                ),
+              ),
+              actions: <Widget>[
+                new ScopedModelDescendant<UserModel>(
+                  builder: (context, child, model) {
+                    FlatButton(
+                      child: new Text("Continuar"),
+                      onPressed: () async {
+                        uid = firebaseUser.uid;
+                        DocumentReference documentReference = Firestore.instance
+                            .collection("ConsumidorFinal")
+                            .document(firebaseUser.uid);
+
+//            Mudar quando for lançar
+//            documentReference.updateData({"cidade": cidadeEstado});
+                        documentReference
+                            .updateData({"telefone": telefoneController.text});
+                        model.refresh();
+                        model.signIn(
+                            email: "", pass: "", onSucess: null, onFail: null);
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => GeolocalizacaoUsuario()));
+                      },
+                    );
+                  },
                 )
+                // usually buttons at the bottom of the dialog
               ],
-            ),
+            );
+          },
+        );
+      }
+    }
+    // flutter defined function
+  }
+}
+
+_showDialogTermos(BuildContext context) {
+  // flutter defined function
+  showDialog(
+    barrierDismissible: true,
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: new Center(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.description)],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text("Termos de Utilização"),
+                ],
+              )
+            ],
           ),
-          content: new SingleChildScrollView(
-            child: Column(
-              children: [
-                Html(
-                  data:
-                      """<p>Os presentes termos de uso (\&ldquo;<u>Termos\</u>&rdquo;) representam os termos e condi&ccedil;&otilde;es que regem a presta&ccedil;&atilde;o dos Servi&ccedil;os pelo&nbsp;<strong>CompreAqui Delivery </strong><strong>-</strong><strong> Alves do Vale e Almeida LTDA.</strong>, inscrita no CNPJ sob o n&ordm; 37.314.012/0001-09, com sede na Cidade de Catal&atilde;o, Estado de Goi&aacute;s (\ &ldquo;CompreAqui Delivery\&rdquo;) por meio do aplicativo CompreAqui Delivery dispon&iacute;vel na App Store e na Google Play (\ &ldquo;<u>Plataforma</u>\&rdquo;) para voc&ecirc; (\&ldquo;<u>Usu&aacute;rio</u>\&rdquo;).</p>
+        ),
+        content: new SingleChildScrollView(
+          child: Column(
+            children: [
+              Html(
+                data:
+                    """<p>Os presentes termos de uso (\&ldquo;<u>Termos\</u>&rdquo;) representam os termos e condi&ccedil;&otilde;es que regem a presta&ccedil;&atilde;o dos Servi&ccedil;os pelo&nbsp;<strong>CompreAqui Delivery </strong><strong>-</strong><strong> Alves do Vale e Almeida LTDA.</strong>, inscrita no CNPJ sob o n&ordm; 37.314.012/0001-09, com sede na Cidade de Catal&atilde;o, Estado de Goi&aacute;s (\ &ldquo;CompreAqui Delivery\&rdquo;) por meio do aplicativo CompreAqui Delivery dispon&iacute;vel na App Store e na Google Play (\ &ldquo;<u>Plataforma</u>\&rdquo;) para voc&ecirc; (\&ldquo;<u>Usu&aacute;rio</u>\&rdquo;).</p>
 
 <p>\nAo se cadastrar em nossa Plataforma e utilizar os nossos Servi&ccedil;os, voc&ecirc; declara estar de acordo com os termos e condi&ccedil;&otilde;es dispostos neste instrumento e declara que aceitou todas as regras, condi&ccedil;&otilde;es e obriga&ccedil;&otilde;es dispostas neste instrumento e compromete-se a cumpri-las. Portanto, leia estes Termos com aten&ccedil;&atilde;o.</p>
 
@@ -1093,20 +1157,19 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 
 <address>&nbsp;</address>
  """,
-                )
-              ],
-            ),
+              )
+            ],
           ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-                child: new Text("Continuar"),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-          ],
-        );
-      },
-    );
-  }
+        ),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+              child: new Text("Continuar"),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ],
+      );
+    },
+  );
 }

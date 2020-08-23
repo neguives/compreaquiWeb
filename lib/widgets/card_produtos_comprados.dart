@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class CardProdutosComprados extends StatelessWidget {
   QuerySnapshot snapshot;
 

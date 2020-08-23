@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
   Observable<FirebaseUser> user;
   Observable<Map<String, dynamic>> profile;
+  // ignore: close_sinks
   PublishSubject loading = PublishSubject();
 
   AuthService() {
@@ -46,10 +44,6 @@ class AuthService {
       else {
 //        print(result.uid + "aew ");
 
-        DocumentReference documentReference = Firestore.instance
-            .collection("ConsumidorFinal")
-            .document(result.uid);
-
         verificarCadastro(result.uid, result.displayName, result.displayName,
             result.email, result.photoUrl);
         return true;
@@ -72,6 +66,7 @@ class AuthService {
 }
 
 final AuthService authService = AuthService();
+// ignore: missing_return
 Future<bool> verificarCadastro(
     String id, String nome, String apelido, String email, String photo) async {
   final QuerySnapshot result = await Firestore.instance

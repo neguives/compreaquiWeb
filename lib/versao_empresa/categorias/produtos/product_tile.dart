@@ -2,21 +2,20 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/datas/product_data.dart';
-import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class ProductTile extends StatefulWidget {
   final String type, idDocument, categoria;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   final DocumentSnapshot snapshot;
 
-  ProductTile(this.type, @required this.nomeEmpresa, this.snapshot,
-      this.idDocument, this.categoria);
+  ProductTile(this.type, this.nomeEmpresa, this.snapshot, this.idDocument,
+      this.categoria);
 
   @override
   _ProductTileState createState() =>
@@ -29,8 +28,6 @@ class _ProductTileState extends State<ProductTile> {
   double latitude, longitude;
   final DocumentSnapshot snapshot;
 
-  final _nomeCategoria = TextEditingController();
-  final _posCategoria = TextEditingController();
   final _nomeProdutoController = TextEditingController();
   final _codigoBarraProdutoController = TextEditingController();
   final _preferenciaProdutoController = TextEditingController();
@@ -38,14 +35,13 @@ class _ProductTileState extends State<ProductTile> {
   final _precoAtualProdutoController = TextEditingController();
   final _precoAnteriorProdutoController = TextEditingController();
   final _quantidadeEstoqueProdutoController = TextEditingController();
-  final _codigoBarraBuscaController = TextEditingController();
   File _image;
 
   FlutterToast flutterToast;
   var listImages;
   String urlImagem1 = "url", urlImagem2 = "url";
-  _ProductTileState(this.type, @required this.nomeEmpresa, this.snapshot,
-      this.idDocument, this.categoria);
+  _ProductTileState(this.type, this.nomeEmpresa, this.snapshot, this.idDocument,
+      this.categoria);
   @override
   Widget build(BuildContext context) {
     List<dynamic> img = snapshot.data["images"];
@@ -68,6 +64,7 @@ class _ProductTileState extends State<ProductTile> {
     _nomeProdutoController.text = snapshot.data["title"];
 
     Future getImageProduto1() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -78,15 +75,14 @@ class _ProductTileState extends State<ProductTile> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
             print(docUrl);
           });
 
-          DocumentReference documentReference = await Firestore.instance
-              .collection("Catalão - GO")
+          DocumentReference documentReference = Firestore.instance
+              .collection("catalaoGoias")
               .document(nomeEmpresa)
               .collection("Produtos e Servicos")
               .document(categoria)
@@ -105,6 +101,7 @@ class _ProductTileState extends State<ProductTile> {
     }
 
     Future getImageProduto2() async {
+      // ignore: deprecated_member_use
       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
@@ -115,7 +112,6 @@ class _ProductTileState extends State<ProductTile> {
           StorageReference firebaseStorageRef =
               FirebaseStorage.instance.ref().child(filName);
           StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-          StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
           String docUrl =
               await (await uploadTask.onComplete).ref.getDownloadURL();
           setState(() {
@@ -451,8 +447,8 @@ class _ProductTileState extends State<ProductTile> {
                                                 .text);
 
                                         DocumentReference referenciaOrdem =
-                                            await Firestore.instance
-                                                .collection("Catalão - GO")
+                                            Firestore.instance
+                                                .collection("catalaoGoias")
                                                 .document("Supermecado Bretas")
                                                 .collection(
                                                     "Produtos e Servicos")
@@ -482,7 +478,7 @@ class _ProductTileState extends State<ProductTile> {
                                         }));
 
                                         DocumentReference referenciaOrdemBase =
-                                            await Firestore.instance
+                                            Firestore.instance
                                                 .collection("BaseGlobal")
                                                 .document("Produtos")
                                                 .collection("itens")
@@ -881,11 +877,10 @@ class _ProductTileState extends State<ProductTile> {
                                                 .text);
 
                                         DocumentReference referenciaOrdem =
-                                            await Firestore.instance
+                                            Firestore.instance
                                                 .collection("catalaoGoias")
                                                 .document(nomeEmpresa)
-                                                .collection(
-                                                    "Produtos e Servicos")
+                                                .collection("produtos")
                                                 .document(categoria)
                                                 .collection("itens")
                                                 .document(idDocument);
@@ -897,12 +892,11 @@ class _ProductTileState extends State<ProductTile> {
                                           "promo":
                                               _precoAnteriorProdutoController
                                                           .text !=
-                                                      null
+                                                      "0.0"
                                                   ? true
                                                   : false,
                                           "precoAnterior": precoAnterior,
                                           "quantidade": quantidade,
-                                          "images": urlImagem1,
                                           "variacao": variacao,
                                           "description":
                                               _descricaoProdutoController.text,
@@ -999,38 +993,12 @@ class _ProductTileState extends State<ProductTile> {
   }
 
   Future chooseFile() async {
+    // ignore: deprecated_member_use
     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
       setState(() {
-        _image = image as File;
+        _image = image;
       });
     });
-  }
-
-  _showToast() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text("Informações Salvas!"),
-        ],
-      ),
-    );
-
-    flutterToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
-    );
-    _showToast2();
   }
 
   _clearProduto() {
@@ -1042,32 +1010,6 @@ class _ProductTileState extends State<ProductTile> {
     _quantidadeEstoqueProdutoController.text = "";
     _descricaoProdutoController.text = "";
     _preferenciaProdutoController.text = "";
-  }
-
-  _showToast2() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text("O icone aparecerá em breve."),
-        ],
-      ),
-    );
-
-    flutterToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 5),
-    );
   }
 
   _showToastProdutoCadastrado() {

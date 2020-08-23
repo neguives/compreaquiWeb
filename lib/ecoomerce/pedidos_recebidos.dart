@@ -1,12 +1,9 @@
-import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_abertos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_concluido.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_entregues.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos_transporte.dart';
-import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class PedidosRecebidos extends StatefulWidget {
   String nomeEmpresa, cidadeEstado;
 
@@ -41,6 +38,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                                     nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
+                            onPressed: () {},
                             child: Image.asset(
                               "assets/btn_pedidos_em_aberto.png",
                               height: 140,
@@ -55,6 +53,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                                         nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
+                            onPressed: () {},
                             child: Image.asset(
                               "assets/btn_pedidos_transporte.png",
                               height: 140,
@@ -68,6 +67,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                                     nomeEmpresa, cidadeEstado)));
                           },
                           child: FlatButton(
+                            onPressed: () {},
                             child: Image.asset(
                               "assets/btn_pedidos_entregues.png",
                               height: 140,

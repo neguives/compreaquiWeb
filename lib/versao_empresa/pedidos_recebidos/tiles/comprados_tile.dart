@@ -1,17 +1,13 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/tab/listagemItens.dart';
-import 'package:compreaidelivery/widgets/card_produtos_comprados.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class CompradosTileEmpresa extends StatelessWidget {
   String orderId, nomeEmpresa, clienteId;
   String cidadeEstado = "Alagoinhas-Bahia";
@@ -48,9 +44,6 @@ class CompradosTileEmpresa extends StatelessWidget {
                                   child: CircularProgressIndicator(),
                                 );
                               else {
-                                DateTime now = DateTime.now();
-                                var currentTime = new DateTime(now.year,
-                                    now.month, now.day, now.hour, now.minute);
                                 return Center(
                                     child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,7 +178,7 @@ class CompradosTileEmpresa extends StatelessWidget {
                                                         FlatButton(
                                                           onPressed: () async {
                                                             var whatsappUrl =
-                                                                "whatsapp://send?phone=+55${telefone}&text=${"Olá, sou motorista e vim através do App CompreAqui!"}";
+                                                                "whatsapp://send?phone=+55$telefone&text=${"Olá, sou motorista e vim através do App CompreAqui!"}";
                                                             await canLaunch(
                                                                     whatsappUrl)
                                                                 ? launch(
@@ -253,58 +246,4 @@ Widget _buildProductsText(DocumentSnapshot snapshot) {
         "Preferência: ${p["variacao"]}\nCódigo de Barras: ${p["product"]["codigoBarras"]}\n ________________________________________________\n";
   }
   return Text(text);
-}
-
-String _recuperarData(DocumentSnapshot snapshot) {
-  String text = "\n";
-  text += "\nSolicitação do dia ${snapshot.data["data"]}";
-
-  return text;
-}
-
-String _PrecoTotal(DocumentSnapshot snapshot) {
-  String text = "\n";
-  text += "\nTotal: ${snapshot.data["precoTotal"]}";
-
-  return text;
-}
-
-Widget _buildCircle(String title, String subtitle, int status, int thisStatus) {
-  Color backColor;
-  Widget child;
-
-  if (status < thisStatus) {
-    backColor = Colors.grey[500];
-    child = Text(
-      title,
-      style: TextStyle(color: Colors.white, fontSize: 8),
-    );
-  } else if (status == thisStatus) {
-    backColor = Colors.blue;
-    child = Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        Text(
-          title,
-          style: TextStyle(color: Colors.white),
-        ),
-        CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        )
-      ],
-    );
-  } else {
-    backColor = Colors.green;
-    child = Icon(Icons.check);
-  }
-  return Column(
-    children: <Widget>[
-      CircleAvatar(
-        radius: 20,
-        backgroundColor: backColor,
-        child: child,
-      ),
-      Text(subtitle)
-    ],
-  );
 }

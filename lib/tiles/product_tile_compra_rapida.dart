@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ProductTileCompraRapida extends StatelessWidget {
   final String type;
   final ProductData product;
@@ -12,13 +12,13 @@ class ProductTileCompraRapida extends StatelessWidget {
   ProductTileCompraRapida(
     this.type,
     this.product,
-    @required this.nomeEmpresa,
-    @required this.imagemEmpresa,
-    @required this.cidadeEstado,
-    @required this.endereco,
-    @required this.latitude,
-    @required this.longitude,
-    @required this.telefone,
+    this.nomeEmpresa,
+    this.imagemEmpresa,
+    this.cidadeEstado,
+    this.endereco,
+    this.latitude,
+    this.longitude,
+    this.telefone,
   );
   @override
   Widget build(BuildContext context) {
@@ -101,6 +101,7 @@ class ProductTileCompraRapida extends StatelessWidget {
                           ),
                           IconButton(
                             icon: Icon(Icons.add_shopping_cart),
+                            onPressed: () {},
                           )
                         ],
                       ),
@@ -194,6 +195,7 @@ class ProductTileCompraRapida extends StatelessWidget {
                                                 Icons.add_shopping_cart,
                                                 color: Colors.white,
                                               ),
+                                              onPressed: () {},
                                             ),
                                           ),
                                           elevation: 5,

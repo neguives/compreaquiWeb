@@ -4,8 +4,8 @@ import 'package:compreaidelivery/ecoomerce/services/components/cpf_field.dart';
 import 'package:compreaidelivery/ecoomerce/services/components/credit_card_widget.dart';
 import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class CheckoutScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

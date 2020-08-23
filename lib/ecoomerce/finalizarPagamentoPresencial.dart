@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+// ignore: must_be_immutable
 class FinalizarPagamentoPresencial extends StatefulWidget {
   String nomeEmpresa, cidadeEstado, endereco, freteTipo;
   double latitude, longitude;
@@ -56,10 +57,6 @@ class _FinalizarPagamentoPresencialState
   _FinalizarPagamentoPresencialState(this.freteTipo, this.buy, this.nomeEmpresa,
       this.cidadeEstado, this.endereco, this.latitude, this.longitude);
 
-  final TextEditingController _startCoordinatesTextController =
-      TextEditingController();
-  final TextEditingController _endCoordinatesTextController =
-      TextEditingController();
   final enderecoController = TextEditingController();
   final obsController = TextEditingController();
 
@@ -74,16 +71,8 @@ class _FinalizarPagamentoPresencialState
 
   void Function(CreditCardModel) onCreditCardModelChange;
   CreditCardModel creditCardModel;
-  final MaskedTextController _cardNumberController =
-      MaskedTextController(mask: '0000 0000 0000 0000');
   final MaskedTextController _cardNumberControllerTrim =
       MaskedTextController(mask: '0000000000000000');
-  final TextEditingController _expiryDateController =
-      MaskedTextController(mask: '00/0000');
-  final TextEditingController _cardHolderNameController =
-      TextEditingController();
-  final TextEditingController _cvvCodeController =
-      MaskedTextController(mask: '0000');
 
   FocusNode cvvFocusNode = FocusNode();
 
@@ -102,8 +91,6 @@ class _FinalizarPagamentoPresencialState
 
   @override
   Widget build(BuildContext context) {
-    bool entregaGratuita = false;
-
     obsController.text =
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$60,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
@@ -128,7 +115,6 @@ class _FinalizarPagamentoPresencialState
       body: ScopedModelDescendant<CartModel>(
         builder: (context, child, model) {
           double preco = model.getProductPrice();
-          double desconto = model.getDesconto();
           double frete = model.getFreteKarona();
 //              model.loadCartItens();
           return SingleChildScrollView(
@@ -152,7 +138,7 @@ class _FinalizarPagamentoPresencialState
                               child: Text("Comprar Sem Cartao"),
                               onPressed: () {
                                 model.finalizarCompra(nomeEmpresa, endereco,
-                                    cidadeEstado, freteTipo);
+                                    cidadeEstado, freteTipo, "Avista");
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -187,24 +173,6 @@ class _FinalizarPagamentoPresencialState
                                                         "Entrega do estabelecimento") {
                                                   _pedidoInferior(context);
                                                 } else {
-                                                  String valorTotal = (preco +
-                                                          (model.getEntregaGratuita() ==
-                                                                  false
-                                                              ? model
-                                                                  .getFreteKarona()
-                                                              : 0.0) -
-                                                          model.getDesconto())
-                                                      .toString()
-                                                      .replaceAll(".", "");
-                                                  String valorTotalCorrigido =
-                                                      valorTotal
-                                                              .replaceAll(
-                                                                  ",", "")
-                                                              .trim() +
-                                                          "";
-                                                  int valorTotalFinal =
-                                                      int.parse(
-                                                          valorTotalCorrigido);
                                                   String numeroCartao;
                                                   _cardNumberControllerTrim
                                                       .text = numeroCartao;
@@ -329,85 +297,6 @@ class _FinalizarPagamentoPresencialState
                 ),
               )),
             ));
-      },
-    );
-  }
-
-  void _pagamentoAprovado(BuildContext context) {
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Pagamento Aprovado"),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _pagamentoReprovado(BuildContext context) {
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 100,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Pagamento Reprovado"),
-                  ],
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Fechar"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
       },
     );
   }

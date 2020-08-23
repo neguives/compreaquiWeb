@@ -1,12 +1,8 @@
-import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_concluido.dart';
-import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_entregues.dart';
 import 'package:compreaidelivery/versao_entregador/telas/pedidos_recebidos_transporte.dart';
 import 'package:flutter/material.dart';
 
-import '../../versao_empresa/pedidos_recebidos/blocs/orders_bloc.dart';
-
+// ignore: must_be_immutable
 class PedidosRecebidos extends StatefulWidget {
   String uid;
 
@@ -42,6 +38,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                                     PedidosRecebidosTransporte(uid)));
                           },
                           child: FlatButton(
+                            onPressed: () {},
                             child: Image.asset(
                               "assets/btn_pedidos_transporte.png",
                               height: 140,
@@ -55,6 +52,7 @@ class _PedidosRecebidosState extends State<PedidosRecebidos> {
                                     PedidosRecebidosConcluido(uid)));
                           },
                           child: FlatButton(
+                            onPressed: () {},
                             child: Image.asset(
                               "assets/btn_pedidos_entregues.png",
                               height: 140,

@@ -1,18 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:compreaidelivery/ecoomerce/checkout_screen.dart';
-import 'package:compreaidelivery/ecoomerce/finalizarPagamento.dart';
+import 'package:compreaidelivery/ecoomerce/formaPagamento.dart';
 import 'package:compreaidelivery/ecoomerce/ordemPedidoConfirmado.dart';
 import 'package:compreaidelivery/models/CreditCardModel.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'dart:math' show cos, sqrt, asin;
 
+// ignore: must_be_immutable
 class CardResumo extends StatefulWidget {
   String nomeEmpresa, cidadeEstado, endereco;
   double latitude, longitude;
@@ -54,10 +49,6 @@ class _CardResumoState extends State<CardResumo> {
   _CardResumoState(this.buy, this.nomeEmpresa, this.cidadeEstado, this.endereco,
       this.latitude, this.longitude);
 
-  final TextEditingController _startCoordinatesTextController =
-      TextEditingController();
-  final TextEditingController _endCoordinatesTextController =
-      TextEditingController();
   final enderecoController = TextEditingController();
   final textDialogController = TextEditingController();
   final obsController = TextEditingController();
@@ -65,26 +56,20 @@ class _CardResumoState extends State<CardResumo> {
 
 //Api de Pagamento
 
-//Realizar Pagamento
+//Realizar Pagamentoo
 
   @override
   Widget build(BuildContext context) {
     enderecoController.text = endereco;
     textDialogController.text =
         "Modalidade de pagamento não disponível para entrega expressa.";
-    bool entregaGratuita = false;
 
     obsController.text =
         "A entrega por conta do estabelecimento é gratuita e está disponível apenas para pedidos com o valor total acima de R\$50,00. Essa modalidade poderá demorar mais de 2 horas para o pedido ser entregue.";
 
     return ScopedModelDescendant<CartModel>(
       builder: (context, child, model) {
-        double freteKarona = model.getFreteKarona();
-
-        double freteKaronaFixo = freteKarona;
         double preco = model.getProductPrice();
-        double desconto = model.getDesconto();
-        double frete = model.getFrete();
         return Column(
           key: _scaffoldKey,
           children: [
@@ -238,23 +223,6 @@ class _CardResumoState extends State<CardResumo> {
                             highlightColor: Colors.white70,
                             highlightElevation: 10,
 
-                            onPressed: freteTipo.length > 5
-                                ? () {
-                                    if (freteTipo ==
-                                            "Entrega do estabelecimento" &&
-                                        preco < 50) {
-                                      _pedidoInferior(context);
-                                    } else {
-                                      Navigator.of(context).pushNamed(
-                                        '/finalizarPagamento',
-                                      );
-                                    }
-                                    {}
-                                  }
-                                : () {
-                                    _dialogSelecioneEntrega(context);
-                                  },
-
                             child: Text(
                               'Pagamento com Cartão',
                             ),
@@ -270,45 +238,86 @@ class _CardResumoState extends State<CardResumo> {
                               width: 0.8, //width of the border
                             ),
                           ),
-                          OutlineButton(
-                            hoverColor: Colors.white,
-                            highlightColor: Colors.white70,
-                            highlightElevation: 10,
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("catalaoGoias")
+                                .document(nomeEmpresa)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              return OutlineButton(
+                                hoverColor: Colors.white,
+                                highlightColor: Colors.white70,
+                                highlightElevation: 10,
 
-                            onPressed: freteTipo.length > 5
-                                ? () {
-                                    if (freteTipo ==
-                                        "Entrega Expressa (Karona)") {
-                                      _dialogPagamentoPresencial(context);
-                                    }
-                                    if ((freteTipo ==
-                                                "Entrega do estabelecimento" ||
-                                            freteTipo ==
-                                                "Retirar no estabelecimento") &&
-                                        preco < 50) {
-                                      _pedidoInferior(context);
-                                    }
-                                    {}
-                                  }
-                                : () {
-                                    _dialogSelecioneEntrega(context);
-                                  },
+                                onPressed: freteTipo.length > 5
+                                    ? () {
+                                        if (snapshot.data[
+                                                "disponibilidadeEstabelecimento"] ==
+                                            "aberto") {
+                                          if (freteTipo ==
+                                              "Entrega Expressa (Karona)") {
+                                            _dialogSelecioneEntrega(context,
+                                                "Entrega Expressa indisponivel");
+                                          }
+                                          if (freteTipo ==
+                                                  "Entrega do estabelecimento" &&
+                                              preco < 50) {
+                                            _pedidoInferior(context);
+                                          }
+                                          if (freteTipo ==
+                                              "Retirar no estabelecimento") {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FormaPagamento(
+                                                                nomeEmpresa,
+                                                                endereco,
+                                                                cidadeEstado,
+                                                                freteTipo)));
+                                          }
+                                          if (freteTipo ==
+                                                  "Entrega do estabelecimento" &&
+                                              preco >= 50) {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FormaPagamento(
+                                                                nomeEmpresa,
+                                                                endereco,
+                                                                cidadeEstado,
+                                                                freteTipo)));
+                                          }
+                                        } else {
+                                          _dialogSelecioneEntrega(context,
+                                              "Estabelecimento Fechado");
+                                        }
+                                      }
+                                    : () {
+                                        _dialogSelecioneEntrega(
+                                            context, "Frete não escolhido");
+                                      },
 
-                            child: Text(
-                              'Pagar Pessoalmente',
-                            ),
+                                child: Text(
+                                  'Pagar Pessoalmente',
+                                ),
 
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(18.0),
-                                side: BorderSide(
-                                    color: Colors
-                                        .white30)), // callback when button is clicked
-                            borderSide: BorderSide(
-                              color: Colors.blueGrey, //Color of the border
-                              style: BorderStyle.solid, //Style of the border
-                              width: 0.8, //width of the border
-                            ),
-                          ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(18.0),
+                                    side: BorderSide(
+                                        color: Colors
+                                            .white30)), // callback when button is clicked
+                                borderSide: BorderSide(
+                                  color: Colors.blueGrey, //Color of the border
+                                  style:
+                                      BorderStyle.solid, //Style of the border
+                                  width: 0.8, //width of the border
+                                ),
+                              );
+                            },
+                          )
                         ],
                       ))),
             ),
@@ -366,7 +375,7 @@ class _CardResumoState extends State<CardResumo> {
     );
   }
 
-  void _dialogSelecioneEntrega(BuildContext context) {
+  void _dialogSelecioneEntrega(BuildContext context, String msg) {
     // flutter defined function
     showDialog(
       barrierDismissible: true,
@@ -393,7 +402,8 @@ class _CardResumoState extends State<CardResumo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("Frete não escolhido"),
+                    Text(msg,
+                        style: TextStyle(fontFamily: "QuickSand", fontSize: 12))
                   ],
                 )
               ],
@@ -412,66 +422,5 @@ class _CardResumoState extends State<CardResumo> {
       },
     );
   }
-
-  void _dialogPagamentoPresencial(BuildContext context) {
-    // flutter defined function
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.red,
-                      size: 100,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextField(
-                      maxLines: 4,
-                      controller: enderecoController,
-                      enabled: false,
-                      style: TextStyle(
-                          fontFamily: "WorkSansSemiBold",
-                          fontSize: 16.0,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintStyle: TextStyle(
-                            fontFamily: "QuickSand",
-                            fontSize: 17.0,
-                            color: Colors.black87),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Fechar"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // flutter defined function
 }
