@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'ordemPedidoConfirmado.dart';
+
 class FormaPagamento extends StatelessWidget {
   String freteTipo, nomeEmpresa, endereco, cidadeEstado, formaPagamento;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -72,6 +74,11 @@ class FormaPagamento extends StatelessWidget {
                                           cidadeEstado,
                                           freteTipo,
                                           formaPagamento);
+
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrdemPedidoConfirmado("1")));
                                     } else {
                                       showInSnackBar(
                                           "Selecione uma das opções", context);

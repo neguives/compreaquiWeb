@@ -266,28 +266,26 @@ class _CardResumoState extends State<CardResumo> {
                                           }
                                           if (freteTipo ==
                                               "Retirar no estabelecimento") {
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            FormaPagamento(
-                                                                nomeEmpresa,
-                                                                endereco,
-                                                                cidadeEstado,
-                                                                freteTipo)));
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FormaPagamento(
+                                                            nomeEmpresa,
+                                                            endereco,
+                                                            cidadeEstado,
+                                                            freteTipo)));
                                           }
                                           if (freteTipo ==
                                                   "Entrega do estabelecimento" &&
                                               preco >= 50) {
-                                            Navigator.of(context)
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            FormaPagamento(
-                                                                nomeEmpresa,
-                                                                endereco,
-                                                                cidadeEstado,
-                                                                freteTipo)));
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FormaPagamento(
+                                                            nomeEmpresa,
+                                                            endereco,
+                                                            cidadeEstado,
+                                                            freteTipo)));
                                           }
                                         } else {
                                           _dialogSelecioneEntrega(context,

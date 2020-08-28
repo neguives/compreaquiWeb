@@ -831,27 +831,23 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                 ),
               ),
               actions: <Widget>[
-                new ScopedModelDescendant<UserModel>(
-                  builder: (context, child, model) {
-                    FlatButton(
-                      child: new Text("Continuar"),
-                      onPressed: () async {
-                        uid = firebaseUser.uid;
-                        DocumentReference documentReference = Firestore.instance
-                            .collection("ConsumidorFinal")
-                            .document(firebaseUser.uid);
+                FlatButton(
+                  child: new Text("Continuar"),
+                  onPressed: () async {
+                    uid = firebaseUser.uid;
+                    DocumentReference documentReference = Firestore.instance
+                        .collection("ConsumidorFinal")
+                        .document(firebaseUser.uid);
 
 //            Mudar quando for lançar
 //            documentReference.updateData({"cidade": cidadeEstado});
-                        documentReference
-                            .updateData({"telefone": telefoneController.text});
-                        model.refresh();
-                        model.signIn(
-                            email: "", pass: "", onSucess: null, onFail: null);
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => GeolocalizacaoUsuario()));
-                      },
-                    );
+                    documentReference
+                        .updateData({"telefone": telefoneController.text});
+
+                    Future.delayed(Duration(seconds: 1)).then((_) async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => GeolocalizacaoUsuario()));
+                    });
                   },
                 )
                 // usually buttons at the bottom of the dialog

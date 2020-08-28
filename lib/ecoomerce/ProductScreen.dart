@@ -209,9 +209,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             Firestore.instance
                                                 .collection("catalaoGoias")
                                                 .document(nomeEmpresa)
-                                                .collection("produtos")
-                                                .document(product.category)
-                                                .collection("itens")
+                                                .collection("baseProdutos")
                                                 .document(product.id);
                                         documentReference.updateData({
                                           "quantidade": product.quantidade--

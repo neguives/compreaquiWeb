@@ -14,6 +14,7 @@ class Products_Screen extends StatefulWidget {
   final DocumentSnapshot snapshot;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
+  int id_categoria;
 
   Products_Screen(
       this.snapshot,
@@ -23,7 +24,8 @@ class Products_Screen extends StatefulWidget {
       this.endereco,
       this.latitude,
       this.longitude,
-      this.telefone);
+      this.telefone,
+      this.id_categoria);
   @override
   _Products_ScreenState createState() => _Products_ScreenState(
       this.snapshot,
@@ -33,7 +35,8 @@ class Products_Screen extends StatefulWidget {
       this.endereco,
       this.latitude,
       this.longitude,
-      this.telefone);
+      this.telefone,
+      this.id_categoria);
 }
 
 // ignore: camel_case_types
@@ -41,6 +44,7 @@ class _Products_ScreenState extends State<Products_Screen> {
   final DocumentSnapshot snapshot;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
+  int id_categoria;
 
   _Products_ScreenState(
       this.snapshot,
@@ -50,7 +54,8 @@ class _Products_ScreenState extends State<Products_Screen> {
       this.endereco,
       this.latitude,
       this.longitude,
-      this.telefone);
+      this.telefone,
+      this.id_categoria);
   final pequisarController = TextEditingController();
   String produtoPesquisado;
 
@@ -98,15 +103,20 @@ class _Products_ScreenState extends State<Products_Screen> {
                 child: ScopedModelDescendant<CartModel>(
                   builder: (context, child, model) {
                     return FutureBuilder<QuerySnapshot>(
-                      future: Firestore.instance
-                          .collection(cidadeEstado)
-                          .document(nomeEmpresa)
-                          .collection("produtos")
-                          .where("cat")
-                          .document(snapshot.data["title"])
-                          .collection("itens")
-                          .orderBy("title")
-                          .startAt([produtoPesquisado]).getDocuments(),
+                      future: id_categoria == 0
+                          ? Firestore.instance
+                              .collection(cidadeEstado)
+                              .document(nomeEmpresa)
+                              .collection("baseProdutos")
+                              .orderBy("title")
+                              .startAt([produtoPesquisado]).getDocuments()
+                          : Firestore.instance
+                              .collection(cidadeEstado)
+                              .document(nomeEmpresa)
+                              .collection("baseProdutos")
+                              .where("id_categoria", isEqualTo: id_categoria)
+                              .orderBy("title")
+                              .startAt([produtoPesquisado]).getDocuments(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData)
                           return Center(

@@ -54,7 +54,8 @@ class CategoryTile extends StatelessWidget {
                           endereco,
                           latitude,
                           longitude,
-                          telefone)));
+                          telefone,
+                          snapshot.data["id_categoria"])));
                 },
               ),
             ],

@@ -97,9 +97,7 @@ class _CartTileState extends State<CartTile> {
                                       Firestore.instance
                                           .collection("catalaoGoias")
                                           .document(nomeEmpresa)
-                                          .collection("produtos")
-                                          .document(productData.category)
-                                          .collection("itens")
+                                          .collection("baseProdutos")
                                           .document(productData.id);
 
                                   documentReference.updateData({
@@ -125,9 +123,7 @@ class _CartTileState extends State<CartTile> {
                                       Firestore.instance
                                           .collection("catalaoGoias")
                                           .document(nomeEmpresa)
-                                          .collection("produtos")
-                                          .document(productData.category)
-                                          .collection("itens")
+                                          .collection("baseProdutos")
                                           .document(productData.id);
 
                                   documentReference.updateData({
@@ -150,9 +146,7 @@ class _CartTileState extends State<CartTile> {
                                 .instance
                                 .collection("catalaoGoias")
                                 .document(nomeEmpresa)
-                                .collection("produtos")
-                                .document(productData.category)
-                                .collection("itens")
+                                .collection("baseProdutos")
                                 .document(productData.id);
 
                             documentReference.updateData({
@@ -196,9 +190,7 @@ class _CartTileState extends State<CartTile> {
                 future: Firestore.instance
                     .collection("catalaoGoias")
                     .document(nomeEmpresa)
-                    .collection("produtos")
-                    .document(cartProduct.categoria)
-                    .collection("itens")
+                    .collection("baseProdutos")
                     .document(cartProduct.pid)
                     .get(),
                 builder: (context, snapshot) {
