@@ -772,6 +772,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6+3"
+  mysql1:
+    dependency: "direct main"
+    description:
+      name: mysql1
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.1"
   nested:
     dependency: transitive
     description:
@@ -1071,6 +1078,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  sqljocky5:
+    dependency: "direct main"
+    description:
+      name: sqljocky5
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   stack:
     dependency: transitive
     description:
@@ -1106,6 +1120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.3+2"
   term_glyph:
     dependency: transitive
     description:
@@ -1141,6 +1162,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  typed_buffer:
+    dependency: transitive
+    description:
+      name: typed_buffer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   typed_data:
     dependency: transitive
     description:

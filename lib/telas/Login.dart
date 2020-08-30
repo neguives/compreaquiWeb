@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -162,6 +165,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     _pageController = PageController();
   }
 
+  String msg = "";
   Future<Login> _desconectar(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     final GoogleSignIn googleSignIn = GoogleSignIn();

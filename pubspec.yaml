@@ -32,6 +32,7 @@ dependencies:
   flip_card: ^0.4.4
   flushbar: ^1.10.4
   google_maps_utils:
+  mysql1: ^0.17.1
   google_sign_in:
   geolocator: ^5.3.1
   cloud_functions: ^0.5.0
@@ -46,7 +47,7 @@ dependencies:
   carousel_slider: ^2.0.0
   flutter_login:
   firebase_messaging: ^6.0.16
-  
+  sqljocky5: ^2.2.1
   date_format:
   flutter_credit_card: 0.1.0
   pdf: ^1.8.1
