@@ -10,23 +10,23 @@ import 'ecoomerce/formaPagamento.dart';
 import 'models/cart_model.dart';
 import 'models/user_model.dart';
 
-Future<void> main() async {
+main() async {
   // Open a connection (testdb should already exist)
-
-  final conn = await MySqlConnection.connect(ConnectionSettings(
-      host: 'macmobile04930.mysql.uhserver.com',
-      port: 3306,
-      user: 'macmobile04930',
-      password: 'c1a2i3m@c',
-      db: 'MB_PRODUTO'));
-
-  // Create a table
-  var result = await conn.query(
-      'SELECT * FROM `MB_PRODUTO` WHERE `CODIGO` = "7891000011294" ORDER BY `CODIGO` ASC');
-
-  // Insert some data
-
-  print('Resultado = ${result}');
+//
+//  final conn = await MySqlConnection.connect(ConnectionSettings(
+//      host: 'macmobile04930.mysql.uhserver.com',
+//      port: 3306,
+//      user: 'macmobile04930',
+//      password: 'c1a2i3m@c',
+//      db: 'MB_PRODUTO'));
+//
+//  // Create a table
+//  var result = await conn.query(
+//      'SELECT * FROM `MB_PRODUTO` WHERE `CODIGO` = "7891000011294" ORDER BY `CODIGO` ASC');
+//
+//  // Insert some data
+//
+//  print('Resultado = ${result}');
 
   // Finally, close the connection
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
