@@ -372,8 +372,119 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                             disabledColor: Colors.transparent,
                             splashColor: Colors.transparent,
                             color: Colors.transparent,
-                            onPressed: () {
-                              _loginGoogle();
+                            onPressed: () async {
+                              model.signIn(
+                                  email: "teste@compreaqui.com.br",
+                                  pass: "221295",
+                                  onSucess: _onSucess2,
+                                  onFail: _onFail);
+
+                              _desconectar(context);
+                              AuthService authService = AuthService();
+                              bool res = await authService.googleSignIn();
+                              if (!res) {
+                                print("Erro ao fazer o login com o Google");
+                              } else {
+                                telefoneController.text = "";
+                                FirebaseAuth _auth = FirebaseAuth.instance;
+                                FirebaseUser firebaseUser;
+
+                                if (firebaseUser == null)
+                                  firebaseUser = await _auth.currentUser();
+                                if (firebaseUser != null) {
+                                  uid = firebaseUser.uid;
+                                  showDialog(
+                                    barrierDismissible: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      // return object of type Dialog
+                                      return AlertDialog(
+                                        title: new Center(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icon_zap.png",
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                      "Qual é o seu whatsapp?"),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        content: new TextField(
+                                          maxLines: 1,
+                                          controller: telefoneController,
+                                          enabled: true,
+                                          keyboardType: TextInputType.number,
+                                          style: TextStyle(
+                                              fontFamily: "WorkSansSemiBold",
+                                              fontSize: 16.0,
+                                              color: Colors.black),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            hintText: "Telefone com DDD",
+                                            labelText: "Telefone com DDD",
+                                            hintStyle: TextStyle(
+                                                fontFamily: "QuickSand",
+                                                fontSize: 17.0,
+                                                color: Colors.black87),
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: new Text("Continuar"),
+                                            onPressed: () async {
+                                              uid = firebaseUser.uid;
+                                              DocumentReference
+                                                  documentReference = Firestore
+                                                      .instance
+                                                      .collection(
+                                                          "ConsumidorFinal")
+                                                      .document(
+                                                          firebaseUser.uid);
+
+//            Mudar quando for lançar
+//            documentReference.updateData({"cidade": cidadeEstado});
+                                              documentReference.updateData({
+                                                "telefone":
+                                                    telefoneController.text
+                                              });
+
+                                              Future.delayed(
+                                                      Duration(seconds: 1))
+                                                  .then((_) async {
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                GeolocalizacaoUsuario()));
+                                              });
+                                            },
+                                          )
+                                          // usually buttons at the bottom of the dialog
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }
                             },
                             child: Image.asset(
                               'assets/gmail.png',
@@ -742,6 +853,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
   }
+
+  _onSucess2() {}
 
   void _onFail() {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -1172,4 +1285,9 @@ _showDialogTermos(BuildContext context) {
       );
     },
   );
+  Future<Login> _desconectar(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+
+    return Login();
+  }
 }

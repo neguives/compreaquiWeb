@@ -56,13 +56,13 @@ class _SplashScreenState extends State<SplashScreen> {
             flushbarStyle: FlushbarStyle.GROUNDED,
             isDismissible: true,
             backgroundColor: Theme.of(context).primaryColor,
-            duration: const Duration(seconds: 6),
+            duration: const Duration(seconds: 3),
             icon: Image.asset("assets/ic_launcher.png"))
         .show(context);
   }
 
   openStartPage() async {
-    await Future.delayed(Duration(seconds: 6), () => _loadCurrentUser());
+    await Future.delayed(Duration(seconds: 3), () => _loadCurrentUser());
   }
 
   String id;

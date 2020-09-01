@@ -84,9 +84,7 @@ class _ProductTileState extends State<ProductTile> {
           DocumentReference documentReference = Firestore.instance
               .collection("catalaoGoias")
               .document(nomeEmpresa)
-              .collection("Produtos e Servicos")
-              .document(categoria)
-              .collection("itens")
+              .collection("baseProdutos")
               .document(idDocument);
 
           urlImagem1 = docUrl;
@@ -504,7 +502,7 @@ class _ProductTileState extends State<ProductTile> {
                                               _descricaoProdutoController.text,
                                         }));
 
-                                        _showToastProdutoCadastrado();
+//                                        _showToastProdutoCadastrado();
                                       }
                                     : null,
                             child: Text(
@@ -880,9 +878,7 @@ class _ProductTileState extends State<ProductTile> {
                                             Firestore.instance
                                                 .collection("catalaoGoias")
                                                 .document(nomeEmpresa)
-                                                .collection("produtos")
-                                                .document(categoria)
-                                                .collection("itens")
+                                                .collection("baseProdutos")
                                                 .document(idDocument);
 
                                         await referenciaOrdem.updateData(({

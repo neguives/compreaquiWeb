@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class AuthService {
+class AuthService extends Model {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
@@ -11,7 +13,18 @@ class AuthService {
   Observable<Map<String, dynamic>> profile;
   // ignore: close_sinks
   PublishSubject loading = PublishSubject();
+  static AuthService of(BuildContext context) =>
+      ScopedModel.of<AuthService>(context);
 
+  @override
+  void addListener(listener) {
+    // ignore: todo
+    // TODO: implement addListener
+    super.addListener(listener);
+    _loadCurrentUser();
+  }
+
+  Future<Null> _loadCurrentUser() async {}
   AuthService() {
     user = Observable(_auth.onAuthStateChanged);
 
@@ -46,6 +59,7 @@ class AuthService {
 
         verificarCadastro(result.uid, result.displayName, result.displayName,
             result.email, result.photoUrl);
+        notifyListeners();
         return true;
       }
     } catch (e) {

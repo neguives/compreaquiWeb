@@ -25,58 +25,60 @@ class _CustomDrawerState extends State<CustomDrawer> {
   UserModel user;
   String uid;
   String photo;
-
   _CustomDrawerState(this.uid);
+
+  final GlobalKey drawer = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     print(uid);
     return Drawer(
+        key: drawer,
         child: Stack(
-      children: <Widget>[
-        Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage("assets/background_drawer.png"),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: null /* add child content content here */
-            ),
-        ListView(
-          padding: EdgeInsets.zero,
           children: <Widget>[
-            _createHeader(),
-            Divider(),
-            StreamBuilder(
-              stream: Firestore.instance
-                  .collection("ConsumidorFinal")
-                  .document(uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                } else {
-                  if (snapshot.data["tipoPerfil"] == "Entregador") {
-                    return _createDrawerItem(
-                        icon: Icons.contacts,
-                        text: "Meus Pedidos",
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PedidosRecebidos(uid)));
-                        });
-                  } else {
-                    return _createDrawerItem(
-                        icon: Icons.contacts,
-                        text: 'Meu Perfil',
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PerfilUsuario(uid)));
-                        });
-                  }
-                }
-              },
-            ),
+            Container(
+                decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/background_drawer.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: null /* add child content content here */
+                ),
+            ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                _createHeader(),
+                Divider(),
+                StreamBuilder(
+                  stream: Firestore.instance
+                      .collection("ConsumidorFinal")
+                      .document(uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    } else {
+                      if (snapshot.data["tipoPerfil"] == "Entregador") {
+                        return _createDrawerItem(
+                            icon: Icons.contacts,
+                            text: "Meus Pedidos",
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PedidosRecebidos(uid)));
+                            });
+                      } else {
+                        return _createDrawerItem(
+                            icon: Icons.contacts,
+                            text: 'Meu Perfil',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PerfilUsuario(uid)));
+                            });
+                      }
+                    }
+                  },
+                ),
 
 //            _createDrawerItem(
 //                icon: Icons.business_center,
@@ -85,59 +87,59 @@ class _CustomDrawerState extends State<CustomDrawer> {
 //                  Navigator.of(context).push(MaterialPageRoute(
 //                      builder: (context) => RecomendarEstabelecimento()));
 //                }),
-            _createDrawerItem(
-                icon: Icons.library_books,
-                text: 'Termos de Uso',
-                onTap: () => _showDialogTermos(context)),
-            _createDrawerItem(
-                onTap: () {
-                  _desconectar(context);
-                },
-                icon: Icons.exit_to_app,
-                text: 'Desconectar'),
-            Divider(),
-            Row(
-              children: <Widget>[
-                Container(
-                  color: Colors.black,
-                  width: 10,
+                _createDrawerItem(
+                    icon: Icons.library_books,
+                    text: 'Termos de Uso',
+                    onTap: () => _showDialogTermos(context)),
+                _createDrawerItem(
+                    onTap: () {
+                      _desconectar(context);
+                    },
+                    icon: Icons.exit_to_app,
+                    text: 'Desconectar'),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      color: Colors.black,
+                      width: 10,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text("Nossas Redes Sociais"),
+                    ),
+                    Container(
+                      color: Colors.black38,
+                      width: 10,
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Text("Nossas Redes Sociais"),
-                ),
-                Container(
-                  color: Colors.black38,
-                  width: 10,
-                ),
+                _createDrawerItem(
+                    icon: FontAwesome.instagram,
+                    text: 'Instagram',
+                    onTap: () async {
+                      var instagramUrl =
+                          "https://www.instagram.com/compreaquidelivery/";
+                      await canLaunch(instagramUrl)
+                          ? launch(instagramUrl)
+                          : print(
+                              "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                    }),
+                _createDrawerItem(
+                    icon: FontAwesome.whatsapp,
+                    text: 'WhatsApp',
+                    onTap: () async {
+                      String whatsappUrl =
+                          "whatsapp://send?phone=${"+5564992961918"}&text=${"Olá, vim através do App CompreAqui!"}";
+                      await canLaunch(whatsappUrl)
+                          ? launch(whatsappUrl)
+                          : print(
+                              "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                    }),
               ],
-            ),
-            _createDrawerItem(
-                icon: FontAwesome.instagram,
-                text: 'Instagram',
-                onTap: () async {
-                  var instagramUrl =
-                      "https://www.instagram.com/compreaquidelivery/";
-                  await canLaunch(instagramUrl)
-                      ? launch(instagramUrl)
-                      : print(
-                          "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
-                }),
-            _createDrawerItem(
-                icon: FontAwesome.whatsapp,
-                text: 'WhatsApp',
-                onTap: () async {
-                  String whatsappUrl =
-                      "whatsapp://send?phone=${"+5564992961918"}&text=${"Olá, vim através do App CompreAqui!"}";
-                  await canLaunch(whatsappUrl)
-                      ? launch(whatsappUrl)
-                      : print(
-                          "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
-                }),
+            )
           ],
-        )
-      ],
-    ));
+        ));
   }
 
   Widget _createHeader() {

@@ -14,7 +14,7 @@ class CategoriaTab extends StatelessWidget {
       future: Firestore.instance
           .collection("catalaoGoias")
           .document(nomeEmpresa)
-          .collection("produtos")
+          .collection("categorias")
           .orderBy("pos")
           .getDocuments(),
       builder: (context, snapshot) {

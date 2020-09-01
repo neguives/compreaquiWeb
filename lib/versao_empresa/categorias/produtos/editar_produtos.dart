@@ -27,9 +27,7 @@ class _EditarProdutosState extends State<EditarProdutos> {
       future: Firestore.instance
           .collection("catalaoGoias")
           .document(nomeEmpresa)
-          .collection("produtos")
-          .document(categoria)
-          .collection("itens")
+          .collection("baseProdutos")
           .where("codigoBarras", isEqualTo: codigoBarras)
           .getDocuments(),
       builder: (context, snapshot1) {
@@ -42,7 +40,7 @@ class _EditarProdutosState extends State<EditarProdutos> {
               appBar: AppBar(),
               body: ListView(
                   children: snapshot1.data.documents.map((doc) {
-                return ProductTile("list", nomeEmpresa, doc,
+                return ProductTile("grid", nomeEmpresa, doc,
                     doc.documentID.toString(), categoria);
               }).toList()));
         }

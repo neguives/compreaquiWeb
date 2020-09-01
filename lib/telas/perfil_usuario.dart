@@ -20,6 +20,7 @@ class PerfilUsuario extends StatefulWidget {
 class _PerfilUsuarioState extends State<PerfilUsuario> {
   File _image;
   String uid;
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   _PerfilUsuarioState(this.uid);
   final controllerNome = TextEditingController();
   final controllerApelido = TextEditingController();
@@ -73,6 +74,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             controllerApelido.text = snapshot.data["apelido"].toString();
             controllerTelefone.text = snapshot.data["telefone"].toString();
             return Scaffold(
+                key: _scaffoldKey,
                 appBar: AppBar(
                   iconTheme: new IconThemeData(color: Colors.black),
                   backgroundColor: Colors.white,
@@ -219,6 +221,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                                                         controllerTelefone.text
                                                   });
                                                 }
+                                                showInSnackBar(
+                                                    "Alterações Salvas",
+                                                    context);
                                               },
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
@@ -255,6 +260,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       );
     } else {
       return Container(
+        color: Colors.white,
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -283,6 +289,23 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         ),
       );
     }
+  }
+
+  void showInSnackBar(String value, BuildContext context) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontFamily: "WorkSansSemiBold"),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
   }
 
   void onErrorCallback(error, stackTrace) {

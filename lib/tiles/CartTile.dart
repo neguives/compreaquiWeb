@@ -158,6 +158,7 @@ class _CartTileState extends State<CartTile> {
                           _atualizarQuantidade();
                           CartModel.of(context)
                               .removeCartItem(cartProduct, nomeEmpresa);
+                          print("clicado");
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => CartScreen(
