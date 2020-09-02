@@ -11,23 +11,6 @@ import 'models/cart_model.dart';
 import 'models/user_model.dart';
 
 main() async {
-  // Open a connection (testdb should already exist)
-//
-//  final conn = await MySqlConnection.connect(ConnectionSettings(
-//      host: 'macmobile04930.mysql.uhserver.com',
-//      port: 3306,
-//      user: 'macmobile04930',
-//      password: 'c1a2i3m@c',
-//      db: 'MB_PRODUTO'));
-//
-//  // Create a table
-//  var result = await conn.query(
-//      'SELECT * FROM `MB_PRODUTO` WHERE `CODIGO` = "7891000011294" ORDER BY `CODIGO` ASC');
-//
-//  // Insert some data
-//
-//  print('Resultado = ${result}');
-
   // Finally, close the connection
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -70,38 +53,6 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class RestartWidget extends StatefulWidget {
-  RestartWidget({this.child});
-
-  final Widget child;
-
-  static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
-  }
-
-  @override
-  _RestartWidgetState createState() => _RestartWidgetState();
-}
-
-class _RestartWidgetState extends State<RestartWidget> {
-  Key key = UniqueKey();
-
-  void restartApp() {
-    print("Restart Widget State");
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: widget.child,
     );
   }
 }

@@ -142,10 +142,10 @@ class ProductTile extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: "Roboto",
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     color: product.promo == true
                                         ? Colors.red
-                                        : Colors.blue.shade700),
+                                        : Colors.red),
                               ),
                               Text(
                                 product.promo == true && product.quantidade > 0

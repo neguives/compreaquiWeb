@@ -2,6 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
 import 'package:compreaidelivery/drawer/custom_drawer_entregador.dart';
+import 'package:compreaidelivery/nuagetRefresh/atualizar_produtos.dart';
 import 'package:compreaidelivery/tab/empresas_tab.dart';
 import 'package:compreaidelivery/versao_empresa/demonstrativos/demonstrativos.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/telas/pedidos_recebidos.dart';
@@ -123,6 +124,20 @@ class TelaSelecaoCategoria extends StatelessWidget {
                                   builder: (context) => Demonstrativos(
                                         snapshot.data["nome"].toString(),
                                         snapshot.data["cidade"].toString(),
+                                      )));
+                            },
+                            child: FlatButton(
+                              child: Image.asset(
+                                "assets/btn_demonstrativos.png",
+                                height: 140,
+                                width: 140,
+                              ),
+                            )),
+                        InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => AtualizarProdutos(
+                                        snapshot.data["nome"].toString(),
                                       )));
                             },
                             child: FlatButton(

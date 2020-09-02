@@ -26,6 +26,7 @@ dependencies:
   keyboard_actions: ^3.3.0+1
   brasil_fields: ^0.2.0
 
+  http:
   credit_card_type_detector: ^1.1.0
   google_map_polyline:
   maps_toolkit: ^1.0.1+3
