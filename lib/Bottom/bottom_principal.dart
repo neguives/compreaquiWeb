@@ -1,6 +1,7 @@
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/ecoomerce/produtosTwo.dart';
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:compreaidelivery/widgets/AnimatedBottomBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +10,16 @@ import 'package:flutter/services.dart';
 class BottomPrincipal extends StatefulWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  BottomPrincipal(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
-      this.endereco, this.latitude, this.longitude, this.telefone);
+  List<BaseDadosProdutos> baseDadosProdutos;
+  BottomPrincipal(
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.baseDadosProdutos);
   final List<BarItem> barItems = [
     BarItem(
       text: "Meu carrinho",
@@ -38,17 +47,26 @@ class BottomPrincipal extends StatefulWidget {
       this.endereco,
       this.latitude,
       this.longitude,
-      this.telefone);
+      this.telefone,
+      this.baseDadosProdutos);
 }
 
 class _BottomPrincipal extends State<BottomPrincipal> {
   ProductData productData;
+  List<BaseDadosProdutos> baseDadosProdutos;
 
   int selectedBarIndex = 1;
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  _BottomPrincipal(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
-      this.endereco, this.latitude, this.longitude, this.telefone);
+  _BottomPrincipal(
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.baseDadosProdutos);
   @override
   Widget build(BuildContext context) {
     print(nomeEmpresa);
@@ -69,7 +87,7 @@ class _BottomPrincipal extends State<BottomPrincipal> {
       CartScreen(productData, nomeEmpresa, imagemEmpresa, cidadeEstado,
           endereco, latitude, longitude, telefone),
       SelecaoCategoria(nomeEmpresa, imagemEmpresa, cidadeEstado, endereco,
-          latitude, longitude, telefone),
+          latitude, longitude, telefone, baseDadosProdutos),
 //      OrdersTab(nomeEmpresa, imagemEmpresa, cidadeEstado),
     ];
     return Scaffold(

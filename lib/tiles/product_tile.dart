@@ -17,7 +17,9 @@ class ProductTile extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
 
+  List<BaseDadosProdutos> baseDadosProdutos;
   ProductTile(
+    this.baseDadosProdutos,
     this.type,
     this.product,
     this.nomeEmpresa,
@@ -28,8 +30,51 @@ class ProductTile extends StatelessWidget {
     this.longitude,
     this.telefone,
   );
+  List<BaseDadosProdutos> _searchResult = [];
+
+  List<BaseDadosProdutos> _userDetails = [];
+  refreshDataDio() async {
+    double valor;
+    var dataStr = jsonEncode({
+      "command": "get_products",
+    });
+    var url = "https://nuage.net.br/lucas/controller.php?data=" + dataStr;
+
+    Response response = await Dio().get(url);
+
+//    print(response.data);
+
+    List<BaseDadosProdutos> baseProdutos = List<BaseDadosProdutos>();
+
+    for (Map<String, dynamic> item in response.data) {
+      baseProdutos.add(BaseDadosProdutos.fromJson(item));
+//      print(item);
+
+    }
+    List<BaseDadosProdutos> _searchResult = [];
+
+    List<BaseDadosProdutos> _userDetails = [];
+    baseProdutos.forEach((element) {
+      if (element.cODIGO.contains(product.codigoBarras)) {
+        _searchResult.add(element);
+        valor = double.parse(_searchResult[0].vLVARJ.toString());
+        product.price = 555;
+      }
+
+      print(_searchResult[0].vLVARJ.toString);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _searchResult.clear();
+    baseDadosProdutos.forEach((element) {
+      if (element.cODIGO.startsWith(product.codigoBarras)) {
+        _searchResult.add(element);
+        print(_searchResult[0]);
+        product.price = double.parse(_searchResult[0].vLVARJ);
+      }
+    });
     return InkWell(onTap: () {
 //        print(product.quantidade.toString());
       Navigator.of(context).push(MaterialPageRoute(
@@ -44,9 +89,8 @@ class ProductTile extends StatelessWidget {
               telefone)));
     }, child: ScopedModelDescendant<CartModel>(
       builder: (context, child, model) {
-        product.price = 1;
+//        product.price = 1;
 
-        refreshDataDio(product.codigoBarras);
         return Card(
             child: type == "grid"
                 ? Column(
@@ -251,35 +295,5 @@ class ProductTile extends StatelessWidget {
                   ));
       },
     ));
-  }
-
-  refreshDataDio(String codigoBarras) async {
-    var dataStr = jsonEncode({
-      "command": "get_products",
-    });
-    var url = "https://nuage.net.br/lucas/controller.php?data=" + dataStr;
-
-    Response response = await Dio().get(url);
-
-//    print(response.data);
-
-    List<BaseDadosProdutos> baseProdutos = List<BaseDadosProdutos>();
-
-    for (Map<String, dynamic> item in response.data) {
-      baseProdutos.add(BaseDadosProdutos.fromJson(item));
-//      print(item);
-
-    }
-    List<BaseDadosProdutos> _searchResult = [];
-
-    List<BaseDadosProdutos> _userDetails = [];
-    baseProdutos.forEach((element) {
-      if (element.cODIGO.contains(codigoBarras)) {
-        _searchResult.add(element);
-        String valor = _searchResult[0].vLVARJ.toString();
-        print(valor);
-        product.price = double.parse(_searchResult[0].vLVARJ.toString())
-      }
-    });
   }
 }

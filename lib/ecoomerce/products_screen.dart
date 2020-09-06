@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:compreaidelivery/tiles/product_tile.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -16,6 +20,7 @@ class Products_Screen extends StatefulWidget {
   double latitude, longitude;
   int id_categoria;
 
+  List<BaseDadosProdutos> baseDadosProdutos;
   Products_Screen(
       this.snapshot,
       this.nomeEmpresa,
@@ -25,7 +30,8 @@ class Products_Screen extends StatefulWidget {
       this.latitude,
       this.longitude,
       this.telefone,
-      this.id_categoria);
+      this.id_categoria,
+      this.baseDadosProdutos);
   @override
   _Products_ScreenState createState() => _Products_ScreenState(
       this.snapshot,
@@ -36,7 +42,8 @@ class Products_Screen extends StatefulWidget {
       this.latitude,
       this.longitude,
       this.telefone,
-      this.id_categoria);
+      this.id_categoria,
+      this.baseDadosProdutos);
 }
 
 // ignore: camel_case_types
@@ -45,6 +52,7 @@ class _Products_ScreenState extends State<Products_Screen> {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
   int id_categoria;
+  List<BaseDadosProdutos> baseDadosProdutos;
 
   _Products_ScreenState(
       this.snapshot,
@@ -55,7 +63,8 @@ class _Products_ScreenState extends State<Products_Screen> {
       this.latitude,
       this.longitude,
       this.telefone,
-      this.id_categoria);
+      this.id_categoria,
+      this.baseDadosProdutos);
   final pequisarController = TextEditingController();
   String produtoPesquisado;
 
@@ -102,6 +111,8 @@ class _Products_ScreenState extends State<Products_Screen> {
                 padding: EdgeInsets.only(top: 40),
                 child: ScopedModelDescendant<CartModel>(
                   builder: (context, child, model) {
+                    List<BaseDadosProdutos> base =
+                        model.getAdicionarValoresAtualizados();
                     return FutureBuilder<QuerySnapshot>(
                       future: id_categoria == 0
                           ? Firestore.instance
@@ -123,6 +134,8 @@ class _Products_ScreenState extends State<Products_Screen> {
                             child: CircularProgressIndicator(),
                           );
                         else
+//                          print("Deus " + baseDadosProdutos.toString());
+
                           return GridView.builder(
                               padding: EdgeInsets.all(5),
                               gridDelegate:
@@ -136,8 +149,10 @@ class _Products_ScreenState extends State<Products_Screen> {
                                 ProductData data = ProductData.fromDocument(
                                     snapshot.data.documents[index]);
                                 data.category = this.snapshot.documentID;
-                                print(data.quantidade);
+                                List<BaseDadosProdutos> _searchResult = [];
+
                                 return ProductTile(
+                                    baseDadosProdutos,
                                     "grid",
                                     data,
                                     nomeEmpresa,

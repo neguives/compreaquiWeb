@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -20,6 +21,7 @@ class CartModel extends Model {
   UserModel user;
   List<CartProduct> products = [];
 
+  List<BaseDadosProdutos> baseDadosProdutos = [];
   bool isLoading = false;
   CartModel(this.user) {
     if (user.isLoggedIn()) loadCartItens(nomeEmpresa);
@@ -81,6 +83,15 @@ class CartModel extends Model {
 
   bool getEntregaGratuita() {
     return entregaGratis;
+  }
+
+  setAdicionarValoresAtualizados(BaseDadosProdutos produtosAtualizados) {
+    baseDadosProdutos.add(produtosAtualizados);
+    notifyListeners();
+  }
+
+  getAdicionarValoresAtualizados() {
+    return baseDadosProdutos;
   }
 
   void incProduct(CartProduct cartProduct, String nomeEmpresa) {

@@ -1,3 +1,4 @@
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:compreaidelivery/tab/products_tabTwo.dart';
 import 'package:flutter/material.dart';
 
@@ -5,8 +6,17 @@ import 'package:flutter/material.dart';
 class SelecaoCategoria extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
-  SelecaoCategoria(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado,
-      this.endereco, this.latitude, this.longitude, this.telefone);
+  List<BaseDadosProdutos> baseDadosProdutos;
+
+  SelecaoCategoria(
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.baseDadosProdutos);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +32,7 @@ class SelecaoCategoria extends StatelessWidget {
         centerTitle: true,
       ),
       body: ProductTab(nomeEmpresa, imagemEmpresa, cidadeEstado, endereco,
-          latitude, longitude, telefone),
+          latitude, longitude, telefone, baseDadosProdutos),
     );
   }
 }

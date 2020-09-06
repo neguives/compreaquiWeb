@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 import 'categoriesTwo.dart';
@@ -7,15 +9,17 @@ import 'categoriesTwo.dart';
 class ProductTab extends StatelessWidget {
   String nomeEmpresa, imagemEmpresa, cidadeEstado, endereco, telefone;
   double latitude, longitude;
+  List<BaseDadosProdutos> baseDadosProdutos;
+
   ProductTab(
-    this.nomeEmpresa,
-    this.imagemEmpresa,
-    this.cidadeEstado,
-    this.endereco,
-    this.latitude,
-    this.longitude,
-    this.telefone,
-  );
+      this.nomeEmpresa,
+      this.imagemEmpresa,
+      this.cidadeEstado,
+      this.endereco,
+      this.latitude,
+      this.longitude,
+      this.telefone,
+      this.baseDadosProdutos);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
@@ -28,8 +32,16 @@ class ProductTab extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
-            child: Text(nomeEmpresa),
-          );
+              child: Container(
+            height: 200,
+            width: 200,
+            child: FlareActor(
+              "assets/fruit_loading.flr",
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              animation: "move",
+            ),
+          ));
         else {
           return Stack(
             children: <Widget>[
@@ -42,8 +54,16 @@ class ProductTab extends StatelessWidget {
               ),
               ListView(
                   children: snapshot.data.documents.map((doc) {
-                return CategoryTile(doc, nomeEmpresa, imagemEmpresa,
-                    cidadeEstado, endereco, latitude, longitude, telefone);
+                return CategoryTile(
+                    doc,
+                    nomeEmpresa,
+                    imagemEmpresa,
+                    cidadeEstado,
+                    endereco,
+                    latitude,
+                    longitude,
+                    telefone,
+                    baseDadosProdutos);
               }).toList())
             ],
           );

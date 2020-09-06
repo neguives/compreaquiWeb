@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:compreaidelivery/Bottom/bottom_principal.dart';
+import 'package:compreaidelivery/ecoomerce/splash_screen_empresa.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tab/ordersTab.dart';
@@ -127,19 +128,7 @@ class PaginaEmpresa extends StatelessWidget {
                                 images: [
                                   Image.network(galeriaPagina.elementAt(0)),
                                   InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BottomPrincipal(
-                                                      nomeEmpresa,
-                                                      imagemEmpresa,
-                                                      cidadeEstado,
-                                                      endereco,
-                                                      latitude,
-                                                      longitude,
-                                                      whatsapp)));
-                                    },
+                                    onTap: () {},
                                     child: Container(
                                       child: ClipRRect(
                                         borderRadius:
@@ -191,7 +180,7 @@ class PaginaEmpresa extends StatelessWidget {
                           print(model.getFreteKarona());
                           model.limparCarrinho(nomeEmpresa, endereco);
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => BottomPrincipal(
+                              builder: (context) => SplashScreenEmpresa(
                                   nomeEmpresa,
                                   imagemEmpresa,
                                   "catalaoGoias",
