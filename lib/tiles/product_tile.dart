@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
+import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -40,6 +44,9 @@ class ProductTile extends StatelessWidget {
               telefone)));
     }, child: ScopedModelDescendant<CartModel>(
       builder: (context, child, model) {
+        product.price = 1;
+
+        refreshDataDio(product.codigoBarras);
         return Card(
             child: type == "grid"
                 ? Column(
@@ -244,5 +251,35 @@ class ProductTile extends StatelessWidget {
                   ));
       },
     ));
+  }
+
+  refreshDataDio(String codigoBarras) async {
+    var dataStr = jsonEncode({
+      "command": "get_products",
+    });
+    var url = "https://nuage.net.br/lucas/controller.php?data=" + dataStr;
+
+    Response response = await Dio().get(url);
+
+//    print(response.data);
+
+    List<BaseDadosProdutos> baseProdutos = List<BaseDadosProdutos>();
+
+    for (Map<String, dynamic> item in response.data) {
+      baseProdutos.add(BaseDadosProdutos.fromJson(item));
+//      print(item);
+
+    }
+    List<BaseDadosProdutos> _searchResult = [];
+
+    List<BaseDadosProdutos> _userDetails = [];
+    baseProdutos.forEach((element) {
+      if (element.cODIGO.contains(codigoBarras)) {
+        _searchResult.add(element);
+        String valor = _searchResult[0].vLVARJ.toString();
+        print(valor);
+        product.price = double.parse(_searchResult[0].vLVARJ.toString())
+      }
+    });
   }
 }

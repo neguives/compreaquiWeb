@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
@@ -15,6 +17,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 
 class TelaSelecaoCategoria extends StatelessWidget {
   String cidadeEstado, endereco, imagem, uid;
@@ -134,7 +138,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                               ),
                             )),
                         InkWell(
-                            onTap: () {
+                            onTap: () async {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => AtualizarProdutos(
                                         snapshot.data["nome"].toString(),
