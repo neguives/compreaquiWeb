@@ -5,6 +5,7 @@ import 'package:compreaidelivery/ecoomerce/splash_screen_empresa.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/tab/ordersTab.dart';
+import 'package:compreaidelivery/telas/pedidos_recebidos_consumidor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -208,9 +209,8 @@ class PaginaEmpresa extends StatelessWidget {
                                 fontFamily: "QuickSand", fontSize: 12)),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => OrdersTab(
+                              builder: (context) => PedidosRecebidosConsumidor(
                                     nomeEmpresa,
-                                    imagemEmpresa,
                                     cidadeEstado,
                                   )));
                         },

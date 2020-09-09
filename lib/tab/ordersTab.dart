@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class OrdersTab extends StatelessWidget {
+  int status;
   String nomeEmpresa, imagemEmpresa, cidadeEstado;
-  OrdersTab(this.nomeEmpresa, this.imagemEmpresa, this.cidadeEstado);
+  OrdersTab(this.nomeEmpresa, this.cidadeEstado, this.status);
   @override
   Widget build(BuildContext context) {
     if (UserModel.of(context).isLoggedIn()) {
@@ -30,16 +31,7 @@ class OrdersTab extends StatelessWidget {
                 appBar: AppBar(
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        child: Image.asset(
-                          'assets/logo.png',
-                          width: 50,
-                          height: 50,
-                        ),
-                        padding: EdgeInsets.only(right: 50),
-                      )
-                    ],
+                    children: [],
                   ),
                   iconTheme: new IconThemeData(color: Colors.black),
                   backgroundColor: Colors.white,
@@ -55,35 +47,6 @@ class OrdersTab extends StatelessWidget {
                         ),
                       ),
                       /* add child content content here */
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                elevation: 40,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(100.0),
-                                    side: BorderSide(color: Colors.white30)),
-                                child: Container(
-                                    width: 100.0,
-                                    height: 100.0,
-                                    decoration: new BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: new DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image:
-                                              new NetworkImage(imagemEmpresa),
-                                        ))),
-                              ),
-                              Text("Minhas Solicitações",
-                                  style: TextStyle(
-                                      fontFamily: "QuickSand", fontSize: 20))
-                            ],
-                          )),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(16, 180, 16, 1),

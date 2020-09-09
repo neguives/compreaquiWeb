@@ -856,12 +856,74 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 
   _onSucess2() {}
 
-  void _onFail() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+  void _onFail() async {
+    await _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text("Sua senha está errada."),
       backgroundColor: Colors.blueGrey,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 3),
     ));
+    await showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+            title: new Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.lock,
+                        size: 50,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "Deseja redefinir sua senha ?",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              Row(
+                children: [
+                  FlatButton(
+                    child: new Text("Redefinir"),
+                    onPressed: () async {
+                      FirebaseAuth auth = FirebaseAuth.instance;
+
+                      auth.sendPasswordResetEmail(email: _emailController.text);
+
+                      Navigator.pop(context);
+                      await _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(
+                            "Um e-mail de redefinição de senha foi enviado para ${_emailController.text}"),
+                        backgroundColor: Colors.blueGrey,
+                        duration: Duration(seconds: 3),
+                      ));
+                    },
+                  ),
+                  FlatButton(
+                      child: new Text("Cancelar"),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      })
+                ],
+              ),
+            ]);
+      },
+    );
   }
 
   void _onFailRegister() {
