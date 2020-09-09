@@ -678,7 +678,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                            color: Theme.Colors.loginGradientStart,
+                            color: Colors.blue,
                             offset: Offset(1.0, 6.0),
                             blurRadius: 20.0,
                           ),
@@ -689,10 +689,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                           ),
                         ],
                         gradient: new LinearGradient(
-                            colors: [
-                              Theme.Colors.loginGradientEnd,
-                              Theme.Colors.loginGradientStart
-                            ],
+                            colors: [Colors.green, Colors.lightGreen],
                             begin: const FractionalOffset(0.2, 0.2),
                             end: const FractionalOffset(1.0, 1.0),
                             stops: [0.0, 1.0],
