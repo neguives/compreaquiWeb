@@ -49,7 +49,7 @@ class OrdersTab extends StatelessWidget {
                       /* add child content content here */
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(16, 180, 16, 1),
+                      padding: EdgeInsets.fromLTRB(16, 10, 16, 1),
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: snapshot.data.documents

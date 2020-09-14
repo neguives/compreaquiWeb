@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tiles/comprados_tile.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -33,7 +34,16 @@ class OrderTile extends StatelessWidget {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData)
                         return Center(
-                          child: CircularProgressIndicator(),
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            child: FlareActor(
+                              "assets/loading_compreaqui.flr",
+                              alignment: Alignment.center,
+                              fit: BoxFit.contain,
+                              animation: "effect",
+                            ),
+                          ),
                         );
                       else {
                         int status = snapshot.data["status"];
@@ -67,19 +77,11 @@ class OrderTile extends StatelessWidget {
                                     padding: EdgeInsets.all(10),
                                     child: (Column(
                                       children: [
-                                        ListView(
-                                          children: [
-                                            ListTile(
-                                              leading: Icon(Icons.car_rental),
-                                              title: Text(
-                                                snapshot.data["tipoFrete"],
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          snapshot.data["tipoFrete"],
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         Text(
                                           snapshot.data["formaPagamento"] !=

@@ -7,6 +7,7 @@ import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:compreaidelivery/tiles/product_tile.dart';
 import 'package:compreaidelivery/widgets/cart_button.dart';
 import 'package:dio/dio.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -132,7 +133,16 @@ class _Products_ScreenState extends State<Products_Screen> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData)
                           return Center(
-                            child: CircularProgressIndicator(),
+                            child: Container(
+                              height: 200,
+                              width: 200,
+                              child: FlareActor(
+                                "assets/fruit_loading.flr",
+                                alignment: Alignment.center,
+                                fit: BoxFit.contain,
+                                animation: "move",
+                              ),
+                            ),
                           );
                         else
 //                          print("Deus " + baseDadosProdutos.toString());
