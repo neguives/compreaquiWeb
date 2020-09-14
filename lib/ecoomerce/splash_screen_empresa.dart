@@ -61,22 +61,18 @@ class _SplashScreenEmpresaState extends State<SplashScreenEmpresa> {
 
     for (Map<String, dynamic> item in response.data) {
       baseProdutos.add(BaseDadosProdutos.fromJson(item));
-//      print(item);
-
+      print(item);
     }
-
-    await Future.delayed(
-        Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => BottomPrincipal(
-                nomeEmpresa,
-                imagemEmpresa,
-                "catalaoGoias",
-                endereco,
-                latitude,
-                longitude,
-                telefone,
-                baseProdutos))));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => BottomPrincipal(
+            nomeEmpresa,
+            imagemEmpresa,
+            "catalaoGoias",
+            endereco,
+            latitude,
+            longitude,
+            telefone,
+            baseProdutos)));
   }
 
   String id;

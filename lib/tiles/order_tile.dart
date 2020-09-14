@@ -62,27 +62,39 @@ class OrderTile extends StatelessWidget {
                                       size: 100.0,
                                     ),
                                   ),
-                                  Text(
-                                    snapshot.data["tipoFrete"],
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    snapshot.data["formaPagamento"] != null
-                                        ? snapshot.data["formaPagamento"]
-                                        : "",
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                  Card(
+                                      child: (Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: (Column(
+                                      children: [
+                                        ListView(
+                                          children: [
+                                            ListTile(
+                                              leading: Icon(Icons.car_rental),
+                                              title: Text(
+                                                snapshot.data["tipoFrete"],
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          snapshot.data["formaPagamento"] !=
+                                                  null
+                                              ? snapshot.data["formaPagamento"]
+                                              : "",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )),
+                                  ))),
                                   SizedBox(height: 4),
-                                  Text(
-                                    "Descrição:",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
                                   Card(
                                     child: Padding(
                                       padding: EdgeInsets.all(5),

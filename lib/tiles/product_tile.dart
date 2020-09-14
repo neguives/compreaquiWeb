@@ -31,10 +31,10 @@ class ProductTile extends StatelessWidget {
     this.telefone,
   );
   List<BaseDadosProdutos> _searchResult = [];
+  double valor;
 
   List<BaseDadosProdutos> _userDetails = [];
   refreshDataDio() async {
-    double valor;
     var dataStr = jsonEncode({
       "command": "get_products",
     });
@@ -54,29 +54,22 @@ class ProductTile extends StatelessWidget {
     List<BaseDadosProdutos> _searchResult = [];
 
     List<BaseDadosProdutos> _userDetails = [];
-    baseProdutos.forEach((element) {
-      if (element.cODIGO.contains(product.codigoBarras)) {
-        _searchResult.add(element);
-        valor = double.parse(_searchResult[0].vLVARJ.toString());
-        product.price = 555;
-      }
-
-      print(_searchResult[0].vLVARJ.toString);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     _searchResult.clear();
     baseDadosProdutos.forEach((element) {
-      if (element.cODIGO.startsWith(product.codigoBarras)) {
+      if (element.cODIGO.contains(product.codigoBarras)) {
         _searchResult.add(element);
-        print(_searchResult[0]);
+        double quant = double.parse(_searchResult[0].estoque);
+        // print(_searchResult[0]);
         product.price = double.parse(_searchResult[0].vLVARJ);
+        product.quantidade = quant.round();
       }
     });
     return InkWell(onTap: () {
-//        print(product.quantidade.toString());
+      print(product.codBarras.toString());
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProductScreen(
               product,

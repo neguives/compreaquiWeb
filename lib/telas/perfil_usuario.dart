@@ -56,9 +56,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     }
 
     if (UserModel.of(context).isLoggedIn()) {
-      String uid = UserModel.of(context).firebaseUser.uid;
-      print(uid);
-
       return StreamBuilder(
         stream: Firestore.instance
             .collection("ConsumidorFinal")

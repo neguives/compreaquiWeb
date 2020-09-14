@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/drawer/custom_drawer.dart';
 import 'package:compreaidelivery/drawer/custom_drawer_entregador.dart';
@@ -26,6 +25,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
   final enderecoController = TextEditingController();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool enderecoConfirmado = false;
+
   TelaSelecaoCategoria(
       {this.cidadeEstado,
       this.endereco,
@@ -35,279 +35,310 @@ class TelaSelecaoCategoria extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    verificarCidadeCatalao();
-    return Scaffold(
-        drawer: CustomDrawer(uid),
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                child: Image.asset(
-                  'assets/logo.png',
-                  width: 50,
-                  height: 50,
+    Future<bool> _onWillPop() async {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('Do you want to exit an App'),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text('No'),
                 ),
-                padding: EdgeInsets.only(right: 50),
-              )
-            ],
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: new Text('Yes'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
+
+    verificarCidadeCatalao();
+    return new WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        print("");
+      },
+      child: Scaffold(
+          drawer: CustomDrawer(uid),
+          appBar: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 50,
+                    height: 50,
+                  ),
+                  padding: EdgeInsets.only(right: 50),
+                )
+              ],
+            ),
+            iconTheme: new IconThemeData(color: Colors.black),
+            backgroundColor: Colors.white,
           ),
-          iconTheme: new IconThemeData(color: Colors.black),
           backgroundColor: Colors.white,
-        ),
-        backgroundColor: Colors.white,
-        body: StreamBuilder(
-          stream: Firestore.instance
-              .collection("ConsumidorFinal")
-              .document(uid)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return LinearProgressIndicator();
-            } else {
-              if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
-                if (snapshot.data["nome"] == "Supermecado Newton") {
-                  _firebaseMessaging.subscribeToTopic("supermecadonewton");
-                }
-                return Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 1.0),
-                      child: new Padding(
-                          padding: EdgeInsets.only(
-                              left: 30, right: 30, top: 30, bottom: 20),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/logo.png',
-                                width: 150,
-                                height: 150,
-                              ),
-                              Text("Versão Parceiro",
-                                  style: TextStyle(fontFamily: "QuickSand"))
-                            ],
-                          )),
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PedidosRecebidos(
-                                      snapshot.data["nome"].toString(),
-                                      cidadeEstado)));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_pedidos_recebidos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => VersaoEmpresaCategorias(
-                                      snapshot.data["nome"].toString(),
-                                      cidadeEstado)));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_produtos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Demonstrativos(
-                                        snapshot.data["nome"].toString(),
-                                        snapshot.data["cidade"].toString(),
-                                      )));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_demonstrativos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                        InkWell(
-                            onTap: () async {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AtualizarProdutos(
-                                        snapshot.data["nome"].toString(),
-                                      )));
-                            },
-                            child: FlatButton(
-                              child: Image.asset(
-                                "assets/btn_demonstrativos.png",
-                                height: 140,
-                                width: 140,
-                              ),
-                            )),
-                      ],
-                    )
-                  ],
-                );
-              } else if (snapshot.data["tipoPerfil"].toString() ==
-                  "Entregador") {
-                _firebaseMessaging.subscribeToTopic("Entregador");
-                return FutureBuilder<QuerySnapshot>(
-                  future: Firestore.instance
-                      .collection("Entregadores")
-                      .document("PedidosRecebidos")
-                      .collection("TempoReal")
-                      .getDocuments(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: (Padding(
-                              padding: EdgeInsets.only(top: 50),
-                              child: ListView(
-                                children: snapshot.data.documents
-                                    .map(
-                                        (doc) => OrderTile(doc.documentID, uid))
-                                    .toList(),
-                              ),
-                            )),
-                          )
-                        ],
-                      );
-                    }
-                  },
-                );
+          body: StreamBuilder(
+            stream: Firestore.instance
+                .collection("ConsumidorFinal")
+                .document(uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return LinearProgressIndicator();
               } else {
-                _firebaseMessaging.subscribeToTopic(uid);
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                      decoration: new BoxDecoration(
-                        image: new DecorationImage(
-                          image:
-                              new AssetImage("assets/bg_selecaocategoria.webp"),
-                          fit: BoxFit.cover,
+                if (snapshot.data["tipoPerfil"].toString() == "Empresa") {
+                  if (snapshot.data["nome"] == "Supermecado Newton") {
+                    _firebaseMessaging.subscribeToTopic("supermecadonewton");
+                  }
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 1.0),
+                        child: new Padding(
+                            padding: EdgeInsets.only(
+                                left: 30, right: 30, top: 30, bottom: 20),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/logo.png',
+                                  width: 150,
+                                  height: 150,
+                                ),
+                                Text("Versão Parceiro",
+                                    style: TextStyle(fontFamily: "QuickSand"))
+                              ],
+                            )),
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PedidosRecebidos(
+                                        snapshot.data["nome"].toString(),
+                                        cidadeEstado)));
+                              },
+                              child: FlatButton(
+                                child: Image.asset(
+                                  "assets/btn_pedidos_recebidos.png",
+                                  height: 140,
+                                  width: 140,
+                                ),
+                              )),
+                          InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        VersaoEmpresaCategorias(
+                                            snapshot.data["nome"].toString(),
+                                            cidadeEstado)));
+                              },
+                              child: FlatButton(
+                                child: Image.asset(
+                                  "assets/btn_produtos.png",
+                                  height: 140,
+                                  width: 140,
+                                ),
+                              )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Demonstrativos(
+                                          snapshot.data["nome"].toString(),
+                                          snapshot.data["cidade"].toString(),
+                                        )));
+                              },
+                              child: FlatButton(
+                                child: Image.asset(
+                                  "assets/btn_demonstrativos.png",
+                                  height: 140,
+                                  width: 140,
+                                ),
+                              )),
+                          InkWell(
+                              onTap: () async {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AtualizarProdutos(
+                                          snapshot.data["nome"].toString(),
+                                        )));
+                              },
+                              child: FlatButton(
+                                child: Image.asset(
+                                  "assets/btn_demonstrativos.png",
+                                  height: 140,
+                                  width: 140,
+                                ),
+                              )),
+                        ],
+                      )
+                    ],
+                  );
+                } else if (snapshot.data["tipoPerfil"].toString() ==
+                    "Entregador") {
+                  _firebaseMessaging.subscribeToTopic("Entregador");
+                  return FutureBuilder<QuerySnapshot>(
+                    future: Firestore.instance
+                        .collection("Entregadores")
+                        .document("PedidosRecebidos")
+                        .collection("TempoReal")
+                        .getDocuments(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: (Padding(
+                                padding: EdgeInsets.only(top: 50),
+                                child: ListView(
+                                  children: snapshot.data.documents
+                                      .map((doc) =>
+                                          OrderTile(doc.documentID, uid))
+                                      .toList(),
+                                ),
+                              )),
+                            )
+                          ],
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  _firebaseMessaging.subscribeToTopic(uid);
+                  return Stack(
+                    children: <Widget>[
+                      Container(
+                        decoration: new BoxDecoration(
+                          image: new DecorationImage(
+                            image: new AssetImage(
+                                "assets/bg_selecaocategoria.webp"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: null /* add child content content here */,
+                      ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 100),
+                            child: Container(
+                              height: 320,
+                              width: 400,
+                              child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white30),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 35),
+                                        child: Text(
+                                          "O que você está procurando ?",
+                                          style: TextStyle(
+                                              fontFamily: "QuickSand",
+                                              color: Colors.black54),
+                                        ),
+                                      ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: <Widget>[
+                                            InkWell(
+                                                onTap: () {
+                                                  _showDialogEndereco(context);
+                                                },
+                                                child: FlatButton(
+                                                  child: Image.asset(
+                                                    "assets/btn_categoria_supermecados.png",
+                                                    height: 240,
+                                                    width: 150,
+                                                  ),
+                                                )),
+                                            InkWell(
+                                                onTap: () {
+                                                  _showDialogEnderecoCat2(
+                                                      context);
+                                                },
+                                                child: FlatButton(
+                                                  child: Image.asset(
+                                                    "assets/btn_categoria_farmacia.png",
+                                                    height: 240,
+                                                    width: 150,
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Transform.scale(
+                              scale: 1.2,
+                              child: Image.asset(
+                                "assets/logo.png",
+                                height: 150,
+                                width: 150,
+                              )),
                         ),
                       ),
-                      child: null /* add child content content here */,
-                    ),
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 100),
-                          child: Container(
-                            height: 320,
-                            width: 400,
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.white30),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 35),
-                                      child: Text(
-                                        "O que você está procurando ?",
-                                        style: TextStyle(
-                                            fontFamily: "QuickSand",
-                                            color: Colors.black54),
-                                      ),
-                                    ),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: <Widget>[
-                                          InkWell(
-                                              onTap: () {
-                                                _showDialogEndereco(context);
-                                              },
-                                              child: FlatButton(
-                                                child: Image.asset(
-                                                  "assets/btn_categoria_supermecados.png",
-                                                  height: 240,
-                                                  width: 150,
-                                                ),
-                                              )),
-                                          InkWell(
-                                              onTap: () {
-                                                _showDialogEnderecoCat2(
-                                                    context);
-                                              },
-                                              child: FlatButton(
-                                                child: Image.asset(
-                                                  "assets/btn_categoria_farmacia.png",
-                                                  height: 240,
-                                                  width: 150,
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Transform.scale(
-                            scale: 1.2,
-                            child: Image.asset(
-                              "assets/logo.png",
-                              height: 150,
-                              width: 150,
-                            )),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 70),
-                          child: Container(
-                            height: 60,
-                            width: 250,
-                            child: Card(
-                                elevation: 20,
-                                color: Colors.white70,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(10.0),
-                                  side: BorderSide(color: Colors.white30),
-                                ),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: ListTile(
-                                    title: Text(
-                                      cidadeEstado == "catalaoGoias"
-                                          ? "Catalão - Goiás"
-                                          : cidadeEstado,
-                                      style: TextStyle(fontFamily: "QuickSand"),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    trailing: Icon(Icons.location_on),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 70),
+                            child: Container(
+                              height: 60,
+                              width: 250,
+                              child: Card(
+                                  elevation: 20,
+                                  color: Colors.white70,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(10.0),
+                                    side: BorderSide(color: Colors.white30),
                                   ),
-                                )),
-                          ),
-                        )),
-                  ],
-                );
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: ListTile(
+                                      title: Text(
+                                        cidadeEstado == "catalaoGoias"
+                                            ? "Catalão - Goiás"
+                                            : cidadeEstado,
+                                        style:
+                                            TextStyle(fontFamily: "QuickSand"),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      trailing: Icon(Icons.location_on),
+                                    ),
+                                  )),
+                            ),
+                          )),
+                    ],
+                  );
+                }
               }
-            }
-          },
-        ));
+            },
+          )),
+    );
   }
 
   void _showDialogEndereco(BuildContext context) {

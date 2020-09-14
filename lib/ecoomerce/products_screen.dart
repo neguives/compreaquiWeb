@@ -67,6 +67,7 @@ class _Products_ScreenState extends State<Products_Screen> {
       this.baseDadosProdutos);
   final pequisarController = TextEditingController();
   String produtoPesquisado;
+  List<BaseDadosProdutos> baseProdutos = List<BaseDadosProdutos>();
 
   @override
   void setState(VoidCallback fn) {}
@@ -146,10 +147,22 @@ class _Products_ScreenState extends State<Products_Screen> {
                                       childAspectRatio: 0.65),
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {
+                                double valor;
                                 ProductData data = ProductData.fromDocument(
                                     snapshot.data.documents[index]);
                                 data.category = this.snapshot.documentID;
                                 List<BaseDadosProdutos> _searchResult = [];
+                                baseProdutos.forEach((element) {
+                                  if (element.cODIGO
+                                      .contains(data.codigoBarras)) {
+                                    _searchResult.add(element);
+                                    valor = double.parse(
+                                        _searchResult[0].vLVARJ.toString());
+                                    data.price = 555;
+                                  }
+
+                                  print(_searchResult[0].vLVARJ.toString);
+                                });
 
                                 return ProductTile(
                                     baseDadosProdutos,

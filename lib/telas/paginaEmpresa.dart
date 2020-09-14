@@ -12,6 +12,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../tab/ordersTab.dart';
+
 // ignore: must_be_immutable
 class PaginaEmpresa extends StatelessWidget {
   List<String> galeriaImages = new List();
@@ -209,10 +211,8 @@ class PaginaEmpresa extends StatelessWidget {
                                 fontFamily: "QuickSand", fontSize: 12)),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PedidosRecebidosConsumidor(
-                                    nomeEmpresa,
-                                    cidadeEstado,
-                                  )));
+                              builder: (context) =>
+                                  OrdersTab(nomeEmpresa, cidadeEstado, 1)));
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(18.0),
