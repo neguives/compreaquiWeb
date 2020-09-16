@@ -65,9 +65,19 @@ class ProductTile extends StatelessWidget {
         double quant = double.parse(_searchResult[0].estoque);
         // print(_searchResult[0]);
         product.price = double.parse(_searchResult[0].vLVARJ);
+
         product.quantidade = quant.round();
       }
     });
+
+    if (product.quantidade < 10 && product.precoAnterior < 1) {
+      product.precoAnterior =
+          product.price + ((product.price / 1000) * product.price.floor() + 1);
+      product.promo = true;
+    }
+    if (_searchResult.length < 1) {
+      product.quantidade = 0;
+    }
     return InkWell(onTap: () {
       print(product.codBarras.toString());
       Navigator.of(context).push(MaterialPageRoute(
@@ -114,6 +124,7 @@ class ProductTile extends StatelessWidget {
                                           ? "${((product.precoAnterior / product.price - 1) * 100).toStringAsPrecision(2)} % de Desconto"
                                           : "",
                                       style: (TextStyle(
+                                          fontSize: 8,
                                           fontFamily: "QuickSand",
                                           color: Colors.blueGrey)),
                                     ),

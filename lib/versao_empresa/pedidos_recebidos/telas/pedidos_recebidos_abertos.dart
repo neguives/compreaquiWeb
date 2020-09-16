@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/versao_empresa/pedidos_recebidos/tiles/order_tile_abertos.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -12,11 +13,21 @@ class PedidosRecebidosAbertos extends StatefulWidget {
       _PedidosRecebidosAbertosState(nomeEmpresa, cidadeEstado);
 }
 
+DocumentReference docRef;
+Firestore firestore;
+DateTime currentPhoneDate = DateTime.now(); //DateTime
+Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate); //To TimeStamp
+DateTime myDateTime = myTimeStamp.toDate(); // TimeStamp to DateTime
+
+Timestamp timestamp;
+
 class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
   String nomeEmpresa, cidadeEstado;
   _PedidosRecebidosAbertosState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
+    print(myDateTime);
+
     return Scaffold(
       appBar: (AppBar(
         iconTheme: new IconThemeData(color: Colors.black),
@@ -28,6 +39,7 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 3)
+            .orderBy("data_query")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)

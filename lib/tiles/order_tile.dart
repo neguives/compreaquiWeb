@@ -38,7 +38,7 @@ class OrderTile extends StatelessWidget {
                             height: 200,
                             width: 200,
                             child: FlareActor(
-                              "assets/loading_compreaqui.flr",
+                              "assets/fruit_loading.flr",
                               alignment: Alignment.center,
                               fit: BoxFit.contain,
                               animation: "effect",
