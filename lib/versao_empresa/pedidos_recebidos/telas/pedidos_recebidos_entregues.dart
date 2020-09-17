@@ -28,6 +28,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 5)
+            .orderBy("data_query")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -56,7 +57,7 @@ class _PedidosRecebidosEntreguesState extends State<PedidosRecebidosEntregues> {
                           Card(
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Text("Solicitações Recebidas",
+                              child: Text("Pedidos Entregues",
                                   style: TextStyle(
                                       fontFamily: "QuickSand", fontSize: 20)),
                             ),

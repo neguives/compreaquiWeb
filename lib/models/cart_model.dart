@@ -180,8 +180,13 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  Future<String> finalizarCompra(String nomeEmpresa, String endereco,
-      String cidade, String freteTipo, String formaPagamento) async {
+  Future<String> finalizarCompra(
+      String nomeEmpresa,
+      String endereco,
+      String cidade,
+      String freteTipo,
+      String formaPagamento,
+      String uid) async {
 //    print(endereco + " Deus no comando");
     if (products.length == 0) return null;
 
@@ -197,7 +202,7 @@ class CartModel extends Model {
         .document(nomeEmpresa)
         .collection("ordensSolicitadas")
         .add({
-      "clienteId": user.firebaseUser.uid,
+      "clienteId": uid,
       "produtos": products.map((catProduct) => catProduct.toMap()).toList(),
       "enderecoCliente": endereco,
       "precoDoFrete": productsFrete,
@@ -209,7 +214,8 @@ class CartModel extends Model {
       "data": formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy]) +
           " às ${formatDate(DateTime.now(), [HH, ':', nn, ':', ss])}",
       "precoTotal": productsPrice - productsDesconto + productsFrete,
-      "status": 3
+      "status": 3,
+      "data_query": DateTime.now().microsecondsSinceEpoch
     });
 
     await Firestore.instance

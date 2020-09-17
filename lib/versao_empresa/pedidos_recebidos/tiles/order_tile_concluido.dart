@@ -196,7 +196,8 @@ class OrderTileConcluido extends StatelessWidget {
                                           color: Colors.white),
                                     ),
                                   ),
-                                  Text(_recuperarData(snapshot.data)),
+                                  Text(_recuperarData(snapshot.data),
+                                      style: TextStyle(fontFamily: "QuickSand"))
                                 ],
                               )
                             ],

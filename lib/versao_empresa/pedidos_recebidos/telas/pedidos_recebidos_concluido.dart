@@ -19,6 +19,10 @@ class _PedidosRecebidosConcluidoState extends State<PedidosRecebidosConcluido> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (AppBar(
+        title: Text(
+          "Solicitações Recebidas",
+          style: TextStyle(fontFamily: "QuickSand", color: Colors.black),
+        ),
         iconTheme: new IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
       )),
@@ -28,6 +32,7 @@ class _PedidosRecebidosConcluidoState extends State<PedidosRecebidosConcluido> {
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 5)
+            .orderBy("data_query")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -56,7 +61,7 @@ class _PedidosRecebidosConcluidoState extends State<PedidosRecebidosConcluido> {
                           Card(
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Text("Solicitações Recebidas",
+                              child: Text("Pedidos Entregues",
                                   style: TextStyle(
                                       fontFamily: "QuickSand", fontSize: 20)),
                             ),

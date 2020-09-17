@@ -134,7 +134,13 @@ class OrderTileTransporte extends StatelessWidget {
                                         color: Colors.transparent,
                                       ),
                                       _buildCircle(
-                                          "2", "Em Transporte", status, 4),
+                                          "2",
+                                          snapshot.data["tipoFrete"] ==
+                                                  "Retirar no estabelecimento"
+                                              ? "Retirada"
+                                              : "Em Transporte",
+                                          status,
+                                          4),
                                       Container(
                                         height: 1,
                                         width: 20,
@@ -242,7 +248,7 @@ class OrderTileTransporte extends StatelessWidget {
                                                   snapshot.data["tipoFrete"] ==
                                                       "Entrega Expressa (Karona)"
                                               ? () {
-                                                  Navigator.of(context).push(MaterialPageRoute(
+                                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
                                                       builder: (context) =>
                                                           InformacoesMotoristas(
                                                               snap.data["photo"]

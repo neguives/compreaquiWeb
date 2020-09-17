@@ -26,10 +26,12 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
   _PedidosRecebidosAbertosState(this.nomeEmpresa, this.cidadeEstado);
   @override
   Widget build(BuildContext context) {
-    print(myDateTime);
-
     return Scaffold(
       appBar: (AppBar(
+        title: Text(
+          "Solicitações Recebidas",
+          style: TextStyle(fontFamily: "QuickSand", color: Colors.black),
+        ),
         iconTheme: new IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
       )),
@@ -68,7 +70,7 @@ class _PedidosRecebidosAbertosState extends State<PedidosRecebidosAbertos> {
                           Card(
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Text("Solicitações Recebidas",
+                              child: Text("Pedidos Não Separados",
                                   style: TextStyle(
                                       fontFamily: "QuickSand", fontSize: 20)),
                             ),

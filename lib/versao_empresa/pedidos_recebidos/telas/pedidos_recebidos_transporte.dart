@@ -20,6 +20,10 @@ class _PedidosRecebidosTransporteState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (AppBar(
+        title: Text(
+          "Solicitações Recebidas",
+          style: TextStyle(fontFamily: "QuickSand", color: Colors.black),
+        ),
         iconTheme: new IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
       )),
@@ -29,6 +33,7 @@ class _PedidosRecebidosTransporteState
             .document(nomeEmpresa)
             .collection("ordensSolicitadas")
             .where("status", isEqualTo: 4)
+            .orderBy("data_query")
             .getDocuments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -57,9 +62,18 @@ class _PedidosRecebidosTransporteState
                           Card(
                             child: Padding(
                               padding: EdgeInsets.all(5),
-                              child: Text("Solicitações Recebidas",
-                                  style: TextStyle(
-                                      fontFamily: "QuickSand", fontSize: 20)),
+                              child: Column(
+                                children: [
+                                  Text("Pedidos em Transporte",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          fontSize: 20)),
+                                  Text("(ou aguardando retirada)",
+                                      style: TextStyle(
+                                          fontFamily: "QuickSand",
+                                          fontSize: 10)),
+                                ],
+                              ),
                             ),
                             elevation: 5,
                           )

@@ -94,21 +94,21 @@ class CompradosTileEmpresa extends StatelessWidget {
                                           .collection("ConsumidorFinal")
                                           .document(clienteId)
                                           .snapshots(),
-                                      builder: (context, snapshot) {
+                                      builder: (context, snap) {
+                                        final nomeCliente =
+                                            TextEditingController();
+                                        final emailController =
+                                            TextEditingController();
+
+                                        String apelido = snap.data["apelido"];
+                                        String email = snap.data["email"];
+                                        String telefone = snap.data["telefone"];
+                                        nomeCliente.text = apelido;
+                                        emailController.text = email;
+                                        String telefones = telefone;
                                         if (!snapshot.hasData) {
                                           return CircularProgressIndicator();
                                         } else {
-                                          final nomeCliente =
-                                              TextEditingController();
-                                          final emailController =
-                                              TextEditingController();
-                                          nomeCliente.text =
-                                              snapshot.data["nome"].toString();
-                                          emailController.text =
-                                              snapshot.data["email"].toString();
-                                          String telefone = snapshot
-                                              .data["telefone"]
-                                              .toString();
                                           return ExpansionTile(
                                             title:
                                                 Text("Informações do Cliente"),
