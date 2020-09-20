@@ -143,8 +143,6 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                                           .document(nomeEmpresa)
                                                           .collection(
                                                               "ordensSolicitadas")
-                                                          .where("status",
-                                                              isEqualTo: 3)
                                                           .getDocuments(),
                                                       builder:
                                                           (context, snapshot) {
@@ -159,17 +157,33 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                                                       .all(5),
                                                               child: Column(
                                                                 children: [
-                                                                  Text(
-                                                                    snapshot
-                                                                        .data
-                                                                        .documents
-                                                                        .length
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            30,
-                                                                        fontFamily:
-                                                                            "QuickSand"),
+                                                                  FutureBuilder(
+                                                                    future: Firestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            "catalaoGoias")
+                                                                        .document(
+                                                                            nomeEmpresa)
+                                                                        .collection(
+                                                                            "ordensSolicitadas")
+                                                                        .where(
+                                                                            "status",
+                                                                            isEqualTo:
+                                                                                5)
+                                                                        .getDocuments(),
+                                                                    builder:
+                                                                        (context,
+                                                                            snapEntregues) {
+                                                                      return Text(
+                                                                          snapEntregues
+                                                                              .data
+                                                                              .documents
+                                                                              .length
+                                                                              .toString(),
+                                                                          style: TextStyle(
+                                                                              fontSize: 30,
+                                                                              fontFamily: "QuickSand"));
+                                                                    },
                                                                   ),
                                                                   Text(
                                                                     "Entregas Realizadas",
@@ -211,7 +225,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        "À receber (periodo atual)",
+                                        "Valor Transacionado",
                                         style: TextStyle(
                                             fontSize: 10,
                                             fontFamily: "QuickSand"),
@@ -240,7 +254,7 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                                     fontFamily: "QuickSand"),
                                               ),
                                               Text(
-                                                "Pagamento retido",
+                                                "",
                                                 style: TextStyle(
                                                     fontSize: 10,
                                                     fontFamily: "QuickSand"),
@@ -253,51 +267,53 @@ class _DemonstrativosState extends State<Demonstrativos> {
                                   )),
                             ],
                           ))),
-                  StreamBuilder(
-                    stream: Firestore.instance
-                        .collection("catalaoGoias")
-                        .document(nomeEmpresa)
-                        .snapshots(),
-                    builder: (context, snapshot3) {
-                      if (!snapshot3.hasData) {
-                        return LinearProgressIndicator();
-                      } else {
-                        final double valorComissao =
-                            (counterTotal / 100) * snapshot3.data["comissao"];
-                        return Card(
-                            child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "Custo de comissão da plataforma",
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontFamily: "QuickSand",
-                                                  color: Colors.green),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              valorComissao.toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: "QuickSand",
-                                                  color: Colors.red),
-                                            ),
-                                          ],
-                                        )),
-                                  ],
-                                )));
-                      }
-                    },
-                  ),
+                  // StreamBuilder(
+                  //   stream: Firestore.instance
+                  //       .collection("catalaoGoias")
+                  //       .document(nomeEmpresa)
+                  //       .snapshots(),
+                  //   builder: (context, snapshot3) {
+                  //     if (!snapshot3.hasData) {
+                  //       return LinearProgressIndicator();
+                  //     } else {
+                  //       final double valorComissao =
+                  //           (counterTotal / 100) * snapshot3.data["comissao"];
+                  //       return Card(
+                  //           child: Padding(
+                  //               padding: EdgeInsets.all(20),
+                  //               child: Stack(
+                  //                 alignment: Alignment.topCenter,
+                  //                 children: [
+                  //                   Align(
+                  //                       alignment: Alignment.topCenter,
+                  //                       child: Column(
+                  //                         children: [
+                  //                           Text(
+                  //                             "Custo de comissão da plataforma",
+                  //                             style: TextStyle(
+                  //                                 fontSize: 10,
+                  //                                 fontFamily: "QuickSand",
+                  //                                 color: Colors.green),
+                  //                           ),
+                  //                           SizedBox(
+                  //                             height: 10,
+                  //                           ),
+                  //                           Text(
+                  //                             "R\$ " +
+                  //                                 valorComissao
+                  //                                     .toStringAsFixed(2),
+                  //                             style: TextStyle(
+                  //                                 fontSize: 20,
+                  //                                 fontFamily: "QuickSand",
+                  //                                 color: Colors.red),
+                  //                           ),
+                  //                         ],
+                  //                       )),
+                  //                 ],
+                  //               )));
+                  //     }
+                  //   },
+                  // ),
                 ],
               );
             }

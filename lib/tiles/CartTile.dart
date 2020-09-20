@@ -141,23 +141,9 @@ class _CartTileState extends State<CartTile> {
                       FlatButton(
                         onPressed: () {
                           // ignore: missing_return
-                          Future<Null> _atualizarQuantidade() {
-                            DocumentReference documentReference = Firestore
-                                .instance
-                                .collection("catalaoGoias")
-                                .document(nomeEmpresa)
-                                .collection("baseProdutos")
-                                .document(productData.id);
 
-                            documentReference.updateData({
-                              "quantidade": cartProduct.productData.quantidade +
-                                  quantidadeRemovida
-                            });
-                          }
-
-                          _atualizarQuantidade();
-                          CartModel.of(context)
-                              .removeCartItem(cartProduct, nomeEmpresa);
+                          CartModel.of(context).removeCartItem(
+                              cartProduct, "Supermecado Newton");
                           print("clicado");
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

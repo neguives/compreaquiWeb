@@ -55,7 +55,7 @@ class CartButton extends StatelessWidget {
         }),
       ]),
       onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => CartScreen(
                 product,
                 nomeEmpresa,

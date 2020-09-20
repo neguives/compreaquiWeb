@@ -10,7 +10,7 @@ import 'ecoomerce/formaPagamento.dart';
 import 'models/cart_model.dart';
 import 'models/user_model.dart';
 
-main() async {
+main() {
   // Finally, close the connection
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               home: SplashScreen(),
 //      home: Principal(),
               debugShowCheckedModeBanner: false,
-              title: "Compreaí Delivery",
+              title: "CompreAqui Delivery",
               theme: ThemeData(
                   primarySwatch: Colors.blue,
                   primaryColor: Color.fromARGB(255, 20, 125, 141)),

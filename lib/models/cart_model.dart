@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/datas/cart_product.dart';
+import 'package:compreaidelivery/datas/product_data.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CartModel extends Model {
@@ -46,18 +49,40 @@ class CartModel extends Model {
     notifyListeners();
   }
 
+  void verItens(
+      BuildContext context,
+      ProductData productData,
+      String imagemEmpresa,
+      cidadeEstado,
+      endereco,
+      latitude,
+      longitude,
+      telefone,
+      empresaNome) {
+    notifyListeners();
+    if (UserModel.of(context).isLoggedIn()) {
+      ProductData product;
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => CartScreen(product, nomeEmpresa, imagemEmpresa,
+              cidadeEstado, endereco, latitude, longitude, telefone)));
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
   void removeCartItem(CartProduct cartProduct, String nomeEmpresa) {
     Firestore.instance
         .collection("ConsumidorFinal")
-        .document(user.firebaseUser.uid)
+        .document("Njs1sVyfEUQbka0OGETfIJzRI8Q2")
         .collection("Em Aberto")
         .document("Carrinho")
-        .collection(nomeEmpresa)
+        .collection("Supermecado Newton")
         .document(cartProduct.cid)
         .delete();
 
     products.remove(cartProduct);
 
+    print("to aqui");
     notifyListeners();
   }
 

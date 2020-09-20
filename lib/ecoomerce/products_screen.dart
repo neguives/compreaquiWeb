@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:compreaidelivery/tiles/product_tile.dart';
@@ -83,17 +85,61 @@ class _Products_ScreenState extends State<Products_Screen> {
 
   @override
   Widget build(BuildContext context) {
+    ProductData product;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          floatingActionButton: CartButton(
-            nomeEmpresa: nomeEmpresa,
-            imagemEmpresa: imagemEmpresa,
-            cidadeEstado: cidadeEstado,
-            endereco: endereco,
-            latitude: latitude,
-            longitude: longitude,
-            telefone: telefone,
+          floatingActionButton: FloatingActionButton(
+            child: Stack(children: <Widget>[
+              Icon(
+                Icons.shopping_cart,
+                color: Colors.deepPurple,
+                size: 35,
+              ),
+              ScopedModelDescendant<CartModel>(
+                  builder: (context, child, cartModel) {
+                if (cartModel.products.length != null &&
+                    cartModel.products.length > 0) {
+                  return Positioned(
+                      right: 0,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12))),
+                        //color: Colors.redAccent,
+                        child: Text('${cartModel.products.length}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      ));
+                } else
+                  return Container(
+                    height: 1,
+                    width: 1,
+                  );
+              }),
+            ]),
+            onPressed: () {
+              ProductData product;
+
+              CartModel.of(context).verItens(
+                  context,
+                  product,
+                  imagemEmpresa,
+                  cidadeEstado,
+                  endereco,
+                  latitude,
+                  longitude,
+                  telefone,
+                  nomeEmpresa);
+            },
+            backgroundColor: Colors.white70,
           ),
           appBar: AppBar(
             iconTheme: IconThemeData(
