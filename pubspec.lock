@@ -322,7 +322,7 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0"
+    version: "0.11.1+12"
   firebase_core:
     dependency: "direct main"
     description:
@@ -750,7 +750,7 @@ packages:
       name: mask_text_input_formatter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7"
+    version: "1.1.0"
   matcher:
     dependency: transitive
     description:

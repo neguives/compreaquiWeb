@@ -16,15 +16,17 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
+
+
 dependencies:
   flutter:
     sdk: flutter
-
 
   mask_text_input_formatter: ^1.0.7
   cpf_cnpj_validator: ^1.0.5
   keyboard_actions: ^3.3.0+1
   brasil_fields: ^0.2.0
+
 
   http:
   credit_card_type_detector: ^1.1.0
@@ -36,7 +38,7 @@ dependencies:
   mysql1: ^0.17.1
   google_sign_in:
   geolocator: ^5.3.1
-  cloud_functions: ^0.5.0
+  cloud_functions: 
   google_sign_in_platform_interface: ^1.1.1
   google_maps_flutter: ^0.5.21+15
   location: ^2.3.5
@@ -47,16 +49,16 @@ dependencies:
   flutter_icons: ^1.1.0
   carousel_slider: ^2.0.0
   flutter_login:
-  firebase_messaging: ^6.0.16
+  firebase_messaging: 
   sqljocky5: ^2.2.1
   date_format:
   flutter_credit_card: 0.1.0
   pdf: ^1.8.1
   flare_flutter: ^2.0.3
-  cloud_firestore: ^0.12.9
+  cloud_firestore: 
   transparent_image: ^1.0.0
   scoped_model: ^1.0.1
-  firebase_auth: 0.10.0
+  firebase_auth: ^0.11.1+12
   floating_search_bar:
   firebase_core:
   grouped_buttons:
