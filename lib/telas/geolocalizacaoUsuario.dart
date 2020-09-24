@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/telas/tela_selecao_categoria.dart';
@@ -38,7 +39,7 @@ class _MyMapPageState extends State<MyMapPage> {
   Circle circle;
   GoogleMapController _controller;
   String cidadeEstado, photo;
-  String endereco;
+  String endereco, cidade;
 
   String uid;
   static final CameraPosition initialLocation = CameraPosition(
@@ -99,15 +100,33 @@ class _MyMapPageState extends State<MyMapPage> {
 
           final coordinates =
               new Coordinates(newLocalData.latitude, newLocalData.longitude);
-          var addresses =
-              await Geocoder.local.findAddressesFromCoordinates(coordinates);
-          var first = addresses.first;
-          latitudeAtualizada = newLocalData.latitude;
-          logintudeAtualizada = newLocalData.longitude;
-          endereco = first.addressLine;
-          String cidade = first.subAdminArea;
-//          cidadeEstado = cidade + "-" + first.adminArea;
 
+          if (Platform.isIOS) {
+            //print("Com permissões!");
+            var addresses =
+                await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+            var first = addresses.first;
+            latitudeAtualizada = newLocalData.latitude;
+            logintudeAtualizada = newLocalData.longitude;
+            endereco = first.addressLine;
+            cidade = first.subAdminArea;
+
+            String traco = "-";
+            String endereco2 = first.locality + "A ELE a gloria";
+            print(endereco2);
+            cidadeEstado = endereco2 + traco + first.adminArea;
+          } else {
+            var addresses =
+                await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+            var first = addresses.first;
+            latitudeAtualizada = newLocalData.latitude;
+            logintudeAtualizada = newLocalData.longitude;
+            endereco = first.addressLine;
+            String cidade = first.subAdminArea;
+            cidadeEstado = cidade + "-" + first.adminArea;
+          }
           double latitude = newLocalData.latitude;
           double logintude = newLocalData.longitude;
           FirebaseAuth _auth = FirebaseAuth.instance;
@@ -127,6 +146,15 @@ class _MyMapPageState extends State<MyMapPage> {
             documentReference.updateData({"endereco": endereco});
             documentReference.updateData({"latitude": latitude});
             documentReference.updateData({"longitude": logintude});
+
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => TelaSelecaoCategoria(
+                      cidadeEstado: cidadeEstado,
+                      endereco: endereco,
+                      latitude: latitudeAtualizada,
+                      longitude: logintudeAtualizada,
+                      uid: uid,
+                    )));
           }
         }
       });
@@ -180,15 +208,8 @@ class _MyMapPageState extends State<MyMapPage> {
                           if (marker != null && endereco != null) {
                             print(cidadeEstado);
                           } else {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => TelaSelecaoCategoria(
-                                          cidadeEstado: "Alagoinhas-Bahia",
-                                          endereco: "Rua jardim Sao Francisco",
-                                          latitude: 1223233,
-                                          longitude: 3131231231,
-                                          uid: "Njs1sVyfEUQbka0OGETfIJzRI8Q2",
-                                        )));
+                            snackBar();
+                            getCurrentLocation();
                           }
                         }
                       : marker != null && endereco != null
@@ -196,18 +217,8 @@ class _MyMapPageState extends State<MyMapPage> {
                               if (marker != null && endereco != null) {
                                 print(cidadeEstado);
                               } else {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TelaSelecaoCategoria(
-                                              cidadeEstado: "Alagoinhas-Bahia",
-                                              endereco:
-                                                  "Rua jardim Sao Francisco",
-                                              latitude: 1223233,
-                                              longitude: 3131231231,
-                                              uid:
-                                                  "Njs1sVyfEUQbka0OGETfIJzRI8Q2",
-                                            )));
+                                snackBar();
+                                getCurrentLocation();
                               }
                             }
                           : null,
