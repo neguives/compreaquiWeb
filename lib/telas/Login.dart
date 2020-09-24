@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/auth.dart';
@@ -201,7 +202,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 Stack(
                   alignment: Alignment.topCenter,
-                  overflow: Overflow.visible,
                   children: <Widget>[
                     Card(
                       elevation: 2.0,
@@ -331,7 +331,11 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                 pass: _senhaController.text,
                                 onSucess: _onSucess,
                                 onFail: _onFail);
-                            model.saveToken();
+
+                            if (Platform.isIOS) {
+                            } else {
+                              model.saveToken();
+                            }
                           },
                         )),
                   ],
@@ -523,7 +527,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 Stack(
                   alignment: Alignment.topCenter,
-                  overflow: Overflow.visible,
                   children: <Widget>[
                     Card(
                       elevation: 2.0,

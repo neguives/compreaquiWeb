@@ -128,16 +128,16 @@ class _Products_ScreenState extends State<Products_Screen> {
             onPressed: () {
               ProductData product;
 
-              CartModel.of(context).verItens(
-                  context,
-                  product,
-                  imagemEmpresa,
-                  cidadeEstado,
-                  endereco,
-                  latitude,
-                  longitude,
-                  telefone,
-                  nomeEmpresa);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                      product,
+                      nomeEmpresa,
+                      imagemEmpresa,
+                      cidadeEstado,
+                      endereco,
+                      latitude,
+                      longitude,
+                      telefone)));
             },
             backgroundColor: Colors.white70,
           ),

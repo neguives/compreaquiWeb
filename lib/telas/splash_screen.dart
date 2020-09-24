@@ -25,27 +25,29 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void configFCM() {
-    final fcm = FirebaseMessaging();
-
     if (Platform.isIOS) {
-      fcm.requestNotificationPermissions(
-          const IosNotificationSettings(provisional: true));
-    }
+//      final fcm = FirebaseMessaging();
+//
+//      fcm.requestNotificationPermissions(
+//          const IosNotificationSettings(provisional: true));
+    } else {
+      final fcm = FirebaseMessaging();
 
-    fcm.configure(
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onResume $message');
-      },
-      onMessage: (Map<String, dynamic> message) async {
-        showNotification(
-          message['notification']['title'] as String,
-          message['notification']['body'] as String,
-        );
-      },
-    );
+      fcm.configure(
+        onLaunch: (Map<String, dynamic> message) async {
+          print('onLaunch $message');
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print('onResume $message');
+        },
+        onMessage: (Map<String, dynamic> message) async {
+          showNotification(
+            message['notification']['title'] as String,
+            message['notification']['body'] as String,
+          );
+        },
+      );
+    }
   }
 
   void showNotification(String title, String message) {
@@ -114,17 +116,22 @@ class _SplashScreenState extends State<SplashScreen> {
           .push(MaterialPageRoute(builder: (context) => Login()));
     }
     if (firebaseUser != null) {
-      id = firebaseUser.uid;
-      final token = await FirebaseMessaging().getToken();
-      print("token $token");
-      tokensReference.document(token).setData({
-        'token': token,
-        'updateAt': FieldValue.serverTimestamp(),
-        'platform': Platform.operatingSystem,
-      });
-      print(firebaseUser.uid);
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+      if (Platform.isIOS) {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+      } else {
+        id = firebaseUser.uid;
+        final token = await FirebaseMessaging().getToken();
+        print("token $token");
+        tokensReference.document(token).setData({
+          'token': token,
+          'updateAt': FieldValue.serverTimestamp(),
+          'platform': Platform.operatingSystem,
+        });
+        print(firebaseUser.uid);
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
+      }
     }
   }
 }

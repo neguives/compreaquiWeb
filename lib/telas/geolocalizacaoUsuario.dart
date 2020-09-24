@@ -106,7 +106,7 @@ class _MyMapPageState extends State<MyMapPage> {
           logintudeAtualizada = newLocalData.longitude;
           endereco = first.addressLine;
           String cidade = first.subAdminArea;
-          cidadeEstado = cidade + "-" + first.adminArea;
+//          cidadeEstado = cidade + "-" + first.adminArea;
 
           double latitude = newLocalData.latitude;
           double logintude = newLocalData.longitude;
@@ -127,15 +127,6 @@ class _MyMapPageState extends State<MyMapPage> {
             documentReference.updateData({"endereco": endereco});
             documentReference.updateData({"latitude": latitude});
             documentReference.updateData({"longitude": logintude});
-
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => TelaSelecaoCategoria(
-                      cidadeEstado: cidadeEstado,
-                      endereco: endereco,
-                      latitude: latitudeAtualizada,
-                      longitude: logintudeAtualizada,
-                      uid: uid,
-                    )));
           }
         }
       });
@@ -189,8 +180,15 @@ class _MyMapPageState extends State<MyMapPage> {
                           if (marker != null && endereco != null) {
                             print(cidadeEstado);
                           } else {
-                            snackBar();
-                            getCurrentLocation();
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (context) => TelaSelecaoCategoria(
+                                          cidadeEstado: "Alagoinhas-Bahia",
+                                          endereco: "Rua jardim Sao Francisco",
+                                          latitude: 1223233,
+                                          longitude: 3131231231,
+                                          uid: "Njs1sVyfEUQbka0OGETfIJzRI8Q2",
+                                        )));
                           }
                         }
                       : marker != null && endereco != null
@@ -198,8 +196,18 @@ class _MyMapPageState extends State<MyMapPage> {
                               if (marker != null && endereco != null) {
                                 print(cidadeEstado);
                               } else {
-                                snackBar();
-                                getCurrentLocation();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TelaSelecaoCategoria(
+                                              cidadeEstado: "Alagoinhas-Bahia",
+                                              endereco:
+                                                  "Rua jardim Sao Francisco",
+                                              latitude: 1223233,
+                                              longitude: 3131231231,
+                                              uid:
+                                                  "Njs1sVyfEUQbka0OGETfIJzRI8Q2",
+                                            )));
                               }
                             }
                           : null,

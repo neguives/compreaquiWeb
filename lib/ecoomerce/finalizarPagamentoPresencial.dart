@@ -138,7 +138,7 @@ class _FinalizarPagamentoPresencialState
                               child: Text("Comprar Sem Cartao"),
                               onPressed: () {
                                 model.finalizarCompra(nomeEmpresa, endereco,
-                                    cidadeEstado, freteTipo, "Avista");
+                                    cidadeEstado, freteTipo, "Avista", "a");
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -157,63 +157,93 @@ class _FinalizarPagamentoPresencialState
                                       hoverColor: Colors.white,
                                       highlightColor: Colors.white70,
                                       highlightElevation: 10,
-                                      onPressed: snapshot
-                                                  .data["disponibilidade"] ==
-                                              "fechado"
-                                          ? () {
-                                              if (freteTipo.length == 1) {
-                                                _dialogSelecioneEntrega(
-                                                    context);
-                                              } else {
-                                                double total = preco +
-                                                    frete -
-                                                    model.getDesconto();
-                                                if (total <= 50 &&
-                                                    freteTipo ==
-                                                        "Entrega do estabelecimento") {
-                                                  _pedidoInferior(context);
-                                                } else {
-                                                  String numeroCartao;
-                                                  _cardNumberControllerTrim
-                                                      .text = numeroCartao;
-                                                  bandeira = numeroCartao
-                                                              .startsWith(
-                                                                  "51") ||
-                                                          numeroCartao.startsWith(
-                                                              "55") ||
-                                                          numeroCartao.startsWith(
-                                                              "2221") ||
-                                                          numeroCartao.startsWith(
-                                                              "2229") ||
-                                                          numeroCartao.startsWith(
-                                                              "223") ||
-                                                          numeroCartao.startsWith(
-                                                              "229") ||
-                                                          numeroCartao.startsWith(
-                                                              "23") ||
-                                                          numeroCartao.startsWith(
-                                                              "26") ||
-                                                          numeroCartao.startsWith(
-                                                              "270") ||
-                                                          numeroCartao
-                                                              .startsWith("271") ||
-                                                          numeroCartao.startsWith("2720")
-                                                      ? "Master"
-                                                      : numeroCartao.startsWith("4") ? "Visa" : numeroCartao.startsWith("34") || numeroCartao.startsWith("37") ? "Amex" : numeroCartao.startsWith("38") || numeroCartao.startsWith("60") ? "Hiper" : numeroCartao.startsWith("636368") || numeroCartao.startsWith("636369") || numeroCartao.startsWith("438935") || numeroCartao.startsWith("504175") || numeroCartao.startsWith("451416") || numeroCartao.startsWith("636297") || numeroCartao.startsWith("5067") || numeroCartao.startsWith("4576") || numeroCartao.startsWith("4011") || numeroCartao.startsWith("506699") ? "Elo" : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38") ? "Diners" : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65") ? "Discover" : "Invalida";
+                                      onPressed:
+                                          snapshot.data["disponibilidade"] ==
+                                                  "fechado"
+                                              ? () {
+                                                  if (freteTipo.length == 1) {
+                                                    _dialogSelecioneEntrega(
+                                                        context);
+                                                  } else {
+                                                    double total = preco +
+                                                        frete -
+                                                        model.getDesconto();
+                                                    if (total <= 50 &&
+                                                        freteTipo ==
+                                                            "Entrega do estabelecimento") {
+                                                      _pedidoInferior(context);
+                                                    } else {
+                                                      String numeroCartao;
+                                                      _cardNumberControllerTrim
+                                                          .text = numeroCartao;
+                                                      bandeira = numeroCartao
+                                                                  .startsWith(
+                                                                      "51") ||
+                                                              numeroCartao.startsWith(
+                                                                  "55") ||
+                                                              numeroCartao.startsWith(
+                                                                  "2221") ||
+                                                              numeroCartao.startsWith(
+                                                                  "2229") ||
+                                                              numeroCartao.startsWith(
+                                                                  "223") ||
+                                                              numeroCartao.startsWith(
+                                                                  "229") ||
+                                                              numeroCartao.startsWith(
+                                                                  "23") ||
+                                                              numeroCartao.startsWith(
+                                                                  "26") ||
+                                                              numeroCartao
+                                                                  .startsWith(
+                                                                      "270") ||
+                                                              numeroCartao
+                                                                  .startsWith(
+                                                                      "271") ||
+                                                              numeroCartao
+                                                                  .startsWith(
+                                                                      "2720")
+                                                          ? "Master"
+                                                          : numeroCartao.startsWith(
+                                                                  "4")
+                                                              ? "Visa"
+                                                              : numeroCartao.startsWith("34") ||
+                                                                      numeroCartao.startsWith(
+                                                                          "37")
+                                                                  ? "Amex"
+                                                                  : numeroCartao.startsWith("38") ||
+                                                                          numeroCartao.startsWith(
+                                                                              "60")
+                                                                      ? "Hiper"
+                                                                      : numeroCartao.startsWith("636368") ||
+                                                                              numeroCartao.startsWith("636369") ||
+                                                                              numeroCartao.startsWith("438935") ||
+                                                                              numeroCartao.startsWith("504175") ||
+                                                                              numeroCartao.startsWith("451416") ||
+                                                                              numeroCartao.startsWith("636297") ||
+                                                                              numeroCartao.startsWith("5067") ||
+                                                                              numeroCartao.startsWith("4576") ||
+                                                                              numeroCartao.startsWith("4011") ||
+                                                                              numeroCartao.startsWith("506699")
+                                                                          ? "Elo"
+                                                                          : numeroCartao.startsWith("301") || numeroCartao.startsWith("305") || numeroCartao.startsWith("36") || numeroCartao.startsWith("38")
+                                                                              ? "Diners"
+                                                                              : numeroCartao.startsWith("6011") || numeroCartao.startsWith("622") || numeroCartao.startsWith("64") || numeroCartao.startsWith("65")
+                                                                                  ? "Discover"
+                                                                                  : "Invalida";
 
 //      numeroCartao, bandeiraCartao, validadeCartao, nomeCartao , codSeguranca
-                                                  // _finalizarPagamento(
-                                                  //     _cardNumberController
-                                                  //         .text,
-                                                  //     _expiryDateController
-                                                  //         .text,
-                                                  //     _cardHolderNameController
-                                                  //         .text,
-                                                  //     _cvvCodeController.text);
+                                                      // _finalizarPagamento(
+                                                      //     _cardNumberController
+                                                      //         .text,
+                                                      //     _expiryDateController
+                                                      //         .text,
+                                                      //     _cardHolderNameController
+                                                      //         .text,
+                                                      //     _cvvCodeController.text);
+                                                    }
+                                                  }
                                                 }
-                                              }
-                                            }
-                                          : null,
+                                              : null,
                                       child: Text(
                                         'Pagar',
                                       ),
