@@ -118,6 +118,13 @@ class _SplashScreenEmpresaState extends State<SplashScreenEmpresa> {
                             color: Colors.black54,
                             fontSize: 15),
                       ),
+                      Text(
+                        "(Estamos carregando os produtos para você)",
+                        style: TextStyle(
+                            fontFamily: "QuickSand",
+                            color: Colors.black54,
+                            fontSize: 11),
+                      ),
                     ],
                   ))),
           Align(

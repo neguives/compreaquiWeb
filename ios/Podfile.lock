@@ -331,6 +331,8 @@ PODS:
     - Flutter
   - geocoder (0.0.1):
     - Flutter
+  - "geocoding (1.0.3+1)":
+    - Flutter
   - "geolocator (5.3.2+2)":
     - Flutter
   - google_maps_flutter (0.0.1):
@@ -451,6 +453,7 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - geocoder (from `.symlinks/plugins/geocoder/ios`)
+  - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
@@ -518,6 +521,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   geocoder:
     :path: ".symlinks/plugins/geocoder/ios"
+  geocoding:
+    :path: ".symlinks/plugins/geocoding/ios"
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
   google_maps_flutter:
@@ -572,6 +577,7 @@ SPEC CHECKSUMS:
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
+  geocoding: e1f71509cefcf3ac61ef6b92efc50024da0be32d
   geolocator: f7622e0e7e2a24718285b73916d60c4a54b9f5b6
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc

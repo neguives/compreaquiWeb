@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/telas/Login.dart';
@@ -125,17 +127,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           : print(
                               "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
                     }),
-                _createDrawerItem(
-                    icon: FontAwesome.whatsapp,
-                    text: 'WhatsApp',
-                    onTap: () async {
-                      String whatsappUrl =
-                          "whatsapp://send?phone=${"+5564992961918"}&text=${"Olá, vim através do App CompreAqui!"}";
-                      await canLaunch(whatsappUrl)
-                          ? launch(whatsappUrl)
-                          : print(
-                              "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
-                    }),
+                Platform.isIOS
+                    ? null
+                    : _createDrawerItem(
+                        icon: FontAwesome.whatsapp,
+                        text: 'WhatsApp',
+                        onTap: () async {
+                          String whatsappUrl =
+                              "whatsapp://send?phone=${"+5564992961918"}&text=${"Olá, vim através do App CompreAqui!"}";
+                          await canLaunch(whatsappUrl)
+                              ? launch(whatsappUrl)
+                              : print(
+                                  "open whatsapp app link or do a snackbar with notification that there is no whatsapp installed");
+                        })
               ],
             )
           ],

@@ -113,7 +113,7 @@ class _MyMapPageState extends State<MyMapPage> {
             cidade = first.subAdminArea;
 
             String traco = "-";
-            String endereco2 = first.locality + "A ELE a gloria";
+            String endereco2 = first.locality;
             print(endereco2);
             cidadeEstado = endereco2 + traco + first.adminArea;
           } else {
