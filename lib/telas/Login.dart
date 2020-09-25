@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
@@ -15,6 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -194,6 +196,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildSignIn(BuildContext context) {
+    bool supportsAppleSignIn = false;
+
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       return Form(
           key: _formKey,
@@ -500,6 +504,26 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       SizedBox(
                         height: 20,
                       ),
+//                      Container(
+//                          height: 50,
+//                          width: 180,
+//                          child: SignInWithAppleButton(
+//                            style: SignInWithAppleButtonStyle.white,
+//                            onPressed: () async {
+//                              final credential =
+//                                  await SignInWithApple.getAppleIDCredential(
+//                                scopes: [
+//                                  AppleIDAuthorizationScopes.email,
+//                                  AppleIDAuthorizationScopes.fullName,
+//                                ],
+//                              );
+//
+//                              print(credential);
+//
+//                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+//                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+//                            },
+//                          )),
                       Center(
                         child: Text(
                           "Não tem conta ? Arraste para o lado!",
@@ -509,7 +533,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ]));
@@ -1352,4 +1376,51 @@ _showDialogTermos(BuildContext context) {
 
     return Login();
   }
+
+//  initiateSignInWithApple() async {
+//    try {
+//      final AuthorizationResult result = await AppleSignIn.performRequests([
+//        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+//      ]);
+//
+//      switch (result.status) {
+//        case AuthorizationStatus.authorized:
+//          try {
+//            print("successfull sign in");
+//            final AppleIdCredential appleIdCredential = result.credential;
+//
+//            OAuthProvider oAuthProvider =
+//                new OAuthProvider(providerId: "apple.com");
+//            final AuthCredential credential = oAuthProvider.getCredential(
+//              idToken: String.fromCharCodes(appleIdCredential.identityToken),
+//              accessToken:
+//                  String.fromCharCodes(appleIdCredential.authorizationCode),
+//            );
+//
+//            final AuthResult _res =
+//                await FirebaseAuth.instance.signInWithCredential(credential);
+//
+//            FirebaseAuth.instance.currentUser().then((val) async {
+//              UserUpdateInfo updateUser = UserUpdateInfo();
+//              updateUser.displayName =
+//                  "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+//              updateUser.photoUrl = "define an url";
+//              await val.updateProfile(updateUser);
+//            });
+//          } catch (e) {
+//            print("error");
+//          }
+//          break;
+//        case AuthorizationStatus.error:
+//          // do something
+//          break;
+//
+//        case AuthorizationStatus.cancelled:
+//          print('User cancelled');
+//          break;
+//      }
+//    } catch (error) {
+//      print("error with apple sign in");
+//    }
+//  }
 }

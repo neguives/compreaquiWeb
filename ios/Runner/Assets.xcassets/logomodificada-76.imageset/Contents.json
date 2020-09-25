@@ -1,10 +1,12 @@
 {
   "images" : [
     {
+      "filename" : "logomodificada-76.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "logomodificada-76@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
