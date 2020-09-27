@@ -218,6 +218,7 @@ class TelaSelecaoCategoria extends StatelessWidget {
                   );
                 } else {
                   _firebaseMessaging.subscribeToTopic(uid);
+
                   return Stack(
                     children: <Widget>[
                       Container(

@@ -70,8 +70,10 @@ dependencies:
   search_widget:
   flutter_local_notifications:
   geocoder:
+  flutter_auth_buttons:
   image_picker: ^0.6.0+17
   firebase_storage:
+  device_info:
   bloc_pattern: ^1.5.2
   fluttertoast: ^6.0.1
   image_cropper: ^1.2.1

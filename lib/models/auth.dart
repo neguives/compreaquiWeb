@@ -1,6 +1,8 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
@@ -70,7 +72,7 @@ class AuthService extends Model {
     }
   }
 
-  Future signInWithApple() async {
+  Future signInWithApple(BuildContext context) async {
     final AuthorizationResult result = await AppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
     ]);
@@ -88,13 +90,21 @@ class AuthService extends Model {
         await _firebaseAuth.signInWithCredential(credential);
 
         // update the user information
-        if (_auth.fullName != null) {
+        if (_firebaseAuth != null) {
+          FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
           _firebaseAuth.currentUser().then((value) async {
-            print();
+            print(firebaseUser.uid);
             UserUpdateInfo user = UserUpdateInfo();
             user.displayName =
                 "${_auth.fullName.givenName} ${_auth.fullName.familyName}";
             await value.updateProfile(user);
+
+            await verificarCadastroApple(
+                firebaseUser.uid,
+                firebaseUser.email,
+                firebaseUser.email,
+                firebaseUser.email,
+                "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7");
           });
         }
         break;
@@ -122,6 +132,29 @@ final AuthService authService = AuthService();
 // ignore: missing_return
 Future<bool> verificarCadastro(
     String id, String nome, String apelido, String email, String photo) async {
+  print(id);
+  final QuerySnapshot result = await Firestore.instance
+      .collection('ConsumidorFinal')
+      .where('uid', isEqualTo: id)
+      .limit(1)
+      .getDocuments();
+  final List<DocumentSnapshot> documents = result.documents;
+
+  if (documents.length <= 0) {
+    Firestore.instance.collection('ConsumidorFinal').document(id).setData({
+      'nome': nome,
+      'apelido': apelido,
+      'email': email,
+      'uid': id,
+      'telefone': "+55",
+      'photo': photo,
+    });
+  } else {}
+}
+
+Future<bool> verificarCadastroApple(
+    String id, String nome, String apelido, String email, String photo) async {
+  print(id);
   final QuerySnapshot result = await Firestore.instance
       .collection('ConsumidorFinal')
       .where('uid', isEqualTo: id)

@@ -159,6 +159,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
           } else {
+            String email = snapshot.data["email"];
+            String nome = snapshot.data["nome"];
+
+            if (email == nome) {
+              email = "Você precisa editar o seu perfil";
+            }
+
             return Padding(
               padding: EdgeInsets.only(top: 40),
               child: Column(
@@ -183,11 +190,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             ))),
                   )),
                   Text(
-                    snapshot.data["nome"],
+                    nome,
                     style: TextStyle(fontFamily: "QuickSand"),
                   ),
                   Text(
-                    snapshot.data["email"],
+                    email,
                     style: TextStyle(
                         color: Colors.black54, fontFamily: "QuickSand"),
                   ),

@@ -302,6 +302,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.8"
+  device_info:
+    dependency: "direct main"
+    description:
+      name: device_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.2+8"
+  device_info_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   dio:
     dependency: "direct main"
     description:
@@ -440,6 +454,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_auth_buttons:
+    dependency: "direct main"
+    description:
+      name: flutter_auth_buttons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   flutter_credit_card:
     dependency: "direct main"
     description:

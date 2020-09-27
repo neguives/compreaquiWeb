@@ -6,11 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/auth.dart';
 import 'package:compreaidelivery/telas/geolocalizacaoUsuario.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:compreaidelivery/style/theme.dart' as Theme;
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -60,8 +63,27 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   Color right = Colors.white;
   String uid;
 
+  bool btnLoginApple = false;
+
+  userAppleSignIn() async {
+    if (Platform.isIOS) {
+      var deviceInfo = await DeviceInfoPlugin().iosInfo;
+      var version = deviceInfo.systemVersion;
+
+      print(version);
+      if (double.parse(version) >= 13) {
+        btnLoginApple = true;
+      } else {
+        print("Versao certa");
+        btnLoginApple = false;
+      }
+    }
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
+    userAppleSignIn();
     return new Scaffold(
       key: _scaffoldKey,
       body: NotificationListener<OverscrollIndicatorNotification>(
@@ -166,6 +188,8 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
     ]);
 
     _pageController = PageController();
+
+    userAppleSignIn();
   }
 
   String msg = "";
@@ -372,131 +396,260 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: 40,
-                        child: FlatButton(
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            disabledColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            color: Colors.transparent,
-                            onPressed: () async {
-                              model.signIn(
-                                  email: "teste@compreaqui.com.br",
-                                  pass: "221295",
-                                  onSucess: _onSucess2,
-                                  onFail: _onFail);
+                        height: 50,
+                        width: 210,
+                        child: btnLoginApple == false
+                            ? FlatButton(
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                disabledColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                color: Colors.transparent,
+                                onPressed: () async {
+                                  model.signIn(
+                                      email: "teste@compreaqui.com.br",
+                                      pass: "221295",
+                                      onSucess: _onSucess2,
+                                      onFail: _onFail);
 
-                              _desconectar(context);
-                              AuthService authService = AuthService();
-                              bool res = await authService.googleSignIn();
-                              if (!res) {
-                                print("Erro ao fazer o login com o Google");
-                              } else {
-                                telefoneController.text = "";
-                                FirebaseAuth _auth = FirebaseAuth.instance;
-                                FirebaseUser firebaseUser;
+                                  _desconectar(context);
+                                  AuthService authService = AuthService();
+                                  bool res = await authService.googleSignIn();
+                                  if (!res) {
+                                    print("Erro ao fazer o login com o Google");
+                                  } else {
+                                    telefoneController.text = "";
+                                    FirebaseAuth _auth = FirebaseAuth.instance;
+                                    FirebaseUser firebaseUser;
 
-                                if (firebaseUser == null)
-                                  firebaseUser = await _auth.currentUser();
-                                if (firebaseUser != null) {
-                                  uid = firebaseUser.uid;
-                                  showDialog(
-                                    barrierDismissible: true,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      // return object of type Dialog
-                                      return AlertDialog(
-                                        title: new Center(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                    if (firebaseUser == null)
+                                      firebaseUser = await _auth.currentUser();
+                                    if (firebaseUser != null) {
+                                      uid = firebaseUser.uid;
+                                      showDialog(
+                                        barrierDismissible: true,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: new Center(
+                                              child: Column(
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icon_zap.png",
-                                                    height: 50,
-                                                    width: 50,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Image.asset(
+                                                        "assets/icon_zap.png",
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ],
                                                   ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                          "Qual é o seu whatsapp?"),
+                                                    ],
+                                                  )
                                                 ],
                                               ),
-                                              SizedBox(
-                                                height: 10,
+                                            ),
+                                            content: new TextField(
+                                              maxLines: 1,
+                                              controller: telefoneController,
+                                              enabled: true,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      "WorkSansSemiBold",
+                                                  fontSize: 16.0,
+                                                  color: Colors.black),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: "Telefone com DDD",
+                                                labelText: "Telefone com DDD",
+                                                hintStyle: TextStyle(
+                                                    fontFamily: "QuickSand",
+                                                    fontSize: 17.0,
+                                                    color: Colors.black87),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Text(
-                                                      "Qual é o seu whatsapp?"),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        content: new TextField(
-                                          maxLines: 1,
-                                          controller: telefoneController,
-                                          enabled: true,
-                                          keyboardType: TextInputType.number,
-                                          style: TextStyle(
-                                              fontFamily: "WorkSansSemiBold",
-                                              fontSize: 16.0,
-                                              color: Colors.black),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            hintText: "Telefone com DDD",
-                                            labelText: "Telefone com DDD",
-                                            hintStyle: TextStyle(
-                                                fontFamily: "QuickSand",
-                                                fontSize: 17.0,
-                                                color: Colors.black87),
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: new Text("Continuar"),
-                                            onPressed: () async {
-                                              uid = firebaseUser.uid;
-                                              DocumentReference
-                                                  documentReference = Firestore
-                                                      .instance
-                                                      .collection(
-                                                          "ConsumidorFinal")
-                                                      .document(
-                                                          firebaseUser.uid);
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: new Text("Continuar"),
+                                                onPressed: () async {
+                                                  uid = firebaseUser.uid;
+                                                  DocumentReference
+                                                      documentReference =
+                                                      Firestore.instance
+                                                          .collection(
+                                                              "ConsumidorFinal")
+                                                          .document(
+                                                              firebaseUser.uid);
 
 //            Mudar quando for lançar
 //            documentReference.updateData({"cidade": cidadeEstado});
-                                              documentReference.updateData({
-                                                "telefone":
-                                                    telefoneController.text
-                                              });
+                                                  documentReference.updateData({
+                                                    "telefone":
+                                                        telefoneController.text
+                                                  });
 
-                                              Future.delayed(
-                                                      Duration(seconds: 1))
-                                                  .then((_) async {
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                GeolocalizacaoUsuario()));
-                                              });
-                                            },
-                                          )
-                                          // usually buttons at the bottom of the dialog
-                                        ],
+                                                  Future.delayed(
+                                                          Duration(seconds: 1))
+                                                      .then((_) async {
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        GeolocalizacaoUsuario()));
+                                                  });
+                                                },
+                                              )
+                                              // usually buttons at the bottom of the dialog
+                                            ],
+                                          );
+                                        },
                                       );
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                            child: Image.asset(
-                              'assets/gmail.png',
-                            )),
+                                    }
+                                  }
+                                },
+                                child: Image.asset(
+                                  'assets/gmail.png',
+                                ))
+                            : GoogleSignInButton(
+                                borderRadius: 100,
+                                splashColor: Colors.white,
+                                onPressed: () async {
+                                  model.signIn(
+                                      email: "teste@compreaqui.com.br",
+                                      pass: "221295",
+                                      onSucess: _onSucess2,
+                                      onFail: _onFail);
+
+                                  _desconectar(context);
+                                  AuthService authService = AuthService();
+                                  bool res = await authService.googleSignIn();
+                                  if (!res) {
+                                    print("Erro ao fazer o login com o Google");
+                                  } else {
+                                    telefoneController.text = "";
+                                    FirebaseAuth _auth = FirebaseAuth.instance;
+                                    FirebaseUser firebaseUser;
+
+                                    if (firebaseUser == null)
+                                      firebaseUser = await _auth.currentUser();
+                                    if (firebaseUser != null) {
+                                      uid = firebaseUser.uid;
+                                      showDialog(
+                                        barrierDismissible: true,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: new Center(
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Image.asset(
+                                                        "assets/icon_zap.png",
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                          "Qual é o seu whatsapp?"),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            content: new TextField(
+                                              maxLines: 1,
+                                              controller: telefoneController,
+                                              enabled: true,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      "WorkSansSemiBold",
+                                                  fontSize: 16.0,
+                                                  color: Colors.black),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: "Telefone com DDD",
+                                                labelText: "Telefone com DDD",
+                                                hintStyle: TextStyle(
+                                                    fontFamily: "QuickSand",
+                                                    fontSize: 17.0,
+                                                    color: Colors.black87),
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: new Text("Continuar"),
+                                                onPressed: () async {
+                                                  uid = firebaseUser.uid;
+                                                  DocumentReference
+                                                      documentReference =
+                                                      Firestore.instance
+                                                          .collection(
+                                                              "ConsumidorFinal")
+                                                          .document(
+                                                              firebaseUser.uid);
+
+//            Mudar quando for lançar
+//            documentReference.updateData({"cidade": cidadeEstado});
+                                                  documentReference.updateData({
+                                                    "telefone":
+                                                        telefoneController.text
+                                                  });
+
+                                                  Future.delayed(
+                                                          Duration(seconds: 1))
+                                                      .then((_) async {
+                                                    Navigator.of(context)
+                                                        .pushReplacement(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        GeolocalizacaoUsuario()));
+                                                  });
+                                                },
+                                              )
+                                              // usually buttons at the bottom of the dialog
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }
+                                },
+                                darkMode: false, // default: false
+                              ),
                       ),
                       SizedBox(
                         height: 10,
@@ -504,13 +657,16 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                          height: 50,
-                          width: 180,
-                          child: SignInWithAppleButton(
-                            style: SignInWithAppleButtonStyle.white,
-                            onPressed: () async {
-                              AuthResult auth;
+                      btnLoginApple == true
+                          ? Container(
+                              height: 50,
+                              width: 210,
+                              child: SignInWithAppleButton(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100)),
+                                style: SignInWithAppleButtonStyle.white,
+                                onPressed: () async {
+                                  AuthResult auth;
 
 //                              final credential =
 //                                  await SignInWithApple.getAppleIDCredential(
@@ -522,14 +678,17 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 //
 //                              print(credential);
 
-                              AuthService authService = AuthService();
+                                  AuthService authService = AuthService();
 
-                              await authService.signInWithApple();
-
-                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
-                            },
-                          )),
+                                  await authService.signInWithApple(context);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          GeolocalizacaoUsuario()));
+                                  // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                                  // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                                },
+                              ))
+                          : Container(),
                       SizedBox(
                         height: 10,
                       ),
