@@ -504,12 +504,14 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       SizedBox(
                         height: 20,
                       ),
-//                      Container(
-//                          height: 50,
-//                          width: 180,
-//                          child: SignInWithAppleButton(
-//                            style: SignInWithAppleButtonStyle.white,
-//                            onPressed: () async {
+                      Container(
+                          height: 50,
+                          width: 180,
+                          child: SignInWithAppleButton(
+                            style: SignInWithAppleButtonStyle.white,
+                            onPressed: () async {
+                              AuthResult auth;
+
 //                              final credential =
 //                                  await SignInWithApple.getAppleIDCredential(
 //                                scopes: [
@@ -519,11 +521,18 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 //                              );
 //
 //                              print(credential);
-//
-//                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-//                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
-//                            },
-//                          )),
+
+                              AuthService authService = AuthService();
+
+                              await authService.signInWithApple();
+
+                              // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                              // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                            },
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Center(
                         child: Text(
                           "Não tem conta ? Arraste para o lado!",
@@ -832,6 +841,17 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                           model.signUp(
                                               userData: userData,
                                               pass: _senhaController.text,
+                                              nome: _nameController.text.trim(),
+                                              apelido: _apelidoController.text
+                                                  .trim(),
+                                              photo:
+                                                  "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7",
+                                              telefone: telefoneController
+                                                          .text.length >=
+                                                      5
+                                                  ? telefoneController.text
+                                                      .trim()
+                                                  : "00000",
                                               onSucess: _onSucessRegister,
                                               onFail: _onFailRegister);
 

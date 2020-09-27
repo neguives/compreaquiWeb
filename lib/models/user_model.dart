@@ -10,7 +10,7 @@ import 'package:scoped_model/scoped_model.dart';
 class UserModel extends Model {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser firebaseUser;
-
+  AuthResult authResult;
   Map<String, dynamic> userData = Map();
 
   bool isLoading = false;
@@ -32,19 +32,24 @@ class UserModel extends Model {
   CollectionReference get cartReference => firestoreRef.collection('cart');
 
   CollectionReference get tokensReference => firestoreRef.collection('tokens');
-  void signUp(
+  Future<void> signUp(
       {@required Map<String, dynamic> userData,
       String pass,
+      String nome,
+      String apelido,
+      String photo,
+      String telefone,
       @required VoidCallback onSucess,
-      VoidCallback onFail}) {
+      VoidCallback onFail}) async {
     isLoading = true;
     notifyListeners();
-
-    _auth
+    AuthResult result = await _auth
         .createUserWithEmailAndPassword(
             email: userData["email"], password: pass)
-        .then((user) async {
-      firebaseUser = user;
+        .then((result) async {
+      verificarCadastro(
+          result.user.uid, nome, apelido, telefone, result.user.email, photo);
+
       await _saveUserData(userData);
       onSucess();
       isLoading = false;
@@ -59,21 +64,20 @@ class UserModel extends Model {
   }
 
   Future<bool> verificarCadastro(String id, String nome, String apelido,
-      String email, String photo) async {
+      String telefone, String email, String photo) async {
     final QuerySnapshot result = await Firestore.instance
         .collection('ConsumidorFinal')
         .where('uid', isEqualTo: id)
         .limit(1)
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
-
     if (documents.length <= 0) {
       Firestore.instance.collection('ConsumidorFinal').document(id).setData({
         'nome': nome,
         'apelido': apelido,
         'email': email,
         'uid': id,
-        'telefone': "+55",
+        'telefone': telefone,
         'photo': photo,
       });
     } else {}
@@ -99,7 +103,6 @@ class UserModel extends Model {
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((user) async {
-      firebaseUser = user;
       await _loadCurrentUser();
 
       onSucess();
@@ -118,19 +121,24 @@ class UserModel extends Model {
       GoogleSignInAccount account = await googleSignIn.signIn();
       if (account == null) return false;
 
-      FirebaseUser result =
+      AuthResult result =
           await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
         idToken: (await account.authentication).idToken,
         accessToken: (await account.authentication).accessToken,
       ));
 
-      if (result.uid == null)
+      if (result.user.uid == null)
         return false;
       else {
 //        print(result.uid + "aew ");
 
-        verificarCadastro(result.uid, result.displayName, result.displayName,
-            result.email, result.photoUrl);
+        verificarCadastro(
+            result.user.uid,
+            result.user.displayName,
+            result.user.displayName,
+            "+55",
+            result.user.email,
+            result.user.photoUrl);
         return true;
       }
     } catch (e) {
@@ -156,6 +164,7 @@ class UserModel extends Model {
 
   Future<Null> _saveUserData(Map<String, dynamic> userData) async {
     this.userData = userData;
+    AuthResult authResult;
     await Firestore.instance
         .collection("ConsumidorFinal")
         .document(firebaseUser.uid)

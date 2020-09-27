@@ -34,7 +34,7 @@ class UserModelConsumidorFinal extends Model {
         .createUserWithEmailAndPassword(
             email: userData["email"], password: pass)
         .then((user) async {
-      firebaseUser = user;
+//      firebaseUser = user;
       await _saveUserData(userData);
       onSucess();
       isLoading = false;
@@ -68,7 +68,7 @@ class UserModelConsumidorFinal extends Model {
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((user) async {
-      firebaseUser = user;
+//      firebaseUser = user;
       await _loadCurrentUser();
       onSucess();
       isLoading = false;

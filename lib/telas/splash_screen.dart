@@ -26,10 +26,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void configFCM() {
     if (Platform.isIOS) {
-//      final fcm = FirebaseMessaging();
-//
-//      fcm.requestNotificationPermissions(
-//          const IosNotificationSettings(provisional: true));
+      final fcm = FirebaseMessaging();
+
+      fcm.requestNotificationPermissions(
+          const IosNotificationSettings(provisional: true));
+
+      fcm.configure(
+        onLaunch: (Map<String, dynamic> message) async {
+          print('onLaunch $message');
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print('onResume $message');
+        },
+        onMessage: (Map<String, dynamic> message) async {
+          showNotification(
+            message['notification']['title'] as String,
+            message['notification']['body'] as String,
+          );
+        },
+      );
     } else {
       final fcm = FirebaseMessaging();
 

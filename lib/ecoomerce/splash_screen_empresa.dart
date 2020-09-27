@@ -61,7 +61,7 @@ class _SplashScreenEmpresaState extends State<SplashScreenEmpresa> {
 
     for (Map<String, dynamic> item in response.data) {
       baseProdutos.add(BaseDadosProdutos.fromJson(item));
-      print(item);
+//      print(item);
     }
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => BottomPrincipal(

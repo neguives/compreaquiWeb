@@ -19,8 +19,4 @@ class BaseDadosProdutos {
     data['ESTOQUE'] = this.estoque;
     return data;
   }
-
-  String toString() {
-    return "${this.cODIGO} ${this.vLVARJ} \n";
-  }
 }

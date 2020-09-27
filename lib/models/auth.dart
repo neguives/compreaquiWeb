@@ -1,12 +1,14 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService extends Model {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
   Observable<FirebaseUser> user;
@@ -26,7 +28,7 @@ class AuthService extends Model {
 
   Future<Null> _loadCurrentUser() async {}
   AuthService() {
-    user = Observable(_auth.onAuthStateChanged);
+    user = Observable(_firebaseAuth.onAuthStateChanged);
 
     profile = user.switchMap((FirebaseUser u) {
       if (u != null) {
@@ -46,19 +48,19 @@ class AuthService extends Model {
       GoogleSignInAccount account = await googleSignIn.signIn();
       if (account == null) return false;
 
-      FirebaseUser result =
-          await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
+      AuthResult result = await _firebaseAuth
+          .signInWithCredential(GoogleAuthProvider.getCredential(
         idToken: (await account.authentication).idToken,
         accessToken: (await account.authentication).accessToken,
       ));
 
-      if (result.uid == null)
+      if (result.user.uid == null)
         return false;
       else {
 //        print(result.uid + "aew ");
 
-        verificarCadastro(result.uid, result.displayName, result.displayName,
-            result.email, result.photoUrl);
+        verificarCadastro(result.user.uid, result.user.displayName,
+            result.user.displayName, result.user.email, result.user.photoUrl);
         notifyListeners();
         return true;
       }
@@ -68,11 +70,48 @@ class AuthService extends Model {
     }
   }
 
+  Future signInWithApple() async {
+    final AuthorizationResult result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final AppleIdCredential _auth = result.credential;
+        final OAuthProvider oAuthProvider =
+            new OAuthProvider(providerId: "apple.com");
+
+        final AuthCredential credential = oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(_auth.identityToken),
+            accessToken: String.fromCharCodes(_auth.authorizationCode));
+
+        await _firebaseAuth.signInWithCredential(credential);
+
+        // update the user information
+        if (_auth.fullName != null) {
+          _firebaseAuth.currentUser().then((value) async {
+            print();
+            UserUpdateInfo user = UserUpdateInfo();
+            user.displayName =
+                "${_auth.fullName.givenName} ${_auth.fullName.familyName}";
+            await value.updateProfile(user);
+          });
+        }
+        break;
+      case AuthorizationStatus.error:
+        print("Erro no Login com a Apple");
+        break;
+      case AuthorizationStatus.cancelled:
+        print("Login Cancelado");
+        break;
+    }
+  }
+
   void updateUserData(FirebaseUser user) async {}
 
   Future<void> signOut() async {
     try {
-      await _auth.signOut();
+      await _firebaseAuth.signOut();
     } catch (e) {
       print("Error logging out");
     }
