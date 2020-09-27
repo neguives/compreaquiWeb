@@ -397,7 +397,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                     children: <Widget>[
                       Container(
                         height: 50,
-                        width: 210,
+                        width: 240,
                         child: btnLoginApple == false
                             ? FlatButton(
                                 focusColor: Colors.transparent,
@@ -623,6 +623,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
 
 //            Mudar quando for lançar
 //            documentReference.updateData({"cidade": cidadeEstado});
+
                                                   documentReference.updateData({
                                                     "telefone":
                                                         telefoneController.text
@@ -660,7 +661,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                       btnLoginApple == true
                           ? Container(
                               height: 50,
-                              width: 210,
+                              width: 240,
                               child: SignInWithAppleButton(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(100)),
@@ -681,9 +682,10 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                   AuthService authService = AuthService();
 
                                   await authService.signInWithApple(context);
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          GeolocalizacaoUsuario()));
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              GeolocalizacaoUsuario()));
                                   // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
                                   // after they have been validated with Apple (see `Integration` section for more information on how to do this)
                                 },
@@ -1045,14 +1047,14 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
       duration: Duration(seconds: 2),
     ));
     Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
   }
 
   _onSucess() async {
     Future.delayed(Duration(seconds: 1)).then((_) async {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
     });
   }
@@ -1227,7 +1229,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                         .updateData({"telefone": telefoneController.text});
 
                     Future.delayed(Duration(seconds: 1)).then((_) async {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => GeolocalizacaoUsuario()));
                     });
                   },
