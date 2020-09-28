@@ -63,7 +63,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
   Color right = Colors.white;
   String uid;
 
-  bool btnLoginApple = false;
+  bool btnLoginApple = true;
 
   userAppleSignIn() async {
     if (Platform.isIOS) {
@@ -682,10 +682,7 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                                   AuthService authService = AuthService();
 
                                   await authService.signInWithApple(context);
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              GeolocalizacaoUsuario()));
+
                                   // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
                                   // after they have been validated with Apple (see `Integration` section for more information on how to do this)
                                 },

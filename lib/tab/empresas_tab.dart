@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/tiles/informacoesEmpresaTile.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -94,13 +95,36 @@ class EmpresasTab extends StatelessWidget {
                       padding: EdgeInsets.only(left: 1, top: 20),
                       child: Align(
                         alignment: Alignment.topCenter,
-                        child: Text(
-                          "Selecione um estabelecimento",
-                          style:
-                              TextStyle(fontSize: 20, fontFamily: "QuickSand"),
-                        ),
+                        child: snapshot.data.documents.length == 0
+                            ? Text(
+                                "Nenhuma empresa dessa categoria foi encontrada.",
+                                style: TextStyle(
+                                    fontSize: 20, fontFamily: "QuickSand"),
+                              )
+                            : Text(
+                                "Selecione um estabelecimento",
+                                style: TextStyle(
+                                    fontSize: 20, fontFamily: "QuickSand"),
+                              ),
                       ),
                     ),
+                    snapshot.data.documents.length == 0
+                        ? Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Center(
+                              child: Container(
+                                height: 200,
+                                width: 200,
+                                child: FlareActor(
+                                  "assets/no_data_found.flr",
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.contain,
+                                  animation: "no_data_found",
+                                ),
+                              ),
+                            ),
+                          )
+                        : Column(),
                     Expanded(
                       child: ListView(
                           scrollDirection: Axis.horizontal,

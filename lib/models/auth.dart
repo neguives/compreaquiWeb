@@ -106,6 +106,8 @@ class AuthService extends Model {
                 firebaseUser.email,
                 "https://firebasestorage.googleapis.com/v0/b/compreai-delivery.appspot.com/o/user.png?alt=media&token=cd7aea4b-4d19-4b10-adce-03008b277da7");
           });
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
         }
         break;
       case AuthorizationStatus.error:
