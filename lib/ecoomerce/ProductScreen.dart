@@ -240,6 +240,23 @@ class _ProductScreenState extends State<ProductScreen> {
                                                           latitude,
                                                           longitude,
                                                           telefone)));
+                                        } else {
+                                          CartProduct cartProduct =
+                                              CartProduct();
+
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CartScreen(
+                                                          cartProduct
+                                                              .productData,
+                                                          nomeEmpresa,
+                                                          imagemEmpresa,
+                                                          cidadeEstado,
+                                                          endereco,
+                                                          latitude,
+                                                          longitude,
+                                                          telefone)));
                                         }
                                       }
                                     : null,

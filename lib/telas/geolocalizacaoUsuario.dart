@@ -155,6 +155,15 @@ class _MyMapPageState extends State<MyMapPage> {
                       longitude: logintudeAtualizada,
                       uid: uid,
                     )));
+          } else {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => TelaSelecaoCategoria(
+                      cidadeEstado: cidadeEstado,
+                      endereco: endereco,
+                      latitude: latitudeAtualizada,
+                      longitude: logintudeAtualizada,
+                      uid: uid,
+                    )));
           }
         }
       });

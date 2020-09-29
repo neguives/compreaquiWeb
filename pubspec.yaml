@@ -71,6 +71,7 @@ dependencies:
   flutter_local_notifications:
   geocoder:
   flutter_auth_buttons:
+  nice_button:
   image_picker: ^0.6.0+17
   firebase_storage:
   device_info:

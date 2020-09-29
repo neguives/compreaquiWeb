@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:compreaidelivery/datas/cart_product.dart';
 import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/ecoomerce/ProductScreen.dart';
+import 'package:compreaidelivery/ecoomerce/cart_screen.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
+import 'package:compreaidelivery/models/user_model.dart';
 import 'package:compreaidelivery/nuagetRefresh/baseDadosProdutos.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -163,15 +165,30 @@ class ProductTile extends StatelessWidget {
                             IconButton(
                               icon: Icon(Icons.add_shopping_cart),
                               onPressed: () {
-                                CartProduct cartProduct = CartProduct();
+                                if (UserModel.of(context).isLoggedIn()) {
+                                  CartProduct cartProduct = CartProduct();
 
-                                cartProduct.variacao = "UND";
-                                cartProduct.quantidade = 1;
-                                cartProduct.pid = product.id;
-                                cartProduct.categoria = product.category;
-                                cartProduct.productData = product;
-                                CartModel.of(context)
-                                    .addCartItem(cartProduct, nomeEmpresa);
+                                  cartProduct.variacao = "UND";
+                                  cartProduct.quantidade = 1;
+                                  cartProduct.pid = product.id;
+                                  cartProduct.categoria = product.category;
+                                  cartProduct.productData = product;
+                                  CartModel.of(context)
+                                      .addCartItem(cartProduct, nomeEmpresa);
+                                } else {
+                                  CartProduct cartProduct = CartProduct();
+
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => CartScreen(
+                                          cartProduct.productData,
+                                          nomeEmpresa,
+                                          imagemEmpresa,
+                                          cidadeEstado,
+                                          endereco,
+                                          latitude,
+                                          longitude,
+                                          telefone)));
+                                }
 
                                 // ignore: deprecated_member_use
                               },

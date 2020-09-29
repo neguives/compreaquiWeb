@@ -2,27 +2,28 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/telas/Login.dart';
-import 'package:compreaidelivery/telas/recepcao_usuario_visitante.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nice_button/NiceButton.dart';
 
 import 'geolocalizacaoUsuario.dart';
 
-class SplashScreen extends StatefulWidget {
+class RecepcaoUsuarioVisitante extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _RecepcaoUsuarioVisitanteState createState() =>
+      _RecepcaoUsuarioVisitanteState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _RecepcaoUsuarioVisitanteState extends State<RecepcaoUsuarioVisitante> {
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    configFCM();
-    openStartPage();
+//    configFCM();
+//    openStartPage();
   }
 
   void configFCM() {
@@ -98,24 +99,68 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Container(
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage("assets/fundocatalao.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: null /* add child content content here */,
-          ),
-          Center(
-            child: Container(
-              width: 200,
-              height: 200,
-              child: Center(
-                child: Transform.scale(
-                    scale: 1.2, child: Image.asset("assets/logo.png")),
-              ),
-            ),
+          Column(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          child: Center(
+                            child: Transform.scale(
+                                scale: 1.2,
+                                child: Image.asset("assets/logo.png")),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "All Delivery",
+                      style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    NiceButton(
+                      width: 255,
+                      elevation: 8.0,
+                      radius: 52.0,
+                      text: "Fazer Login",
+                      textColor: Colors.white,
+                      gradientColors: [Colors.green, Colors.lightGreen],
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Login()));
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    NiceButton(
+                      width: 255,
+                      elevation: 8.0,
+                      radius: 52.0,
+                      text: "Entrar como Visitante",
+                      textColor: Colors.white,
+                      gradientColors: [Colors.green, Colors.lightGreen],
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => GeolocalizacaoUsuario()));
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
           )
         ],
       ),
@@ -128,8 +173,8 @@ class _SplashScreenState extends State<SplashScreen> {
     if (firebaseUser == null) {
       print("aqui");
       firebaseUser = await _auth.currentUser();
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => RecepcaoUsuarioVisitante()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Login()));
     }
     if (firebaseUser != null) {
       if (Platform.isIOS) {

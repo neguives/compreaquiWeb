@@ -2,6 +2,8 @@ import 'package:compreaidelivery/datas/product_data.dart';
 import 'package:compreaidelivery/models/cart_model.dart';
 import 'package:compreaidelivery/models/credit_card.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:compreaidelivery/telas/Login.dart';
+import 'package:compreaidelivery/telas/recepcao_usuario_visitante.dart';
 import 'package:compreaidelivery/tiles/CartTile.dart';
 import 'package:compreaidelivery/widgets/card_desconto.dart';
 import 'package:compreaidelivery/widgets/cart_resumo.dart';
@@ -81,7 +83,12 @@ class CartScreen extends StatelessWidget {
                       SizedBox(height: 16),
                       RaisedButton(
                         color: Colors.purple,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecepcaoUsuarioVisitante()));
+                        },
                         child: Text(
                           "Entrar",
                           style: TextStyle(fontSize: 18, color: Colors.white),

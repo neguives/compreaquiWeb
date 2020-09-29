@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/models/user_model.dart';
+import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/tiles/order_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -64,32 +65,37 @@ class OrdersTab extends StatelessWidget {
         },
       );
     } else {
-      return Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.remove_shopping_cart,
-              size: 80,
-              color: Colors.purple,
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Faça o login para adicionar produtos!",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            RaisedButton(
-              color: Colors.purple,
-              onPressed: () {},
-              child: Text(
-                "Entrar",
-                style: TextStyle(fontSize: 18, color: Colors.white),
+      return Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.remove_shopping_cart,
+                size: 80,
+                color: Colors.purple,
               ),
-            )
-          ],
+              SizedBox(height: 16),
+              Text(
+                "Faça o login para ter acesso aos pedidos!",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              RaisedButton(
+                color: Colors.purple,
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                child: Text(
+                  "Entrar",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              )
+            ],
+          ),
         ),
       );
     }
