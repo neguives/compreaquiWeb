@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:compreaidelivery/telas/recepcao_usuario_visitante.dart';
+import 'package:compreaidelivery/telas/tela_selecao_categoria.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flushbar/flushbar.dart';
@@ -21,62 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    configFCM();
     openStartPage();
-  }
-
-  void configFCM() {
-    if (Platform.isIOS) {
-      final fcm = FirebaseMessaging();
-
-      fcm.requestNotificationPermissions(
-          const IosNotificationSettings(provisional: true));
-
-      fcm.configure(
-        onLaunch: (Map<String, dynamic> message) async {
-          print('onLaunch $message');
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print('onResume $message');
-        },
-        onMessage: (Map<String, dynamic> message) async {
-          showNotification(
-            message['notification']['title'] as String,
-            message['notification']['body'] as String,
-          );
-        },
-      );
-    } else {
-      final fcm = FirebaseMessaging();
-
-      fcm.configure(
-        onLaunch: (Map<String, dynamic> message) async {
-          print('onLaunch $message');
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print('onResume $message');
-        },
-        onMessage: (Map<String, dynamic> message) async {
-          showNotification(
-            message['notification']['title'] as String,
-            message['notification']['body'] as String,
-          );
-        },
-      );
-    }
-  }
-
-  void showNotification(String title, String message) {
-    Flushbar(
-            title: title,
-            message: message,
-            flushbarPosition: FlushbarPosition.TOP,
-            flushbarStyle: FlushbarStyle.GROUNDED,
-            isDismissible: true,
-            backgroundColor: Theme.of(context).primaryColor,
-            duration: const Duration(seconds: 3),
-            icon: Image.asset("assets/ic_launcher.png"))
-        .show(context);
   }
 
   openStartPage() async {
@@ -130,24 +76,28 @@ class _SplashScreenState extends State<SplashScreen> {
       firebaseUser = await _auth.currentUser();
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => RecepcaoUsuarioVisitante()));
-    }
-    if (firebaseUser != null) {
-      if (Platform.isIOS) {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
-      } else {
-        id = firebaseUser.uid;
-        final token = await FirebaseMessaging().getToken();
-        print("token $token");
-        tokensReference.document(token).setData({
-          'token': token,
-          'updateAt': FieldValue.serverTimestamp(),
-          'platform': Platform.operatingSystem,
-        });
-        print(firebaseUser.uid);
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => GeolocalizacaoUsuario()));
-      }
+    } else {
+      id = firebaseUser.uid;
+      final token = await FirebaseMessaging().getToken();
+      print("token $token");
+      tokensReference.document(token).setData({
+        'token': token,
+        'updateAt': FieldValue.serverTimestamp(),
+        'platform': Platform.operatingSystem,
+      });
+      print(firebaseUser.uid);
+
+      StreamBuilder(
+        stream: Firestore.instance
+            .collection("ConsumidorFinal")
+            .document(id)
+            .snapshots(),
+        builder: (context, snap) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TelaSelecaoCategoria(
+                  snap.data["cidadeEstado"], snap.data["endereco"], id)));
+        },
+      );
     }
   }
 }

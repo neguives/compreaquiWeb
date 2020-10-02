@@ -154,11 +154,6 @@ class _Login extends State<Login> with SingleTickerProviderStateMixin {
                             constraints: const BoxConstraints.expand(),
                             child: _buildSignIn(context),
                           ),
-                          new ConstrainedBox(
-                              constraints: const BoxConstraints.expand(),
-                              child: SingleChildScrollView(
-                                child: _buildSignUp(context),
-                              )),
                         ],
                       ),
                     ),

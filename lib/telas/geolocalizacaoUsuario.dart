@@ -131,6 +131,7 @@ class _MyMapPageState extends State<MyMapPage> {
           double logintude = newLocalData.longitude;
           FirebaseAuth _auth = FirebaseAuth.instance;
           FirebaseUser firebaseUser;
+
           if (firebaseUser == null) firebaseUser = await _auth.currentUser();
           if (firebaseUser != null) {
             DocumentReference documentReference = Firestore.instance
@@ -146,24 +147,6 @@ class _MyMapPageState extends State<MyMapPage> {
             documentReference.updateData({"endereco": endereco});
             documentReference.updateData({"latitude": latitude});
             documentReference.updateData({"longitude": logintude});
-
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => TelaSelecaoCategoria(
-                      cidadeEstado: cidadeEstado,
-                      endereco: endereco,
-                      latitude: latitudeAtualizada,
-                      longitude: logintudeAtualizada,
-                      uid: uid,
-                    )));
-          } else {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => TelaSelecaoCategoria(
-                      cidadeEstado: cidadeEstado,
-                      endereco: endereco,
-                      latitude: latitudeAtualizada,
-                      longitude: logintudeAtualizada,
-                      uid: uid,
-                    )));
           }
         }
       });

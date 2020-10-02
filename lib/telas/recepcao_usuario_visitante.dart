@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compreaidelivery/telas/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,8 +111,8 @@ class _RecepcaoUsuarioVisitanteState extends State<RecepcaoUsuarioVisitante> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 50),
                         child: Container(
-                          width: 200,
-                          height: 200,
+                          width: 100,
+                          height: 100,
                           child: Center(
                             child: Transform.scale(
                                 scale: 1.2,
@@ -124,9 +125,30 @@ class _RecepcaoUsuarioVisitanteState extends State<RecepcaoUsuarioVisitante> {
                       height: 30,
                     ),
                     Text(
-                      "All Delivery",
+                      "#FiqueEmCasa\n e compre conosco!",
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 20, fontFamily: "QuickSand"),
                     ),
+                    Column(children: <Widget>[
+                      SizedBox(
+                          height: 200.0,
+                          width: 350.0,
+                          child: Carousel(
+                            images: [
+                              Image.asset("assets/btn_categoria_farmacia.png"),
+                              Image.asset(
+                                  "assets/btn_categoria_supermecados.png"),
+                            ],
+                            dotSize: 4.0,
+                            dotSpacing: 15.0,
+                            dotColor: Colors.white,
+                            indicatorBgPadding: 5.0,
+                            dotBgColor: Colors.deepPurple.withOpacity(0.5),
+                            borderRadius: true,
+                            moveIndicatorFromBottom: 180.0,
+                            noRadiusForIndicator: true,
+                          ))
+                    ]),
                     SizedBox(
                       height: 100,
                     ),
@@ -135,8 +157,9 @@ class _RecepcaoUsuarioVisitanteState extends State<RecepcaoUsuarioVisitante> {
                       elevation: 8.0,
                       radius: 52.0,
                       text: "Fazer Login",
-                      textColor: Colors.white,
-                      gradientColors: [Colors.green, Colors.lightGreen],
+                      fontSize: 14,
+                      textColor: Colors.black87,
+                      gradientColors: [Colors.white, Colors.white],
                       onPressed: () {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => Login()));
@@ -149,9 +172,10 @@ class _RecepcaoUsuarioVisitanteState extends State<RecepcaoUsuarioVisitante> {
                       width: 255,
                       elevation: 8.0,
                       radius: 52.0,
+                      fontSize: 14,
                       text: "Entrar como Visitante",
-                      textColor: Colors.white,
-                      gradientColors: [Colors.green, Colors.lightGreen],
+                      textColor: Colors.black,
+                      gradientColors: [Colors.white, Colors.white],
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => GeolocalizacaoUsuario()));
